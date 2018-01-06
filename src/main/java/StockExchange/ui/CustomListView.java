@@ -1,9 +1,9 @@
 package StockExchange.ui;
 
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,43 +12,48 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class CustomListView<T extends DisplayableListItem> extends VBox implements Initializable{
 
-    private OnCustomListViewButtonClickListener clickListener;
+/**
+ * Custom view for showing listView with a headline and an action button
+ * @param <T>
+ */
+public class CustomListView<T extends DisplayableListItem> extends VBox implements Initializable, EventHandler<ActionEvent>{
+
+    private OnCustomListViewButtonClickListener onClickListener;
 
     @FXML
-    Label label;
+    private Label label;
 
     @FXML
-    Button button;
+    private Button button;
 
     @FXML
-    ListView<T> listView;
+    private ListView<T> listView;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         listView.setCellFactory(param -> new CustomListCell<>());
+        button.setOnAction(this);
     }
 
-    @FXML
-    private void onAddItemClick(ActionEvent event) {
-        if(clickListener != null) {
-            clickListener.onCustomListViewButtonClicked();
+    @Override
+    public void handle(ActionEvent event) {
+        if(onClickListener != null) {
+            onClickListener.onCustomListViewButtonClicked();
         }
     }
+
 
     public CustomListView() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/StockExchange/view/CustomListView.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
-
         try {
             fxmlLoader.load();
-        } catch (IOException exception) {
+        } catch (Exception exception) {
             throw new RuntimeException(exception);
         }
     }
@@ -73,15 +78,16 @@ public class CustomListView<T extends DisplayableListItem> extends VBox implemen
         return buttonTextProperty().get();
     }
 
-    public StringProperty buttonTextProperty() {
+    private StringProperty buttonTextProperty() {
         return button.textProperty();
     }
 
-    public StringProperty labelTextProperty() {
+    private StringProperty labelTextProperty() {
         return label.textProperty();
     }
 
-    public void setClickListener(OnCustomListViewButtonClickListener clickListener) {
-        this.clickListener = clickListener;
+    public void setOnClickListener(OnCustomListViewButtonClickListener onClickListener) {
+        this.onClickListener = onClickListener;
     }
+
 }

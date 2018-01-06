@@ -6,6 +6,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -27,12 +31,14 @@ public class MainSceneController implements Initializable {
     @FXML
     private CustomListView<StockExchangeModel> materialExchangeListView;
 
-
     private ObservableList<StockExchangeModel> stockExchangeModels;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        stockExchangeListView.setClickListener(() -> stockExchangeModels.add(new StockExchangeModel("chujas")));
+        stockExchangeListView.setOnClickListener(() -> stockExchangeModels.add(new StockExchangeModel("chujas")));
+        indexListView.setOnClickListener(() -> {
+
+        });
         stockExchangeModels = FXCollections.observableArrayList();
         stockExchangeListView.setItemList(stockExchangeModels);
     }
