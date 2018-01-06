@@ -25,7 +25,7 @@ public class StockExchangeListViewController implements Initializable {
 
     @FXML
     private void onAddStockButtonClick(ActionEvent event) {
-        stocksList.add(new StockExchangeModel("stock"));
+        stocksList.add(new StockExchangeModel());
     }
 
 

@@ -8,7 +8,7 @@ package StockExchange.GUI.elem;
 import StockExchange.GUI.exception.BladNazwy;
 import StockExchange.GUI.exception.BlednaNazwa;
 import StockExchange.Main;
-import StockExchange.model.RynekSurowcow;
+import StockExchange.model.MaterialExchangeModel;
 
 import java.util.Random;
 
@@ -88,19 +88,19 @@ public class RynSur extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Main.rynekSurowcow = new RynekSurowcow();
+        Main.materialExchangeModel = new MaterialExchangeModel();
         Random generator = new Random ();
         
         double element = generator.nextDouble() / 10;
-        Main.rynekSurowcow.setWysokoscMarzyKupno(generator.nextDouble() / 10);
-        Main.rynekSurowcow.setWysokoscMarzySprzedaz(generator.nextDouble() / 10 + element);
+        Main.materialExchangeModel.setPurchaseMargin(generator.nextDouble() / 10);
+        Main.materialExchangeModel.setSalesMargin(generator.nextDouble() / 10 + element);
 
         String nazwa = jTextField1.getText();
         try {
             if (nazwa.length() == 0) {
                 throw new BlednaNazwa();
             } else {
-                Main.rynekSurowcow.setNazwa(nazwa);
+                Main.materialExchangeModel.setName(nazwa);
                 jButton1.setVisible(false);
                 this.dispose();
             }

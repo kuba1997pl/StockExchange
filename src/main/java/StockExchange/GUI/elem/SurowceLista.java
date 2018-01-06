@@ -7,8 +7,7 @@ package StockExchange.GUI.elem;
 
 import StockExchange.GUI.exception.DodanoObiektWyjatek;
 import StockExchange.GUI.exception.ElementDodano;
-import StockExchange.Main;
-import StockExchange.model.Surowiec;
+import StockExchange.model.MaterialModel;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -81,14 +80,14 @@ public class SurowceLista extends JFrame {
                     try {
                         String nazwa = (String) lista.getSelectedValue();
                         if (!nazwa.equals("Dodano!")) {
-                            Surowiec surowiec = new Surowiec(); //creating new object
+                            MaterialModel materialModel = new MaterialModel(); //creating new object
 
-                            surowiec.setNazwa(nazwa);
+                            materialModel.setName(nazwa);
                             //filling list included in object with random values
 
 
 
-                            //Main.rynekSurowcow.add(surowiec);
+                            //Main.materialExchangeModel.add(materialModel);
 
                             int index = lista.getSelectedIndex();
                             model.setElementAt("Dodano!", index);

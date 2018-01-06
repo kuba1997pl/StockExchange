@@ -125,8 +125,8 @@ public class PanelKontrolny extends javax.swing.JFrame {
         });
         Random generator = new Random();
         
-        int elem = generator.nextInt(Main.rynekWalut.getListaWalut().size());
-        Main.gielda.setWaluta(Main.rynekWalut.getListaWalut().get(elem));
+        int elem = generator.nextInt(Main.currencyExchangeModel.getCurrencyList().size());
+        Main.stockExchange.setCurrencyModel(Main.currencyExchangeModel.getCurrencyList().get(elem));
         
     }//GEN-LAST:event_podgladPrzyciskActionPerformed
 

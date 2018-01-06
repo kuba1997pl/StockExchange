@@ -7,14 +7,12 @@ package StockExchange.GUI;
 
 import StockExchange.GUI.exception.DodanoObiektWyjatek;
 import StockExchange.GUI.exception.ElementDodano;
-import StockExchange.Main;
-import StockExchange.model.Spolka;
+import StockExchange.model.CompanyModel;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.LocalDate;
 import java.util.Random;
 import javax.swing.*;
 
@@ -89,10 +87,10 @@ public class WyborSpolek extends JFrame {
                     try {
                         String nazwa = (String) lista.getSelectedValue();
                         if (!nazwa.equals("Dodano!")) {
-                            Spolka spolka = new Spolka(); //creating new object
-                            spolka.setNazwa(nazwa);
+                            CompanyModel companyModel = new CompanyModel(); //creating new object
+                            companyModel.setName(nazwa);
                             //filling list included in object with random values
-                            // Main.spolkiWprowadzone.add(spolka); //adding object to the main list
+                            // Main.spolkiWprowadzone.add(companyModel); //adding object to the main list
 
                             int index = lista.getSelectedIndex();
                             model.setElementAt("Dodano!", index);

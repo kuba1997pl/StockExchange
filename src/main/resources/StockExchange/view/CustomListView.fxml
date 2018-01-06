@@ -10,7 +10,6 @@
 <fx:root type="javafx.scene.layout.VBox"
          xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
-         fx:controller="StockExchange.ui.CustomListView"
          alignment="CENTER">
 
     <padding><Insets bottom="16.0" top="16.0" left="16.0" right="16.0"/></padding>

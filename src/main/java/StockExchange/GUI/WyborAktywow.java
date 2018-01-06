@@ -27,7 +27,7 @@ public class WyborAktywow extends javax.swing.JFrame {
         dodajSurow = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Aktywa");
+        setTitle("Assets");
 
         dodAktEt.setText("Dodaj aktywa:");
 
@@ -91,7 +91,7 @@ public class WyborAktywow extends javax.swing.JFrame {
     }//GEN-LAST:event_dodajIndeksyActionPerformed
 
     /**
-     * dodajWalActionPerformed sets Gielda's 'Waluta' field
+     * dodajWalActionPerformed sets StockExchangeModel's 'CurrencyModel' field
      */
     private void dodajWaluActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dodajWaluActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
