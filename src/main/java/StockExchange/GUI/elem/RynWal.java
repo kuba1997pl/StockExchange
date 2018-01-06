@@ -8,7 +8,7 @@ package StockExchange.GUI.elem;
 import StockExchange.GUI.exception.BladNazwy;
 import StockExchange.GUI.exception.BlednaNazwa;
 import StockExchange.Main;
-import StockExchange.model.RynekWalut;
+import StockExchange.model.CurrencyExchangeModel;
 
 import java.util.Random;
 
@@ -88,19 +88,19 @@ public class RynWal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Main.rynekWalut= new RynekWalut();
+        Main.currencyExchangeModel = new CurrencyExchangeModel();
         Random generator = new Random ();
         
         double element = generator.nextDouble() / 10;
-        Main.rynekWalut.setWysokoscMarzyKupno(generator.nextDouble() / 10);
-        Main.rynekWalut.setWysokoscMarzySprzedaz(generator.nextDouble() / 10 + element);
+        Main.currencyExchangeModel.setPurchaseMargin(generator.nextDouble() / 10);
+        Main.currencyExchangeModel.setSalesMargin(generator.nextDouble() / 10 + element);
         
         String nazwa = jTextField1.getText();
         try {
             if (nazwa.length() == 0) {
                 throw new BlednaNazwa();
             } else {
-                Main.rynekWalut.setNazwa(nazwa);
+                Main.currencyExchangeModel.setName(nazwa);
                 this.dispose();
             }
         } catch (BlednaNazwa e) {

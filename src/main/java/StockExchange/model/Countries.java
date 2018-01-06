@@ -4,12 +4,12 @@ package StockExchange.model;
  *
  * @author jakub
  */
-public class Kraje {
+public class Countries {
 
     /**
      * list of available countries
      */
-    public static String[] kraje = {
+    public static String[] COUNTRIES = {
         "AUSTRIA",
         "SZWAJCARIA",
         "USA",

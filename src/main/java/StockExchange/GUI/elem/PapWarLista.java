@@ -8,8 +8,8 @@ package StockExchange.GUI.elem;
 import StockExchange.GUI.exception.DodanoObiektWyjatek;
 import StockExchange.GUI.exception.ElementDodano;
 import StockExchange.Main;
-import StockExchange.model.Gielda;
-import StockExchange.model.Kraje;
+import StockExchange.model.StockExchangeModel;
+import StockExchange.model.Countries;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -99,32 +99,32 @@ public class PapWarLista extends JFrame {
             ) {
                 JList lista = (JList) evt.getSource();
                 if (evt.getClickCount() == 2) {
-                    Main.gielda = new Gielda(); //creating new object
+                    Main.stockExchange = new StockExchangeModel(); //creating new object
                     String miasto = (String) lista.getSelectedValue();
                     try {
                         if (!miasto.equals("Dodano!")) {
 
-                            Main.gielda.setMiasto(miasto);
+                            Main.stockExchange.setCity(miasto);
                             //filling list included in object with random values    
-                            int elem = generator.nextInt(Kraje.kraje.length);
-                            Main.gielda.setKraj(Kraje.kraje[elem]);
+                            int elem = generator.nextInt(Countries.COUNTRIES.length);
+                            Main.stockExchange.setCountry(Countries.COUNTRIES[elem]);
 
                             //adress generator
                             elem = generator.nextInt(adresy.length);
-                            Main.gielda.setAdresSiedziby(adresy[elem]);
+                            Main.stockExchange.setOfficeAdress(adresy[elem]);
 
                             double element = generator.nextDouble() / 10;
                             
                             
-                            Main.gielda.setWysokoscMarzyKupno(element);
-                            Main.gielda.setWysokoscMarzySprzedaz(element + generator.nextDouble()/10);
-                            System.out.println(Main.gielda.getWysokoscMarzyKupno());
+                            Main.stockExchange.setPurchaseMargin(element);
+                            Main.stockExchange.setSalesMargin(element + generator.nextDouble()/10);
+                            System.out.println(Main.stockExchange.getPurchaseMargin());
 
                             /*
-                            Waluta is set with PanelKontrolny method
+                            CurrencyModel is set with PanelKontrolny method
                             
                             elem = generator.nextInt(Main.walutyObracane.size());
-                            Main.gielda.setWaluta(Main.walutyObracane.get(elem));
+                            Main.stockExchange.setCurrencyModel(Main.walutyObracane.get(elem));
                              */
                             
                             int index = lista.getSelectedIndex();

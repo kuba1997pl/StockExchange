@@ -2,6 +2,7 @@
 package StockExchange.model;
 
 import StockExchange.Main;
+import StockExchange.ui.DisplayableListItem;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -10,10 +11,15 @@ import java.util.Random;
  * @author jakub
  */
 
-public class IndeksGieldowy {
-    private String nazwa;
-    private double wartosc;
-    ArrayList<Spolka> listaSpolek;
+public class IndexModel implements DisplayableListItem {
+    private String name;
+    private double value;
+    ArrayList<CompanyModel> companiesList;
+
+    @Override
+    public String getDisplayName() {
+        return name;
+    }
 
     private String[] INDEKSY = {
             "Tadawul",
@@ -41,58 +47,58 @@ public class IndeksGieldowy {
      * Constructor sets random fields' values for object
      */
 
-    public IndeksGieldowy() {
+    public IndexModel() {
 
-        this.listaSpolek = new ArrayList<>();
+        this.companiesList = new ArrayList<>();
         Random generator = new Random();
 
-        this.wartosc = generator.nextDouble() * 10000;
+        this.value = generator.nextDouble() * 10000;
 
-        ArrayList<Spolka> spolki = new ArrayList<>();
+        ArrayList<CompanyModel> spolki = new ArrayList<>();
         spolki.addAll(Main.spolkiWprowadzone);
         int lspol = generator.nextInt(spolki.size());
 
         for (int i = 0; i <= lspol; i++) {
             int elem = generator.nextInt(spolki.size());
-            this.listaSpolek.add(spolki.get(elem));
+            this.companiesList.add(spolki.get(elem));
             spolki.remove(elem);
         }
     }
 
     /**
-     * @return nazwa
+     * @return name
      */
 
-    public String getNazwa() {
-        return nazwa;
+    public String getName() {
+        return name;
     }
 
     /**
-     * @param wartosc
+     * @param value
      */
-    public void setWartosc(double wartosc) {
-        this.wartosc = wartosc;
+    public void setValue(double value) {
+        this.value = value;
     }
 
     /**
-     * @param listaSpolek
+     * @param companiesList
      */
-    public void setListaSpolek(ArrayList<Spolka> listaSpolek) {
-        this.listaSpolek = listaSpolek;
+    public void setCompaniesList(ArrayList<CompanyModel> companiesList) {
+        this.companiesList = companiesList;
     }
 
     /**
-     * @return wartosc
+     * @return value
      */
-    public double getWartosc() {
-        return wartosc;
+    public double getValue() {
+        return value;
     }
 
     /**
-     * @return listaSpolek
+     * @return companiesList
      */
-    public ArrayList<Spolka> getListaSpolek() {
-        return listaSpolek;
+    public ArrayList<CompanyModel> getCompaniesList() {
+        return companiesList;
     }
 
 }

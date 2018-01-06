@@ -8,7 +8,7 @@ package StockExchange.GUI.elem;
 import java.awt.FlowLayout;
 import StockExchange.GUI.exception.DodanoObiektWyjatek;
 import StockExchange.GUI.exception.ElementDodano;
-import StockExchange.model.Waluta;
+import StockExchange.model.CurrencyModel;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -19,7 +19,7 @@ import javax.swing.*;
  *
  * @author jakub
  * 
- * class generates random values of Waluta objects 
+ * class generates random values of CurrencyModel objects
  */
 public class WalutyLista extends JFrame {
 
@@ -78,14 +78,14 @@ public class WalutyLista extends JFrame {
             public void mouseClicked(MouseEvent evt) {
                 JList lista = (JList) evt.getSource();
                 if (evt.getClickCount() == 2) {
-                    Waluta waluta = new Waluta(); //creating new object
+                    CurrencyModel currencyModel = new CurrencyModel(); //creating new object
                     String nazwa = (String) lista.getSelectedValue();
                     try {
                         if (!nazwa.equals("Dodano!")){
 
-                            waluta.setNazwa(nazwa);
+                            currencyModel.setName(nazwa);
                             //adding object to the main list
-                            //Main.rynekWalut.add(waluta);
+                            //Main.currencyExchangeModel.add(currencyModel);
                             int index = lista.getSelectedIndex();
                             model.setElementAt("Dodano!", index);
 

@@ -6,13 +6,13 @@ import java.util.*;
 /**
  * @author jakub
  */
-public class Inwestor extends Klient {
-    private String imie;
-    private String nazwisko;
+public class Investor extends Customer {
+    private String firstName;
+    private String lastName;
     private String PESEL;
-    private double budzet;
+    private double budget;
 
-    public static String[] IMIONA = {
+    public static String[] FIRSTNAMES = {
             "Christian",
             "Bill",
             "Tony",
@@ -26,7 +26,7 @@ public class Inwestor extends Klient {
             "Donald",
             "Dariusz",
     };
-    public static String[] NAZWISKA = {
+    public static String[] LASTNAMES = {
             "Malfoy",
             "Majchrzak",
             "Kowalski",
@@ -38,18 +38,18 @@ public class Inwestor extends Klient {
             "Brzezinski"
     };
 
-    public Inwestor() {
-//        ArrayList<String> nazwiska = new ArrayList();
-//        ArrayList<String> imiona = new ArrayList();
+    public Investor() {
+//        ArrayList<String> lastNames = new ArrayList();
+//        ArrayList<String> firstNames = new ArrayList();
 //         powyższe listy trzeba dodać do metody,
 //        która będzie dodawać inwestorów
 //         i po dodaniu usuwać danego inwestora z listy
 //         aby nie był dodany ponownie
-//        for(int i=0; i<IMIONA.length(); i++){
-//            imiona.add(IMIONA[i]);
+//        for(int i=0; i<FIRSTNAMES.length(); i++){
+//            firstNames.add(FIRSTNAMES[i]);
 //        }
-//        for(int i=0; i<NAZWISKA.length(); i++){
-//            imiona.add(NAZWISKA[i]);
+//        for(int i=0; i<LASTNAMES.length(); i++){
+//            firstNames.add(LASTNAMES[i]);
 //        }
         Random generator = new Random();
         StringBuilder builder = new StringBuilder();
@@ -58,8 +58,8 @@ public class Inwestor extends Klient {
                 .append(getTwoDigitNumberString(generator.nextInt(12) + 1)) //miesiac
                 .append(getTwoDigitNumberString(generator.nextInt(28) + 1)) // dzien
                 .append(getTwoDigitNumberString(generator.nextInt(100000))).toString();
-        this.budzet = generator.nextDouble() * 1000000.0;
-        System.out.println(this.budzet + "\n" + this.PESEL);
+        this.budget = generator.nextDouble() * 1000000.0;
+        System.out.println(this.budget + "\n" + this.PESEL);
     }
 
     private String getTwoDigitNumberString(int i) {
@@ -89,17 +89,17 @@ public class Inwestor extends Klient {
 
 
     /**
-     * @return imie
+     * @return firstName
      */
-    public String getImie() {
-        return imie;
+    public String getFirstName() {
+        return firstName;
     }
 
     /**
-     * @return nazwisko
+     * @return lastName
      */
-    public String getNazwisko() {
-        return nazwisko;
+    public String getLastName() {
+        return lastName;
     }
 
     /**
@@ -110,24 +110,24 @@ public class Inwestor extends Klient {
     }
 
     /**
-     * @return budzet
+     * @return budget
      */
-    public double getBudzet() {
-        return budzet;
+    public double getBudget() {
+        return budget;
     }
 
     /**
-     * @param imie
+     * @param firstName
      */
-    public void setImie(String imie) {
-        this.imie = imie;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     /**
-     * @param nazwisko
+     * @param lastName
      */
-    public void setNazwisko(String nazwisko) {
-        this.nazwisko = nazwisko;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     /**
@@ -138,9 +138,9 @@ public class Inwestor extends Klient {
     }
 
     /**
-     * @param budzet
+     * @param budget
      */
-    public void setBudzet(double budzet) {
-        this.budzet = budzet;
+    public void setBudget(double budget) {
+        this.budget = budget;
     }
 }
