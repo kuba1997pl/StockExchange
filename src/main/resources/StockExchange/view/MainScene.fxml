@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.FlowPane?>
+<?import StockExchange.ui.CustomListView?>
+<FlowPane xmlns="http://javafx.com/javafx/8.0.121"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="StockExchange.controller.MainSceneController">
+
+    <CustomListView fx:id="stockExchangeListView" buttonText="Dodaj giełdę" labelText="Giełdy"/>
+    <CustomListView fx:id="indexListView" buttonText="Dodaj indeks" labelText="Indeksy"/>
+    <CustomListView fx:id="materialListView" buttonText="Dodaj surowiec" labelText="Surowce"/>
+    <CustomListView fx:id="currencyListView" buttonText="Dodaj walutę" labelText="Waluty"/>
+    <CustomListView fx:id="companyListView" buttonText="Dodaj spółkę" labelText="Spółki"/>
+    <CustomListView fx:id="currencyExchangeListView" buttonText="Dodaj rynek walut" labelText="Rynki walut"/>
+    <CustomListView fx:id="materialExchangeListView" buttonText="Dodaj rynek surowców" labelText="Rynki surowców"/>
+
+
+</FlowPane>
