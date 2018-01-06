@@ -1,5 +1,5 @@
 
-package StockExchange.model;
+package StockExchange;
 
 import java.awt.List;
 import java.util.ArrayList;
@@ -9,19 +9,22 @@ import StockExchange.Rynek;
 import StockExchange.Waluta;
 
 /**
- *
  * @author jakub
  */
 public class Gielda extends Rynek {
-    
+
     private String kraj;
     private Waluta waluta;
     private String miasto;
     private String adresSiedziby;
     private ArrayList<IndeksGieldowy> listaIndeksow = new ArrayList<>();
 
+    @Override
+    public int liczMarze() {
+        return 0;
+    }
+
     /**
-     *
      * @param listaIndeksow
      */
     public void setListaIndeksow(ArrayList<IndeksGieldowy> listaIndeksow) {
@@ -29,16 +32,14 @@ public class Gielda extends Rynek {
     }
 
     /**
-     *
      * @return listaIndeksow
      */
     public ArrayList<IndeksGieldowy> getListaIndeksow() {
         return listaIndeksow;
     }
 
-    
+
     /**
-     *
      * @param kraj
      */
     public void setKraj(String kraj) {
@@ -46,7 +47,6 @@ public class Gielda extends Rynek {
     }
 
     /**
-     *
      * @param waluta
      */
     public void setWaluta(Waluta waluta) {
@@ -54,7 +54,6 @@ public class Gielda extends Rynek {
     }
 
     /**
-     *
      * @param miasto
      */
     public void setMiasto(String miasto) {
@@ -62,7 +61,6 @@ public class Gielda extends Rynek {
     }
 
     /**
-     *
      * @param adresSiedziby
      */
     public void setAdresSiedziby(String adresSiedziby) {
@@ -70,7 +68,6 @@ public class Gielda extends Rynek {
     }
 
     /**
-     *
      * @return kraj
      */
     public String getKraj() {
@@ -78,7 +75,6 @@ public class Gielda extends Rynek {
     }
 
     /**
-     *
      * @return waluta
      */
     public Waluta getWaluta() {
@@ -86,7 +82,6 @@ public class Gielda extends Rynek {
     }
 
     /**
-     *
      * @return miasto
      */
     public String getMiasto() {
@@ -94,19 +89,9 @@ public class Gielda extends Rynek {
     }
 
     /**
-     *
      * @return adresSiedziby
      */
     public String getAdresSiedziby() {
         return adresSiedziby;
-    }
-    
-    
-    
-    
-    
-    @Override
-    public int liczMarze(){
-       return 0;
     }
 }

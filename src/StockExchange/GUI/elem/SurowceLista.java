@@ -38,16 +38,6 @@ public class SurowceLista extends JFrame {
         "Śruta sojowa"
     };
 
-    String[] jednostki = {
-        "baryłka",
-        "uncja",
-        "tona",
-        "funt",
-        "galon",
-        "kilogram",
-        "korzec"
-    };
-
     Random generator = new Random();
 
     public SurowceLista() {
@@ -87,27 +77,17 @@ public class SurowceLista extends JFrame {
             public void mouseClicked(MouseEvent evt) {
                 JList lista = (JList) evt.getSource();
                 if (evt.getClickCount() == 2) {
-                    Surowiec surowiec = new Surowiec(); //creating new object
-                    String nazwa = (String) lista.getSelectedValue();
                     try {
+                        String nazwa = (String) lista.getSelectedValue();
                         if (!nazwa.equals("Dodano!")) {
+                            Surowiec surowiec = new Surowiec(); //creating new object
+
                             surowiec.setNazwa(nazwa);
                             //filling list included in object with random values
 
-                            double min = generator.nextDouble() * 12000;
-                            double maks = min + generator.nextDouble() * 500;
-                            double akt = (maks + min) / 2 + generator.nextDouble();
-                            surowiec.setWartoscMaksymalna(maks);
-                            surowiec.setWartoscMinimalna(min);
-                            surowiec.setWartoscAktualna(akt);
 
-                            int rozm = Main.rynekWalut.getListaWalut().size();
-                            int elem = generator.nextInt(rozm); //generating random index 
-                            surowiec.setWaluta(Main.rynekWalut.getListaWalut().get(elem));//Setting Waluta value
 
-                            surowiec.setJednostkaHandlowa(jednostki[generator.nextInt(jednostki.length)]);
-
-                            Main.rynekSurowcow.add(surowiec);
+                            //Main.rynekSurowcow.add(surowiec);
 
                             int index = lista.getSelectedIndex();
                             model.setElementAt("Dodano!", index);

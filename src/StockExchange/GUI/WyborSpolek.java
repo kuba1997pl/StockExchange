@@ -87,31 +87,14 @@ public class WyborSpolek extends JFrame {
             public void mouseClicked(MouseEvent evt) {
                 JList lista = (JList) evt.getSource();
                 if (evt.getClickCount() == 2) {
-                    Spolka spolka = new Spolka(); //creating new object
-                    String nazwa = (String) lista.getSelectedValue();
                     try {
+                        String nazwa = (String) lista.getSelectedValue();
                         if (!nazwa.equals("Dodano!")) {
+                            Spolka spolka = new Spolka(); //creating new object
                             spolka.setNazwa(nazwa);
                             //filling list included in object with random values
-                            double min = generator.nextDouble() * 10;
-                            double maks = min + generator.nextDouble() * 20;
-                            int akcyje = generator.nextInt(1000);
-                            spolka.setKursMin(min);
-                            spolka.setKursMax(maks);
-                            spolka.setLiczbaAkcji(akcyje);
+                            // Main.spolkiWprowadzone.add(spolka); //adding object to the main list
 
-                            //date generator
-                            int minDz = (int) LocalDate.of(1900, 1, 1).toEpochDay();
-                            int maxDz = (int) LocalDate.of(2015, 1, 1).toEpochDay();
-                            long losDz = minDz + generator.nextInt(maxDz - minDz);
-                            spolka.setDataIWyceny(LocalDate.ofEpochDay(losDz));
-
-                            /**
-                             * wolumen is set to 0 at the beginning
-                             */
-                            spolka.setWolumen(0);
-
-                            Main.spolkiWprowadzone.add(spolka); //adding object to the main list
                             int index = lista.getSelectedIndex();
                             model.setElementAt("Dodano!", index);
 

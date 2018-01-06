@@ -2,7 +2,9 @@
 package StockExchange;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -11,7 +13,7 @@ import java.util.List;
 public class Waluta extends Aktywa {
     private double cenaKupna;
     private double cenaSprzedazy;
-    private List<String> listaKrajow = new ArrayList<>();
+    private List<String> listaKrajow;
     //losowanie krajów np.:
     //wylosuj liczbę mniejszą niż liczba krajów w tablicy
     //pętla for do wygenerowanej liczby powyżej
@@ -19,7 +21,23 @@ public class Waluta extends Aktywa {
     //i inną niż ta, którą już wcześniej pobraliśmy
     //dodajemy kraj
 
-    
+    public Waluta(){
+
+        ArrayList<String> krajeDoWyboru = new ArrayList<>(Arrays.asList(Kraje.kraje));
+        listaKrajow = new ArrayList<>();
+        Random generator = new Random();
+        int lkrajow = generator.nextInt(4);
+        for (int i = 0; i <= lkrajow; i++) {
+            int element = generator.nextInt(krajeDoWyboru.size());
+            this.listaKrajow.add(krajeDoWyboru.get(element));
+            krajeDoWyboru.remove(element);
+        }
+        double cKupna = generator.nextDouble()*3;
+        this.setCenaKupna(cKupna);
+        this.setCenaSprzedazy(cKupna + generator.nextDouble()/5);
+
+    }
+
     @Override
     public String toString(){
         String nazwa = this.getNazwa();

@@ -7,7 +7,7 @@ package StockExchange.GUI.elem;
 
 import StockExchange.GUI.exception.DodanoObiektWyjatek;
 import StockExchange.GUI.exception.ElementDodano;
-import StockExchange.model.Gielda;
+import StockExchange.Gielda;
 import StockExchange.Kraje;
 import StockExchange.Main;
 

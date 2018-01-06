@@ -3,7 +3,6 @@ package StockExchange;
 
 
 import StockExchange.GUI.PanelKontrolny;
-import StockExchange.model.Gielda;
 
 import java.util.*;
 

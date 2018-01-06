@@ -5,6 +5,7 @@
  */
 package StockExchange.GUI.elem;
 
+import StockExchange.Inwestor;
 import StockExchange.Kraje;
 import StockExchange.Main;
 import StockExchange.Waluta;
@@ -13,6 +14,8 @@ import StockExchange.GUI.exception.DodanoObiektWyjatek;
 import StockExchange.GUI.exception.ElementDodano;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import javax.swing.*;
 
@@ -82,23 +85,14 @@ public class WalutyLista extends JFrame {
                     Waluta waluta = new Waluta(); //creating new object
                     String nazwa = (String) lista.getSelectedValue();
                     try {
-                        if (!nazwa.equals("Dodano!")) {
+                        if (!nazwa.equals("Dodano!")){
+
                             waluta.setNazwa(nazwa);
-                            //filling list included in object with random values
-                            int lkrajow = generator.nextInt(4);
-                            for (int i = 0; i <= lkrajow; i++) {
-                                int tablicaElem = generator.nextInt(Kraje.kraje.length);
-                                waluta.setListaKrajow(Kraje.kraje[tablicaElem]);
-                            }
-                            double cKupna = generator.nextDouble()*3;
-                            double cSprzedazy = cKupna + generator.nextDouble()/5;
-                            waluta.setCenaKupna(cKupna);
-                            waluta.setCenaSprzedazy(cSprzedazy);
                             //adding object to the main list
-                            Main.rynekWalut.add(waluta);
-                            
+                            //Main.rynekWalut.add(waluta);
                             int index = lista.getSelectedIndex();
                             model.setElementAt("Dodano!", index);
+
                         } else {
                             throw new DodanoObiektWyjatek();
                         }
