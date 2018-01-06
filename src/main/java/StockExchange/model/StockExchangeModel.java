@@ -4,6 +4,7 @@ package StockExchange.model;
 import StockExchange.ui.DisplayableListItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author jakub
@@ -15,7 +16,16 @@ public class StockExchangeModel extends Exchange implements DisplayableListItem 
     private CurrencyModel currencyModel;
     private String city;
     private String officeAdress;
-    private ArrayList<IndexModel> indexList = new ArrayList<>();
+    private List<IndexModel> indexList;
+
+    public StockExchangeModel(String name, String country, CurrencyModel currencyModel, String city, String officeAdress, List<IndexModel> indexList) {
+        this.name = name;
+        this.country = country;
+        this.currencyModel = currencyModel;
+        this.city = city;
+        this.officeAdress = officeAdress;
+        this.indexList = indexList;
+    }
 
     //licz marżę
     @Override
@@ -29,59 +39,12 @@ public class StockExchangeModel extends Exchange implements DisplayableListItem 
         return name;
     }
 
-
-
-    /**
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * @param indexList
-     */
-    public void setIndexList(ArrayList<IndexModel> indexList) {
-        this.indexList = indexList;
-    }
-
     /**
      * @return indexList
      */
-    public ArrayList<IndexModel> getIndexList() {
+    public List<IndexModel> getIndexList() {
         return indexList;
     }
-
-
-    /**
-     * @param country
-     */
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    /**
-     * @param currencyModel
-     */
-    public void setCurrencyModel(CurrencyModel currencyModel) {
-        this.currencyModel = currencyModel;
-    }
-
-    /**
-     * @param city
-     */
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    /**
-     * @param officeAdress
-     */
-    public void setOfficeAdress(String officeAdress) {
-        this.officeAdress = officeAdress;
-    }
-
-
 
     /**
      * @return name

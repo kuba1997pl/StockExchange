@@ -1,7 +1,6 @@
 
 package StockExchange.model;
 
-import StockExchange.Main;
 import StockExchange.ui.DisplayableListItem;
 
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class IndexModel implements DisplayableListItem {
         this.value = generator.nextDouble() * 10000;
 
         ArrayList<CompanyModel> spolki = new ArrayList<>();
-        spolki.addAll(Main.spolkiWprowadzone);
+//        spolki.addAll(Main.spolkiWprowadzone);
         int lspol = generator.nextInt(spolki.size());
 
         for (int i = 0; i <= lspol; i++) {
