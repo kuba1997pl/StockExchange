@@ -1,6 +1,5 @@
 package StockExchange.GUI;
 
-import StockExchange.Akcja;
 import StockExchange.GUI.elem.SurowceLista;
 import StockExchange.Main;
 import StockExchange.Waluta;
