@@ -1,0 +1,202 @@
+
+package StockExchange;
+
+import java.time.LocalDate;
+
+/**
+ *
+ * @author jakub
+ */
+
+public class Spolka {
+    private String nazwa;
+    private LocalDate dataIWyceny;
+    private double kursMin;
+    private double kursMax;
+    private int liczbaAkcji;
+    private double zysk; // dochód = przychód - koszta 
+    private double przychod; 
+    private double kapitalWlasny;
+    private double kapitalZakladowy;
+    private int wolumen;
+    private double obroty; //przychód - podatek
+
+    
+    
+    
+    /**
+     *
+     * @param nazwa
+     */
+    public void setNazwa(String nazwa) {
+        this.nazwa = nazwa;
+    }
+
+    /**
+     *
+     * @param dataIwyceny
+     */
+    public void setDataIWyceny(LocalDate dataIwyceny) {
+        this.dataIWyceny = dataIWyceny;
+    }
+
+    /**
+     *
+     * @param kursMin
+     */
+    public void setKursMin(double kursMin) {
+        this.kursMin = kursMin;
+    }
+
+    /**
+     *
+     * @param kursMax
+     */
+    public void setKursMax(double kursMax) {
+        this.kursMax = kursMax;
+    }
+
+    /**
+     *
+     * @param liczbaAkcji
+     */
+    public void setLiczbaAkcji(int liczbaAkcji) {
+        this.liczbaAkcji = liczbaAkcji;
+    }
+
+    /**
+     *
+     * @param zysk
+     */
+    public void setZysk(int zysk) {
+        this.zysk = zysk;
+    }
+
+    /**
+     *
+     * @param przychod
+     */
+    public void setPrzychod(int przychod) {
+        this.przychod = przychod;
+    }
+
+    /**
+     *
+     * @param kapitalWlasny
+     */
+    public void setKapitalWlasny(int kapitalWlasny) {
+        this.kapitalWlasny = kapitalWlasny;
+    }
+
+    /**
+     *
+     * @param kapitalZakladowy
+     */
+    public void setKapitalZakladowy(int kapitalZakladowy) {
+        this.kapitalZakladowy = kapitalZakladowy;
+    }
+
+    /**
+     *
+     * @param wolumen
+     */
+    public void setWolumen(int wolumen) {
+        this.wolumen = wolumen;
+    }
+
+    /**
+     *
+     * @param obroty
+     */
+    public void setObroty(int obroty) {
+        this.obroty = obroty;
+    }
+
+    /**
+     *
+     * @return nazwa
+     */
+    public String getNazwa() {
+        return nazwa;
+    }
+
+    /**
+     *
+     * @return dataIwyceny
+     */
+    public LocalDate getDataIWyceny() {
+        return dataIWyceny;
+    }
+
+    /**
+     *
+     * @return kursMin
+     */
+    public double getKursMin() {
+        return kursMin;
+    }
+
+    /**
+     * 
+     * @return kursMax
+     */
+    public double getKursMax() {
+        return kursMax;
+    }
+
+    /**
+     *
+     * @return liczbaAkcji
+     */
+    public int getLiczbaAkcji() {
+        return liczbaAkcji;
+    }
+
+    /**
+     *
+     * @return zysk
+     */
+    public double getZysk() {
+        return zysk;
+    }
+
+    /**
+     *
+     * @return przychod
+     */
+    public double getPrzychod() {
+        return przychod;
+    }
+
+    /**
+     *
+     * @return kapitalWlasny
+     */
+    public double getKapitalWlasny() {
+        return kapitalWlasny;
+    }
+
+    /**
+     *
+     * @return kapitalZakladowy
+     */
+    public double getKapitalZakladowy() {
+        return kapitalZakladowy;
+    }
+
+    /**
+     *
+     * @return wolumen
+     */
+    public int getWolumen() {
+        return wolumen;
+    }
+
+    /**
+     *
+     * @return obroty
+     */
+    public double getObroty() {
+        return obroty;
+    }
+}
