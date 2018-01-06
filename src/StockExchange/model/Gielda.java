@@ -1,8 +1,12 @@
 
-package StockExchange;
+package StockExchange.model;
 
 import java.awt.List;
 import java.util.ArrayList;
+
+import StockExchange.IndeksGieldowy;
+import StockExchange.Rynek;
+import StockExchange.Waluta;
 
 /**
  *

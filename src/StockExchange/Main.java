@@ -3,6 +3,8 @@ package StockExchange;
 
 
 import StockExchange.GUI.PanelKontrolny;
+import StockExchange.model.Gielda;
+
 import java.util.*;
 
 /**
@@ -14,8 +16,7 @@ public class Main {
     /**
      * Lists of elements
      */
-    
-    public static ArrayList<Akcja> akcjeObracane = new ArrayList<>();
+
     //public static ArrayList<Waluta> walutyObracane = new ArrayList<>();
     //public static ArrayList<Surowiec> surowceObracane = new ArrayList<>();
     public static ArrayList<Spolka> spolkiWprowadzone = new ArrayList<>();

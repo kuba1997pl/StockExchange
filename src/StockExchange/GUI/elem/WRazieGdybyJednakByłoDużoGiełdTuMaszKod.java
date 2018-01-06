@@ -7,7 +7,7 @@
 //
 //import StockExchange.GUI.DodanoObiektWyjatek;
 //import StockExchange.GUI.ElementDodano;
-//import StockExchange.Gielda;
+//import StockExchange.model.Gielda;
 //import StockExchange.Kraje;
 //import StockExchange.Main;
 //import StockExchange.Surowiec;

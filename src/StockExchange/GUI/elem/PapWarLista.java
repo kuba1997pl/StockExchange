@@ -7,16 +7,14 @@ package StockExchange.GUI.elem;
 
 import StockExchange.GUI.exception.DodanoObiektWyjatek;
 import StockExchange.GUI.exception.ElementDodano;
-import StockExchange.Gielda;
+import StockExchange.model.Gielda;
 import StockExchange.Kraje;
 import StockExchange.Main;
-import StockExchange.Surowiec;
+
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.Random;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
