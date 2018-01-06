@@ -1,6 +1,7 @@
 
 package StockExchange.model;
 
+import StockExchange.controller.MainSceneController;
 import StockExchange.ui.DisplayableListItem;
 
 import java.util.Random;
@@ -16,6 +17,26 @@ public class MaterialModel extends Assets implements DisplayableListItem  {
     private double minValue;
     private double maxValue;
 
+    public static String[] MATERIALS = {
+            "Kakao",
+            "Herbata",
+            "Kawa",
+            "Ropa",
+            "Złoto",
+            "Platyna",
+            "Pallad",
+            "Wieprzowina",
+            "Kauczuk",
+            "Olej Opałowy",
+            "Miedź",
+            "Cynk",
+            "Srebro",
+            "Cukier",
+            "Kukurydza",
+            "Sok pomarańczowy",
+            "Śruta sojowa"
+    };
+
     public static String[] UNITS = {
             "baryłka",
             "uncja",
@@ -26,6 +47,11 @@ public class MaterialModel extends Assets implements DisplayableListItem  {
             "korzec"
     };
 
+    @Override
+    public String getDisplayName() {
+        return name;
+    }
+
     public MaterialModel(){
         Random generator = new Random();
         double min = generator.nextDouble() * 12000;
@@ -35,12 +61,11 @@ public class MaterialModel extends Assets implements DisplayableListItem  {
         this.minValue =min;
         this.currentValue = akt;
 
-        //int rozm = Main.currencyExchangeModel.getCurrencyList().size();
-        //int elem = generator.nextInt(rozm); //generating random index
-        //this.currencyModel = Main.currencyExchangeModel.getCurrencyList().get(elem);//Setting CurrencyModel value
+        //int size = MainSceneController.
+      //  int elem = generator.nextInt(rozm); //generating random index
+       // this.currencyModel = Main.currencyExchangeModel.getCurrencyList().get(elem);//Setting CurrencyModel value
 
         this.tradeUnit = UNITS[generator.nextInt(UNITS.length)];
-        System.out.println(this.tradeUnit +"\n"+this.currentValue +"\n"+this.minValue +"\n"+this.maxValue);
     }
 
     /**
@@ -123,8 +148,5 @@ public class MaterialModel extends Assets implements DisplayableListItem  {
         return maxValue;
     }
 
-    @Override
-    public String getDisplayName() {
-        return null;
-    }
+
 }

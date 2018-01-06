@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.Random;
 
 /**
- *
  * @author jakub
  */
 
@@ -17,6 +16,7 @@ public class CompanyModel implements DisplayableListItem {
     private double minPrice;
     private double maxPrice;
     private double currentPrice;
+    private double openingPrice;
     private int sharesCount;
     private double profit; // dochód = przychód - koszta  POPRAW!
     private double income; //POPRAW!
@@ -24,35 +24,58 @@ public class CompanyModel implements DisplayableListItem {
     private double shareCapital; // kapitał zakładowy  POPRAW!
     private int volume; //ilość akcji, które zmieniły właściciela- wolumen
     private double sales; //przychód - podatek, obroty POPRAW!
+    public static String[] COMPANIES = {
+            "Wytwórnia Pasz Lira",
+            "Microsoft Company",
+            "Apple Inc.",
+            "H & M Hennes & Mauritz AB",
+            "Hugo Boss AG",
+            "Google LLC",
+            "Mars Inc.",
+            "Coccodrillo",
+            "Volkswagen Group",
+            "Polskie Składy Drzewne DrewnoPol Świniec",
+            "PKN Orlen SA",
+            "PKO BP",
+            "Cyfrowy Polsat SA",
+            "Dino Polska SA",
+            "Indykpol SA",
+            "Tadex II Krzywiń",
+            "Lechma Poznań",
+            "DAREX - AGD RTV Śmigiel"
+    };
+
+
 
     @Override
     public String getDisplayName() {
         return this.name;
     }
-    
-    public CompanyModel(){
+
+    public CompanyModel() {
         Random generator = new Random();
         double min = generator.nextDouble() * 10;
         double max = min + generator.nextDouble() * 20;
-        int akcyje = generator.nextInt(1000);
+        int sharesCount = generator.nextInt(1000);
         this.minPrice = min;
         this.maxPrice = max;
-        this.currentPrice = (min+max)/2;
-        this.sharesCount = akcyje;
+        this.openingPrice = (min + max) / 2;
+        this.currentPrice = this.openingPrice;
+        this.sharesCount = sharesCount;
+
+
 
         //date generator
-        int minDz = (int) LocalDate.of(1900, 1, 1).toEpochDay();
-        int maxDz = (int) LocalDate.of(2015, 1, 1).toEpochDay();
-        long losDz = minDz + generator.nextInt(maxDz - minDz);
+        int minDay = (int) LocalDate.of(1900, 1, 1).toEpochDay();
+        int maxDay = (int) LocalDate.of(2015, 1, 1).toEpochDay();
+        long losDz = minDay + generator.nextInt(maxDay - minDay);
         this.firstPricingDate = LocalDate.ofEpochDay(losDz);
         this.volume = generator.nextInt(1000);
         //System.out.println(this.firstPricingDate+"\n"+this.volume+"\n"+this.maxPrice+"\n"+this.minPrice);
     }
 
 
-
     /**
-     *
      * @param currentPrice
      */
 
@@ -61,7 +84,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @return currentPrice
      */
 
@@ -71,7 +93,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @param name
      */
     public void setName(String name) {
@@ -79,7 +100,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @param dataIwyceny
      */
     public void setFirstPricingDate(LocalDate dataIwyceny) {
@@ -87,7 +107,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @param minPrice
      */
     public void setMinPrice(double minPrice) {
@@ -95,15 +114,21 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @param maxPrice
      */
     public void setMaxPrice(double maxPrice) {
         this.maxPrice = maxPrice;
     }
 
+
     /**
-     *
+     * @param openingPrice
+     */
+    public void setOpeningPrice(double openingPrice) {
+        this.openingPrice = openingPrice;
+    }
+
+    /**
      * @param sharesCount
      */
     public void setSharesCount(int sharesCount) {
@@ -111,7 +136,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @param profit
      */
     public void setProfit(int profit) {
@@ -119,7 +143,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @param income
      */
     public void setIncome(int income) {
@@ -127,7 +150,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @param equityCapital
      */
     public void setEquityCapital(int equityCapital) {
@@ -135,7 +157,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @param shareCapital
      */
     public void setShareCapital(int shareCapital) {
@@ -143,7 +164,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @param volume
      */
     public void setVolume(int volume) {
@@ -151,7 +171,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @param sales
      */
     public void setSales(int sales) {
@@ -159,7 +178,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @return name
      */
     public String getName() {
@@ -167,7 +185,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @return dataIwyceny
      */
     public LocalDate getFirstPricingDate() {
@@ -175,7 +192,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @return minPrice
      */
     public double getMinPrice() {
@@ -183,15 +199,22 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     * 
      * @return maxPrice
      */
     public double getMaxPrice() {
         return maxPrice;
     }
 
+
     /**
-     *
+     * @return openingPrice
+     */
+    public double getOpeningPrice() {
+
+        return openingPrice;
+    }
+
+    /**
      * @return sharesCount
      */
     public int getSharesCount() {
@@ -199,7 +222,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @return profit
      */
     public double getProfit() {
@@ -207,7 +229,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @return income
      */
     public double getIncome() {
@@ -215,7 +236,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @return equityCapital
      */
     public double getEquityCapital() {
@@ -223,7 +243,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @return shareCapital
      */
     public double getShareCapital() {
@@ -231,7 +250,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @return volume
      */
     public int getVolume() {
@@ -239,7 +257,6 @@ public class CompanyModel implements DisplayableListItem {
     }
 
     /**
-     *
      * @return sales
      */
     public double getSales() {

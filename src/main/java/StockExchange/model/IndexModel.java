@@ -2,6 +2,7 @@
 package StockExchange.model;
 
 import StockExchange.ui.DisplayableListItem;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -20,7 +21,7 @@ public class IndexModel implements DisplayableListItem {
         return name;
     }
 
-    private String[] INDEKSY = {
+    public String[] INDEKSY = {
             "Tadawul",
             "ATX",
             "TSE",
@@ -46,21 +47,21 @@ public class IndexModel implements DisplayableListItem {
      * Constructor sets random fields' values for object
      */
 
-    public IndexModel() {
+    public IndexModel(ObservableList<CompanyModel> cList) {
 
         this.companiesList = new ArrayList<>();
         Random generator = new Random();
 
         this.value = generator.nextDouble() * 10000;
 
-        ArrayList<CompanyModel> spolki = new ArrayList<>();
-//        spolki.addAll(Main.spolkiWprowadzone);
-        int lspol = generator.nextInt(spolki.size());
+        ArrayList<CompanyModel> companies = new ArrayList<>();
+        companies.addAll(cList);
+        int comCount = generator.nextInt(companies.size());
 
-        for (int i = 0; i <= lspol; i++) {
-            int elem = generator.nextInt(spolki.size());
-            this.companiesList.add(spolki.get(elem));
-            spolki.remove(elem);
+        for (int i = 0; i <= comCount; i++) {
+            int elem = generator.nextInt(companies.size());
+            this.companiesList.add(companies.get(elem));
+            companies.remove(elem);
         }
     }
 

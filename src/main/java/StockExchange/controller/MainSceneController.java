@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 public class MainSceneController implements Initializable {
 
@@ -43,7 +44,10 @@ public class MainSceneController implements Initializable {
         setItemLists();
         stockExchangeListView.setOnClickListener(() -> {
             Optional<StockExchangeModel> newModel = new StockDialog().showAndWait();
-            newModel.ifPresent(stockExchangeModels::add);
+            newModel.ifPresent( stockExchangeModels::add);
+        });
+        indexListView.setOnClickListener(() -> {
+            indexListModels.add(new IndexModel(companyListModels));
         });
     }
 
@@ -66,4 +70,6 @@ public class MainSceneController implements Initializable {
         currencyExchangeListView.setItemList(currencyExchangeListModels);
         materialExchangeListView.setItemList(materialExchangeListModels);
     }
+
+
 }

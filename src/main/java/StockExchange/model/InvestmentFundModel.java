@@ -3,6 +3,8 @@ package StockExchange.model;
 
 import StockExchange.ui.DisplayableListItem;
 
+import java.util.Random;
+
 /**
  * @author jakub
  */
@@ -39,7 +41,11 @@ public class InvestmentFundModel extends Customer implements DisplayableListItem
 
     };
 
-
+    public InvestmentFundModel(){
+        Random generator = new Random();
+        managerFirstName = FIRSTNAMES[generator.nextInt(FIRSTNAMES.length)];
+        managerLastName = LASTNAMES[generator.nextInt(LASTNAMES.length)];
+    }
 
     @Override
     public String getDisplayName() {

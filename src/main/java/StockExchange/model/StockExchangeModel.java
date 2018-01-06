@@ -27,6 +27,7 @@ public class StockExchangeModel extends Exchange implements DisplayableListItem 
         this.indexList = indexList;
     }
 
+
     //licz marżę
     @Override
     public int countMargin() {

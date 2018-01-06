@@ -17,6 +17,22 @@ public class CurrencyModel extends Assets implements DisplayableListItem {
     private double sellingPrice;
     private List<String> countriesList;
 
+    public static String[] CURRENCIES = {
+            "Dolar amerykański (USD)",
+            "Złoty (PLN)",
+            "Euro (EUR)",
+            "Rubel rosyjski (RUB)",
+            "Urugwajskie pesos (UYU)",
+            "Forint węgierski (HUF)", //forint węgierski
+            "Funt szterling (GBP)",
+            "Korona czeska (CZK)",
+            "Real brazylijski (BRL)", // Brazylia, real
+            "Korona duńska (DKK)", // Korona duńska
+            "Jen japoński (JPY)", //Jen japoński
+            "Frank szwajcarski (CHF)", // frank szwajcarski
+            "Rand, RPA (ZAR)" //RPA, rand
+    };
+
     @Override
     public String getDisplayName() {
         return name;
