@@ -2,6 +2,8 @@
 package StockExchange.model;
 
 import StockExchange.ui.DisplayableListItem;
+import StockExchange.util.RandomString;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 
 import java.text.DecimalFormat;
@@ -57,8 +59,13 @@ public class Material extends Assets implements DisplayableListItem  {
 
     public Material(ObservableList<Currency> cModel){
         Random generator = new Random();
-        name = materials.get(generator.nextInt(materials.size()));
-        materials.remove(name);
+        if(materials.size() > 0) {
+            name = materials.get(generator.nextInt(materials.size()));
+            materials.remove(name);
+        } else {
+            String str = RandomString.nextString(10);
+            name = str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
+        }
         double min = generator.nextDouble() * 12000;
         double max = min + generator.nextDouble() * 500;
         double akt = (max + min) / 2 + generator.nextDouble();

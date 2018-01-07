@@ -15,8 +15,6 @@ import java.util.Random;
  * @author jakub
  */
 public class Currency extends Assets implements DisplayableListItem {
-    private double purchasePrice;
-    private double sellingPrice;
     private List<String> countriesList;
 
     private static ArrayList<String> CURRENCIES = new ArrayList<>();
@@ -47,38 +45,18 @@ public class Currency extends Assets implements DisplayableListItem {
             this.name = CURRENCIES.get(new Random().nextInt(CURRENCIES.size()));
             CURRENCIES.remove(this.name);
         } else {
-            this.name = RandomString.nextString(3);
+            this.name = RandomString.nextString(3, true);
         }
         DecimalFormat two = new DecimalFormat("#0.00");
         ArrayList<String> avalaibleCountries = new ArrayList<>(Arrays.asList(Countries.COUNTRIES));
         countriesList = new ArrayList<>();
         Random generator = new Random();
-        int cList = generator.nextInt(4);
+        int cList = generator.nextInt(4) + 1;
         for (int i = 0; i <= cList; i++) {
             int element = generator.nextInt(avalaibleCountries.size());
             this.countriesList.add(avalaibleCountries.get(element));
             avalaibleCountries.remove(element);
         }
-        purchasePrice = Double.parseDouble(two.format(generator.nextDouble()*3).replace(",", "."));
-        sellingPrice = Double.parseDouble(two.format(purchasePrice + generator.nextDouble()/5).replace(",", "."));
-
-    }
-
-    
-    /**
-     *
-     * @param purchasePrice
-     */
-    public void setPurchasePrice(double purchasePrice) {
-        this.purchasePrice = purchasePrice;
-    }
-
-    /**
-     *
-     * @param sellingPrice
-     */
-    public void setSellingPrice(double sellingPrice) {
-        this.sellingPrice = sellingPrice;
     }
 
     /**
@@ -87,22 +65,6 @@ public class Currency extends Assets implements DisplayableListItem {
      */
     public void setCountriesList(String kraj) {
         this.countriesList.add(kraj);
-    }
-
-    /**
-     *
-     * @return purchasePrice
-     */
-    public double getPurchasePrice() {
-        return purchasePrice;
-    }
-
-    /**
-     *
-     * @return sellingPrice
-     */
-    public double getSellingPrice() {
-        return sellingPrice;
     }
 
     /**

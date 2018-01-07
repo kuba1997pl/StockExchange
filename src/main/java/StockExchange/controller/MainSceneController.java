@@ -1,8 +1,12 @@
 package StockExchange.controller;
 
+import StockExchange.bindings.ListChangeBooleanBinding;
 import StockExchange.model.*;
+import StockExchange.ui.CurrencyExchangeDialog;
 import StockExchange.ui.CustomListView;
 import StockExchange.ui.StockDialog;
+import javafx.beans.binding.BooleanBinding;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -38,6 +42,7 @@ public class MainSceneController implements Initializable {
         applicationModel = ApplicationModel.getInstance();
         setItemLists();
         initializeOnClickListeners();
+        addButtonVisibilityModifiers();
     }
 
     private void addStockExchange() {
@@ -60,9 +65,7 @@ public class MainSceneController implements Initializable {
             alert.show();
         } else {
             TextInputDialog dialog = new TextInputDialog();
-            dialog.showAndWait().ifPresent(name -> {
-                applicationModel.getIndexListModels().add(new Index(name, applicationModel.getCompanyListModels()));
-            });
+            dialog.showAndWait().ifPresent(name -> applicationModel.getIndexListModels().add(new Index(name, applicationModel.getCompanyListModels())));
         }
     }
 
@@ -86,7 +89,7 @@ public class MainSceneController implements Initializable {
     }
 
     private void addCurrencyExchange() {
-        applicationModel.getCurrencyMarketListModels().add(new CurrencyMarket());
+        new CurrencyExchangeDialog(applicationModel.getCurrencyListModels()).showAndWait().ifPresent(applicationModel.getCurrencyMarketListModels()::add);
     }
 
     private void addMaterialExchange() {
@@ -111,6 +114,18 @@ public class MainSceneController implements Initializable {
         companyListView.setItemList(applicationModel.getCompanyListModels());
         currencyExchangeListView.setItemList(applicationModel.getCurrencyMarketListModels());
         materialExchangeListView.setItemList(applicationModel.getMaterialMarketListModels());
+    }
+
+    private void addButtonVisibilityModifiers() {
+        ObservableList<Currency> currencyListModels = applicationModel.getCurrencyListModels();
+        ObservableList<Index> indexListModels = applicationModel.getIndexListModels();
+        ObservableList<Company> companyListModels = applicationModel.getCompanyListModels();
+        BooleanBinding stockListViewBinding = new ListChangeBooleanBinding(() -> isListEmpty(currencyListModels) || isListEmpty(indexListModels), indexListModels, currencyListModels);
+        stockExchangeListView.setButtonDisabled(stockListViewBinding);
+        BooleanBinding indexListViewBinding = new ListChangeBooleanBinding(() -> isListEmpty(companyListModels) , companyListModels);
+        indexListView.setButtonDisabled(indexListViewBinding);
+        BooleanBinding materialListViewBinding = new ListChangeBooleanBinding(() -> isListEmpty(currencyListModels), currencyListModels);
+        materialListView.setButtonDisabled(materialListViewBinding);
     }
 
     private boolean isListEmpty(List<?> list) {

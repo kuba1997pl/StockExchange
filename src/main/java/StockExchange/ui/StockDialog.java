@@ -4,9 +4,9 @@ import StockExchange.model.Currency;
 import StockExchange.model.Index;
 import StockExchange.model.StockMarket;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -15,11 +15,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
-
 import java.util.ArrayList;
 
-public class StockDialog extends Dialog<StockMarket> implements Callback<ButtonType, StockMarket>, ChangeListener<String>{
+public class StockDialog extends Dialog<StockMarket> {
 
     private static ButtonType saveButtonType = new ButtonType("Zapisz", ButtonBar.ButtonData.OK_DONE);
     private static ButtonType cancelButtonType = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -32,6 +30,7 @@ public class StockDialog extends Dialog<StockMarket> implements Callback<ButtonT
     private ObservableList<Index> suppliedIndexesList;
     private ObjectProperty<MultipleSelectionModel<Index>> chosenSelectedIndices = new SimpleObjectProperty<>();
     private ObjectProperty<MultipleSelectionModel<Index>> suppliedSelectedIndices = new SimpleObjectProperty<>();
+    private ObjectProperty<Currency> selectedCurrency = new SimpleObjectProperty<>();
 
     private Button okButton;
 
@@ -70,6 +69,7 @@ public class StockDialog extends Dialog<StockMarket> implements Callback<ButtonT
         currencyComboBox.setButtonCell(new CustomListCell<>());
         currencyComboBox.setCellFactory(param -> new CustomListCell<>());
         currencyComboBox.valueProperty().addListener(this::currencyChanged);
+        selectedCurrency.bind(currencyComboBox.valueProperty());
 
         grid.add(new Label("Waluta:"), 0, 4);
         grid.add(currencyComboBox, 1, 4);
@@ -84,6 +84,7 @@ public class StockDialog extends Dialog<StockMarket> implements Callback<ButtonT
         ListView<Index> chosenIndexesListView = new ListView<>();
         chosenIndexesListView.setItems(chosenIndexesList);
         chosenIndexesListView.setCellFactory(param -> new CustomListCell<>());
+        chosenIndexesList.addListener(this::chosenIndicesChanged);
         chosenSelectedIndices.bind(chosenIndexesListView.selectionModelProperty());
 
         hBox.getChildren().add(chosenIndexesListView);
@@ -117,7 +118,7 @@ public class StockDialog extends Dialog<StockMarket> implements Callback<ButtonT
         vBox.getChildren().add(hBox);
 
         getDialogPane().setContent(vBox);
-        setResultConverter(this);
+        setResultConverter(this::convertResult);
     }
 
     private void addSelectedIndex(ActionEvent event) {
@@ -133,10 +134,10 @@ public class StockDialog extends Dialog<StockMarket> implements Callback<ButtonT
     }
 
     private void setListeners() {
-        stockName.addListener(this);
-        countryName.addListener(this);
-        city.addListener(this);
-        address.addListener(this);
+        stockName.addListener(this::textFieldChanged);
+        countryName.addListener(this::textFieldChanged);
+        city.addListener(this::textFieldChanged);
+        address.addListener(this::textFieldChanged);
     }
 
     private TextField createTextField(String prompt, Property<String> bindingProperty) {
@@ -146,20 +147,26 @@ public class StockDialog extends Dialog<StockMarket> implements Callback<ButtonT
         return textField;
     }
 
-    @Override
-    public StockMarket call(ButtonType param) {
+    private StockMarket convertResult(ButtonType param) {
         if(param == saveButtonType) {
-            return new StockMarket(stockName.get(), countryName.get(), new Currency(), city.get(), address.get(), new ArrayList<>());
+            return new StockMarket(stockName.get(), countryName.get(), selectedCurrency.get(), city.get(), address.get(), new ArrayList<>(chosenSelectedIndices.get().getSelectedItems()));
         }
         return null;
     }
 
     public void currencyChanged(ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) {
-
+        enableButtonIfFieldsNotEmpty();
     }
 
-    @Override
-    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+    private void chosenIndicesChanged(ListChangeListener.Change<? extends Index> change) {
+        enableButtonIfFieldsNotEmpty();
+    }
+
+    private void textFieldChanged(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        enableButtonIfFieldsNotEmpty();
+    }
+
+    private void enableButtonIfFieldsNotEmpty() {
         String[] values = { stockName.get(), countryName.get(), city.get(), address.get() };
         boolean disabled = false;
         for(String string : values) {
@@ -171,6 +178,7 @@ public class StockDialog extends Dialog<StockMarket> implements Callback<ButtonT
                 disabled = true;
             }
         }
+        disabled = disabled || (chosenIndexesList == null || chosenIndexesList.isEmpty()) || selectedCurrency.get() == null;
         okButton.setDisable(disabled);
     }
 }

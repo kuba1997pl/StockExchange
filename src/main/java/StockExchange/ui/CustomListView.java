@@ -1,6 +1,8 @@
 package StockExchange.ui;
 
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -54,6 +56,11 @@ public class CustomListView<T extends DisplayableListItem> extends VBox implemen
         } catch (Exception exception) {
             throw new RuntimeException(exception);
         }
+    }
+
+    public void setButtonDisabled(ObservableValue<Boolean> disabled) {
+        button.setDisable(disabled.getValue());
+        disabled.addListener((observable, oldValue, newValue) -> button.setDisable(newValue));
     }
 
     public void setItemList(ObservableList<T> itemList) {

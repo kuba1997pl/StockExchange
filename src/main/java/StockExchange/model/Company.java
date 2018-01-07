@@ -3,11 +3,17 @@ package StockExchange.model;
 
 import StockExchange.ui.DisplayableListItem;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+
+import StockExchange.util.RandomString;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
 
 /**
  * @author jakub
@@ -26,29 +32,23 @@ public class Company implements DisplayableListItem {
     private double equityCapital; // kapitał własny
     private double shareCapital; // kapitał zakładowy
     private int volume; //ilość akcji, które zmieniły właściciela- wolumen
-    private double sales; //przychód - podatek, obroty
-    public static String[] COMPANIES = {
-            "Wytwórnia Pasz Lira",
-            "Microsoft Company",
-            "Apple Inc.",
-            "H & M Hennes & Mauritz AB",
-            "Hugo Boss AG",
-            "Google LLC",
-            "Mars Inc.",
-            "Coccodrillo",
-            "Volkswagen Group",
-            "Polskie Składy Drzewne DrewnoPol Świniec",
-            "PKN Orlen SA",
-            "PKO BP",
-            "Cyfrowy Polsat SA",
-            "Dino Polska SA",
-            "Indykpol SA",
-            "Tadex II Krzywiń",
-            "Lechma Poznań",
-            "DAREX - AGD RTV Śmigiel"
-    };
+    private double sales; //przychód - podatek, obroty POPRAW!
 
-    private static ArrayList<String> namesList = new ArrayList<>(Arrays.asList(COMPANIES));
+    private static ArrayList<String> namesList = new ArrayList<>();
+
+    static {
+        InputStream inputStream = Company.class.getResourceAsStream("/StockExchange/dataSamples/companiesSample.json");
+        try {
+            String jsonString = IOUtils.toString(inputStream);
+            inputStream.close();
+            JSONArray companies = new JSONArray(jsonString);
+            for(int i = 0; i<companies.length(); i++) {
+                namesList.add(companies.getString(i));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public String getDisplayName() {
@@ -60,8 +60,12 @@ public class Company implements DisplayableListItem {
         //String strForm = two.format(number);
         //number = Double.parseDouble(strForm.replace(",", "."));
         Random generator = new Random();
-        name = namesList.get(generator.nextInt(namesList.size()));
-        namesList.remove(name);
+        if(namesList.size() > 0) {
+            name = namesList.get(generator.nextInt(namesList.size()));
+            namesList.remove(name);
+        } else {
+            name = RandomString.nextString(10);
+        }
         double min = generator.nextDouble() * 10;
         double max = min + generator.nextDouble() * 20;
         this.sharesCount = generator.nextInt(1000);
