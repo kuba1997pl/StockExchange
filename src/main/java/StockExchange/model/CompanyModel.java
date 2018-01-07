@@ -4,6 +4,8 @@ package StockExchange.model;
 import StockExchange.ui.DisplayableListItem;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -45,7 +47,7 @@ public class CompanyModel implements DisplayableListItem {
             "DAREX - AGD RTV Śmigiel"
     };
 
-
+    private static ArrayList<String> namesList = new ArrayList<>(Arrays.asList(COMPANIES));
 
     @Override
     public String getDisplayName() {
@@ -54,6 +56,8 @@ public class CompanyModel implements DisplayableListItem {
 
     public CompanyModel() {
         Random generator = new Random();
+        name = namesList.get(generator.nextInt(namesList.size()));
+        namesList.remove(name);
         double min = generator.nextDouble() * 10;
         double max = min + generator.nextDouble() * 20;
         int sharesCount = generator.nextInt(1000);

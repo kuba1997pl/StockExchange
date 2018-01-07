@@ -3,8 +3,9 @@ package StockExchange.model;
 
 import StockExchange.controller.MainSceneController;
 import StockExchange.ui.DisplayableListItem;
+import javafx.collections.ObservableList;
 
-import java.util.Random;
+import java.util.*;
 
 /**
  *
@@ -47,24 +48,24 @@ public class MaterialModel extends Assets implements DisplayableListItem  {
             "korzec"
     };
 
+    private static List<String> materials = Arrays.asList(MATERIALS);
+
     @Override
     public String getDisplayName() {
         return name;
     }
 
-    public MaterialModel(){
+    public MaterialModel(ObservableList<CurrencyModel> cModel){
         Random generator = new Random();
+        name = materials.get(generator.nextInt(materials.size()));
+        materials.remove(name);
         double min = generator.nextDouble() * 12000;
         double max = min + generator.nextDouble() * 500;
         double akt = (max + min) / 2 + generator.nextDouble();
         this.maxValue = max;
         this.minValue =min;
         this.currentValue = akt;
-
-        //int size = MainSceneController.
-      //  int elem = generator.nextInt(rozm); //generating random index
-       // this.currencyModel = Main.currencyExchangeModel.getCurrencyList().get(elem);//Setting CurrencyModel value
-
+        this.currencyModel = cModel.get(generator.nextInt(cModel.size()));
         this.tradeUnit = UNITS[generator.nextInt(UNITS.length)];
     }
 

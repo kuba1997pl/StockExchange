@@ -3,6 +3,8 @@ package StockExchange.model;
 
 import StockExchange.ui.DisplayableListItem;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -12,6 +14,7 @@ public class InvestmentFundModel extends Customer implements DisplayableListItem
     private String name;
     private String managerFirstName;
     private String managerLastName;
+
     public static String[] NAMES = {
             "Rób Pieniążki Zawodowo",
             "Śpij na pieniądzach!",
@@ -41,8 +44,12 @@ public class InvestmentFundModel extends Customer implements DisplayableListItem
 
     };
 
+    private static List<String> namesList =Arrays.asList(NAMES);
+
     public InvestmentFundModel(){
         Random generator = new Random();
+        name = NAMES[generator.nextInt(namesList.size())];
+        namesList.remove(name);
         managerFirstName = FIRSTNAMES[generator.nextInt(FIRSTNAMES.length)];
         managerLastName = LASTNAMES[generator.nextInt(LASTNAMES.length)];
     }

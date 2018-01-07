@@ -54,7 +54,7 @@ public class MainSceneController implements Initializable {
     }
 
     private void addMaterial() {
-        materialListModels.add(new MaterialModel());
+        materialListModels.add(new MaterialModel(currencyListModels));
     }
 
     private void addCurrency() {

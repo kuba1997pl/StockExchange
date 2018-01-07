@@ -39,7 +39,6 @@ public class CurrencyModel extends Assets implements DisplayableListItem {
     }
 
     public CurrencyModel(){
-
         ArrayList<String> avalaibleCountries = new ArrayList<>(Arrays.asList(Countries.COUNTRIES));
         countriesList = new ArrayList<>();
         Random generator = new Random();

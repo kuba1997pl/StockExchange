@@ -5,8 +5,7 @@ package StockExchange.model;
  * @author jakub
  */
 public class Exchange {
-    protected double purchaseMargin;
-    protected double salesMargin;
+    protected double margin;
 
     public int countMargin(){
         return 0;
@@ -14,34 +13,18 @@ public class Exchange {
 
     /**
      *
-     * @param purchaseMargin
+     * @param margin
      */
-    public void setPurchaseMargin(double purchaseMargin) {
-        this.purchaseMargin = purchaseMargin;
-    }
-
-    /**
-     *
-     * @param salesMargin
-     */
-    public void setSalesMargin(double salesMargin) {
-        this.salesMargin = salesMargin;
+    public void setMargin(double margin) {
+        this.margin = margin;
     }
 
     /**
      *
      * @return purchaseMargin
      */
-    public double getPurchaseMargin() {
-        return purchaseMargin;
-    }
-
-    /**
-     *
-     * @return salesMargin
-     */
-    public double getSalesMargin() {
-        return salesMargin;
+    public double getMargin() {
+        return margin;
     }
 
 }

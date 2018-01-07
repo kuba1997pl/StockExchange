@@ -27,6 +27,9 @@ public class Investor extends Customer {
             "Dariusz",
     };
     public static String[] LASTNAMES = {
+            "Grey",
+            "Gates",
+            "Stark",
             "Malfoy",
             "Majchrzak",
             "Kowalski",
@@ -38,20 +41,15 @@ public class Investor extends Customer {
             "Brzezinski"
     };
 
+    private static List<String> firstnames = Arrays.asList(FIRSTNAMES);
+    private static List<String> lastnames = Arrays.asList(LASTNAMES);
+
     public Investor() {
-//        ArrayList<String> lastNames = new ArrayList();
-//        ArrayList<String> firstNames = new ArrayList();
-//         powyższe listy trzeba dodać do metody,
-//        która będzie dodawać inwestorów
-//         i po dodaniu usuwać danego inwestora z listy
-//         aby nie był dodany ponownie
-//        for(int i=0; i<FIRSTNAMES.length(); i++){
-//            firstNames.add(FIRSTNAMES[i]);
-//        }
-//        for(int i=0; i<LASTNAMES.length(); i++){
-//            firstNames.add(LASTNAMES[i]);
-//        }
         Random generator = new Random();
+        firstName = firstnames.get(generator.nextInt(firstnames.size()));
+        firstnames.remove(firstName);
+        lastName = lastnames.get(generator.nextInt(lastnames.size()));
+        lastnames.remove(lastName);
         StringBuilder builder = new StringBuilder();
         this.PESEL = builder
                 .append(getTwoDigitNumberString(generator.nextInt(100))) //rok
@@ -59,7 +57,6 @@ public class Investor extends Customer {
                 .append(getTwoDigitNumberString(generator.nextInt(28) + 1)) // dzien
                 .append(getTwoDigitNumberString(generator.nextInt(100000))).toString();
         this.budget = generator.nextDouble() * 1000000.0;
-        System.out.println(this.budget + "\n" + this.PESEL);
     }
 
     private String getTwoDigitNumberString(int i) {
@@ -71,19 +68,19 @@ public class Investor extends Customer {
     }
 
 
-    public void kupujAktywaSamemu() {
+    public void buyAssetsOnYourOwn() {
 
     }
 
-    public void sprzedajAktywaSamemu() {
+    public void sellAssetsOnYourOwn() {
 
     }
 
-    public void kupujPrzezFundusz() {
+    public void buyWithInvFuM() {
 
     }
 
-    public void sprzedajPrzezFundusz() {
+    public void sellWithInfFuM(){
 
     }
 
