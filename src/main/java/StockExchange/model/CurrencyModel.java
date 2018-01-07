@@ -2,6 +2,7 @@
 package StockExchange.model;
 
 import StockExchange.ui.DisplayableListItem;
+import StockExchange.util.RandomString;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,21 +18,23 @@ public class CurrencyModel extends Assets implements DisplayableListItem {
     private double sellingPrice;
     private List<String> countriesList;
 
-    public static String[] CURRENCIES = {
-            "Dolar amerykański (USD)",
-            "Złoty (PLN)",
-            "Euro (EUR)",
-            "Rubel rosyjski (RUB)",
-            "Urugwajskie pesos (UYU)",
-            "Forint węgierski (HUF)", //forint węgierski
-            "Funt szterling (GBP)",
-            "Korona czeska (CZK)",
-            "Real brazylijski (BRL)", // Brazylia, real
-            "Korona duńska (DKK)", // Korona duńska
-            "Jen japoński (JPY)", //Jen japoński
-            "Frank szwajcarski (CHF)", // frank szwajcarski
-            "Rand, RPA (ZAR)" //RPA, rand
-    };
+    private static ArrayList<String> CURRENCIES = new ArrayList<>();
+
+    static {
+        CURRENCIES.add("Dolar amerykański (USD)");
+        CURRENCIES.add("Złoty (PLN)");
+        CURRENCIES.add("Euro (EUR)");
+        CURRENCIES.add("Rubel rosyjski (RUB)");
+        CURRENCIES.add("Urugwajskie pesos (UYU)");
+        CURRENCIES.add("Forint węgierski (HUF)");
+        CURRENCIES.add("Funt szterling (GBP)");
+        CURRENCIES.add("Korona czeska (CZK)");
+        CURRENCIES.add("Real brazylijski (BRL)");
+        CURRENCIES.add("Korona duńska (DKK)");
+        CURRENCIES.add("Jen japoński (JPY)");
+        CURRENCIES.add("Frank szwajcarski (CHF)");
+        CURRENCIES.add("Rand, RPA (ZAR)");
+    }
 
     @Override
     public String getDisplayName() {
@@ -39,6 +42,12 @@ public class CurrencyModel extends Assets implements DisplayableListItem {
     }
 
     public CurrencyModel(){
+        if(CURRENCIES.size() > 0) {
+            this.name = CURRENCIES.get(new Random().nextInt(CURRENCIES.size()));
+            CURRENCIES.remove(this.name);
+        } else {
+            this.name = RandomString.nextString(3);
+        }
         ArrayList<String> avalaibleCountries = new ArrayList<>(Arrays.asList(Countries.COUNTRIES));
         countriesList = new ArrayList<>();
         Random generator = new Random();

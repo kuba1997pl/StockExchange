@@ -48,7 +48,7 @@ public class MaterialModel extends Assets implements DisplayableListItem  {
             "korzec"
     };
 
-    private static List<String> materials = Arrays.asList(MATERIALS);
+    private static ArrayList<String> materials = new ArrayList<>(Arrays.asList(MATERIALS));
 
     @Override
     public String getDisplayName() {
