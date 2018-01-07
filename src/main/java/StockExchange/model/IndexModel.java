@@ -27,8 +27,8 @@ public class IndexModel implements DisplayableListItem {
      * Constructor sets random fields' values for object
      */
 
-    public IndexModel(ObservableList<CompanyModel> cList) {
-
+    public IndexModel(String name, ObservableList<CompanyModel> cList) {
+        this.name = name;
         this.companiesList = new ArrayList<>();
         Random generator = new Random();
 

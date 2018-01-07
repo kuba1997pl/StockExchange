@@ -15,10 +15,9 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
 /**
  * Custom view for showing listView with a headline and an action button
- * @param <T>
+ * @param <T> type of displayed item in a listView. Must implement DisplayableListItem interface.
  */
 public class CustomListView<T extends DisplayableListItem> extends VBox implements Initializable, EventHandler<ActionEvent>{
 
@@ -45,7 +44,6 @@ public class CustomListView<T extends DisplayableListItem> extends VBox implemen
             onClickListener.onCustomListViewButtonClicked();
         }
     }
-
 
     public CustomListView() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/StockExchange/view/CustomListView.fxml"));

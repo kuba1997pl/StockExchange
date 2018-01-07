@@ -7,8 +7,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextInputDialog;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -45,16 +48,40 @@ public class MainSceneController implements Initializable {
     }
 
     private void addStockExchange() {
-        Optional<StockExchangeModel> newModel = new StockDialog(currencyListModels, indexListModels).showAndWait();
-        newModel.ifPresent(stockExchangeModels::add);
+        if(isListEmpty(currencyListModels) || isListEmpty(indexListModels)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Nie można utworzyć giełdy");
+            alert.setContentText("Nie można utworzyć giełdy. Najpierw stwórz walutę, oraz index");
+            alert.show();
+        } else {
+            Optional<StockExchangeModel> newModel = new StockDialog(currencyListModels, indexListModels).showAndWait();
+            newModel.ifPresent(stockExchangeModels::add);
+        }
     }
 
     private void addIndex() {
-        indexListModels.add(new IndexModel(companyListModels));
+        if(isListEmpty(companyListModels)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Nie można utworzyć indeksu");
+            alert.setContentText("Nie można utworzyć indeksu. Najpierw stwórz spółkę");
+            alert.show();
+        } else {
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.showAndWait().ifPresent(name -> {
+                indexListModels.add(new IndexModel(name, companyListModels));
+            });
+        }
     }
 
     private void addMaterial() {
-        materialListModels.add(new MaterialModel(currencyListModels));
+        if(isListEmpty(currencyListModels)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Nie można utworzyć surowca");
+            alert.setContentText("Nie można utworzyć surowca. Najpierw stwórz walutę");
+            alert.show();
+        } else {
+            materialListModels.add(new MaterialModel(currencyListModels));
+        }
     }
 
     private void addCurrency() {
@@ -101,5 +128,9 @@ public class MainSceneController implements Initializable {
         companyListView.setItemList(companyListModels);
         currencyExchangeListView.setItemList(currencyExchangeListModels);
         materialExchangeListView.setItemList(materialExchangeListModels);
+    }
+
+    private boolean isListEmpty(List<?> list) {
+        return list == null || list.isEmpty();
     }
 }
