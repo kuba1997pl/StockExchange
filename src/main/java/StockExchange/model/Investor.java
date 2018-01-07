@@ -1,6 +1,7 @@
 
 package StockExchange.model;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -41,8 +42,8 @@ public class Investor extends Customer {
             "Brzezinski"
     };
 
-    private static List<String> firstnames = Arrays.asList(FIRSTNAMES);
-    private static List<String> lastnames = Arrays.asList(LASTNAMES);
+    private static ArrayList<String> firstnames = new ArrayList<>(Arrays.asList(FIRSTNAMES));
+    private static ArrayList<String> lastnames = new ArrayList<>(Arrays.asList(LASTNAMES));
 
     public Investor() {
         Random generator = new Random();

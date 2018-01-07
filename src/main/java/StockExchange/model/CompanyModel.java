@@ -20,12 +20,12 @@ public class CompanyModel implements DisplayableListItem {
     private double currentPrice;
     private double openingPrice;
     private int sharesCount;
-    private double profit; // dochód = przychód - koszta  POPRAW!
-    private double income; //POPRAW!
-    private double equityCapital; // kapitał własny POPRAW!
-    private double shareCapital; // kapitał zakładowy  POPRAW!
+    private double profit; // dochód = przychód - koszta
+    private double income;
+    private double equityCapital; // kapitał własny
+    private double shareCapital; // kapitał zakładowy
     private int volume; //ilość akcji, które zmieniły właściciela- wolumen
-    private double sales; //przychód - podatek, obroty POPRAW!
+    private double sales; //przychód - podatek, obroty
     public static String[] COMPANIES = {
             "Wytwórnia Pasz Lira",
             "Microsoft Company",
@@ -66,8 +66,11 @@ public class CompanyModel implements DisplayableListItem {
         this.openingPrice = (min + max) / 2;
         this.currentPrice = this.openingPrice;
         this.sharesCount = sharesCount;
-
-
+        this.shareCapital = generator.nextDouble()*1000000;
+        this.equityCapital = shareCapital+generator.nextDouble()*1000000;
+        this.profit = this.equityCapital * 100;
+        this.income = this.profit *12;
+        this.sales = generator.nextDouble()*1000000;
 
         //date generator
         int minDay = (int) LocalDate.of(1900, 1, 1).toEpochDay();

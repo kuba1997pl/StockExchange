@@ -3,6 +3,8 @@ package StockExchange.model;
 
 import StockExchange.ui.DisplayableListItem;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -44,7 +46,7 @@ public class InvestmentFundModel extends Customer implements DisplayableListItem
 
     };
 
-    private static List<String> namesList =Arrays.asList(NAMES);
+    private static ArrayList<String> namesList = new ArrayList<>(Arrays.asList(NAMES));
 
     public InvestmentFundModel(){
         Random generator = new Random();

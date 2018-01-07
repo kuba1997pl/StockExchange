@@ -12,6 +12,7 @@ import java.util.Random;
  */
 
 public class IndexModel implements DisplayableListItem {
+
     private String name;
     private double value;
     ArrayList<CompanyModel> companiesList;
@@ -21,27 +22,6 @@ public class IndexModel implements DisplayableListItem {
         return name;
     }
 
-    public String[] INDEKSY = {
-            "Tadawul",
-            "ATX",
-            "TSE",
-            "DAX",
-            "WIG",
-            "FTSE",
-            "MDAX",
-            "RTS",
-            "BUX",
-            "Merval",
-            "Bovespa",
-            "OMXV",
-            "IPC",
-            "KLCI",
-            "NASDAQ"
-    };
-
-    private void przypiszSpolke() {
-
-    }
 
     /**
      * Constructor sets random fields' values for object

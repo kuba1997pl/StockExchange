@@ -5,6 +5,7 @@ import StockExchange.controller.MainSceneController;
 import StockExchange.ui.DisplayableListItem;
 import javafx.collections.ObservableList;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -48,7 +49,7 @@ public class MaterialModel extends Assets implements DisplayableListItem  {
             "korzec"
     };
 
-    private static List<String> materials = Arrays.asList(MATERIALS);
+    private static ArrayList<String> materials = new ArrayList<>(Arrays.asList(MATERIALS));
 
     @Override
     public String getDisplayName() {
