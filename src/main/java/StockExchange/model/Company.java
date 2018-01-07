@@ -3,6 +3,7 @@ package StockExchange.model;
 
 import StockExchange.ui.DisplayableListItem;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +13,7 @@ import java.util.Random;
  * @author jakub
  */
 
-public class CompanyModel implements DisplayableListItem {
+public class Company implements DisplayableListItem {
     private String name;
     private LocalDate firstPricingDate;
     private double minPrice;
@@ -54,23 +55,25 @@ public class CompanyModel implements DisplayableListItem {
         return this.name;
     }
 
-    public CompanyModel() {
+    public Company() {
+        DecimalFormat two = new DecimalFormat("#0.00");
+        //String strForm = two.format(number);
+        //number = Double.parseDouble(strForm.replace(",", "."));
         Random generator = new Random();
         name = namesList.get(generator.nextInt(namesList.size()));
         namesList.remove(name);
         double min = generator.nextDouble() * 10;
         double max = min + generator.nextDouble() * 20;
-        int sharesCount = generator.nextInt(1000);
-        this.minPrice = min;
-        this.maxPrice = max;
-        this.openingPrice = (min + max) / 2;
+        this.sharesCount = generator.nextInt(1000);
+        this.minPrice = Double.parseDouble(two.format(min).replace(",", "."));
+        this.maxPrice = Double.parseDouble(two.format(max).replace(",", "."));
+        this.openingPrice = Double.parseDouble(two.format((min+max)/2.0).replace(",", "."));
         this.currentPrice = this.openingPrice;
-        this.sharesCount = sharesCount;
-        this.shareCapital = generator.nextDouble()*1000000;
-        this.equityCapital = shareCapital+generator.nextDouble()*1000000;
+        this.shareCapital =Double.parseDouble(two.format(generator.nextDouble()*1000000).replace(",", "."));
+        this.equityCapital =  Double.parseDouble(two.format(shareCapital+generator.nextDouble()*1000000).replace(",", "."));
         this.profit = this.equityCapital * 100;
         this.income = this.profit *12;
-        this.sales = generator.nextDouble()*1000000;
+        this.sales = Double.parseDouble(two.format(generator.nextDouble()*1000000).replace(",", "."));
 
         //date generator
         int minDay = (int) LocalDate.of(1900, 1, 1).toEpochDay();

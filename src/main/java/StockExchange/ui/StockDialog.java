@@ -1,8 +1,8 @@
 package StockExchange.ui;
 
-import StockExchange.model.CurrencyModel;
-import StockExchange.model.IndexModel;
-import StockExchange.model.StockExchangeModel;
+import StockExchange.model.Currency;
+import StockExchange.model.Index;
+import StockExchange.model.StockExchange;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -18,9 +18,8 @@ import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class StockDialog extends Dialog<StockExchangeModel> implements Callback<ButtonType, StockExchangeModel>, ChangeListener<String>{
+public class StockDialog extends Dialog<StockExchange> implements Callback<ButtonType, StockExchange>, ChangeListener<String>{
 
     private static ButtonType saveButtonType = new ButtonType("Zapisz", ButtonBar.ButtonData.OK_DONE);
     private static ButtonType cancelButtonType = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -29,14 +28,14 @@ public class StockDialog extends Dialog<StockExchangeModel> implements Callback<
     private StringProperty countryName = new SimpleStringProperty();
     private StringProperty city = new SimpleStringProperty();
     private StringProperty address = new SimpleStringProperty();
-    private ObservableList<IndexModel> chosenIndexesList = FXCollections.observableArrayList();
-    private ObservableList<IndexModel> suppliedIndexesList;
-    private ObjectProperty<MultipleSelectionModel<IndexModel>> chosenSelectedIndices = new SimpleObjectProperty<>();
-    private ObjectProperty<MultipleSelectionModel<IndexModel>> suppliedSelectedIndices = new SimpleObjectProperty<>();
+    private ObservableList<Index> chosenIndexesList = FXCollections.observableArrayList();
+    private ObservableList<Index> suppliedIndexesList;
+    private ObjectProperty<MultipleSelectionModel<Index>> chosenSelectedIndices = new SimpleObjectProperty<>();
+    private ObjectProperty<MultipleSelectionModel<Index>> suppliedSelectedIndices = new SimpleObjectProperty<>();
 
     private Button okButton;
 
-    public StockDialog(ObservableList<CurrencyModel> currencies, ObservableList<IndexModel> indexes) {
+    public StockDialog(ObservableList<Currency> currencies, ObservableList<Index> indexes) {
         super();
         this.suppliedIndexesList = FXCollections.observableArrayList(indexes);
         setTitle("Dodaj giełdę");
@@ -66,7 +65,7 @@ public class StockDialog extends Dialog<StockExchangeModel> implements Callback<
         grid.add(new Label("Adres:"), 0, 3);
         grid.add(createTextField("Adres", address), 1, 3);
 
-        ComboBox<CurrencyModel> currencyComboBox = new ComboBox<>();
+        ComboBox<Currency> currencyComboBox = new ComboBox<>();
         currencyComboBox.setItems(currencies);
         currencyComboBox.setButtonCell(new CustomListCell<>());
         currencyComboBox.setCellFactory(param -> new CustomListCell<>());
@@ -82,7 +81,7 @@ public class StockDialog extends Dialog<StockExchangeModel> implements Callback<
         hBox.setSpacing(20);
         hBox.setAlignment(Pos.CENTER);
 
-        ListView<IndexModel> chosenIndexesListView = new ListView<>();
+        ListView<Index> chosenIndexesListView = new ListView<>();
         chosenIndexesListView.setItems(chosenIndexesList);
         chosenIndexesListView.setCellFactory(param -> new CustomListCell<>());
         chosenSelectedIndices.bind(chosenIndexesListView.selectionModelProperty());
@@ -108,7 +107,7 @@ public class StockDialog extends Dialog<StockExchangeModel> implements Callback<
 
         hBox.getChildren().add(indexAddButtons);
 
-        ListView<IndexModel> indexListView = new ListView<>();
+        ListView<Index> indexListView = new ListView<>();
         indexListView.setItems(suppliedIndexesList);
         indexListView.setCellFactory(param -> new CustomListCell<>());
         suppliedSelectedIndices.bind(indexListView.selectionModelProperty());
@@ -122,13 +121,13 @@ public class StockDialog extends Dialog<StockExchangeModel> implements Callback<
     }
 
     private void addSelectedIndex(ActionEvent event) {
-        ArrayList<IndexModel> list = new ArrayList<>(suppliedSelectedIndices.get().getSelectedItems());
+        ArrayList<Index> list = new ArrayList<>(suppliedSelectedIndices.get().getSelectedItems());
         chosenIndexesList.addAll(list);
         suppliedIndexesList.removeAll(list);
     }
 
     private void removeSelectedIndex(ActionEvent event) {
-        ArrayList<IndexModel> list = new ArrayList<>(chosenSelectedIndices.get().getSelectedItems());
+        ArrayList<Index> list = new ArrayList<>(chosenSelectedIndices.get().getSelectedItems());
         suppliedIndexesList.addAll(list);
         chosenIndexesList.removeAll(list);
     }
@@ -148,14 +147,14 @@ public class StockDialog extends Dialog<StockExchangeModel> implements Callback<
     }
 
     @Override
-    public StockExchangeModel call(ButtonType param) {
+    public StockExchange call(ButtonType param) {
         if(param == saveButtonType) {
-            return new StockExchangeModel(stockName.get(), countryName.get(), new CurrencyModel(), city.get(), address.get(), new ArrayList<>());
+            return new StockExchange(stockName.get(), countryName.get(), new Currency(), city.get(), address.get(), new ArrayList<>());
         }
         return null;
     }
 
-    public void currencyChanged(ObservableValue<? extends CurrencyModel> observable, CurrencyModel oldValue, CurrencyModel newValue) {
+    public void currencyChanged(ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) {
 
     }
 

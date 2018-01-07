@@ -4,6 +4,7 @@ package StockExchange.model;
 import StockExchange.ui.DisplayableListItem;
 import javafx.collections.ObservableList;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,11 +12,11 @@ import java.util.Random;
  * @author jakub
  */
 
-public class IndexModel implements DisplayableListItem {
+public class Index implements DisplayableListItem {
 
     private String name;
     private double value;
-    ArrayList<CompanyModel> companiesList;
+    ArrayList<Company> companiesList;
 
     @Override
     public String getDisplayName() {
@@ -27,14 +28,17 @@ public class IndexModel implements DisplayableListItem {
      * Constructor sets random fields' values for object
      */
 
-    public IndexModel(String name, ObservableList<CompanyModel> cList) {
+    public Index(String name, ObservableList<Company> cList) {
+
+
         this.name = name;
         this.companiesList = new ArrayList<>();
         Random generator = new Random();
 
-        this.value = generator.nextDouble() * 10000;
+        DecimalFormat two = new DecimalFormat("#0.00");
+        this.value = Double.parseDouble(two.format(generator.nextDouble() * 10000).replace(",", "."));
 
-        ArrayList<CompanyModel> companies = new ArrayList<>();
+        ArrayList<Company> companies = new ArrayList<>();
         companies.addAll(cList);
         int comCount = generator.nextInt(companies.size());
 
@@ -63,7 +67,7 @@ public class IndexModel implements DisplayableListItem {
     /**
      * @param companiesList
      */
-    public void setCompaniesList(ArrayList<CompanyModel> companiesList) {
+    public void setCompaniesList(ArrayList<Company> companiesList) {
         this.companiesList = companiesList;
     }
 
@@ -77,7 +81,7 @@ public class IndexModel implements DisplayableListItem {
     /**
      * @return companiesList
      */
-    public ArrayList<CompanyModel> getCompaniesList() {
+    public ArrayList<Company> getCompaniesList() {
         return companiesList;
     }
 

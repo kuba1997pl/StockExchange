@@ -12,7 +12,7 @@ import java.util.Random;
 /**
  * @author jakub
  */
-public class InvestmentFundModel extends Customer implements DisplayableListItem{
+public class InvestmentFund extends Customer implements DisplayableListItem{
     private String name;
     private String managerFirstName;
     private String managerLastName;
@@ -48,7 +48,7 @@ public class InvestmentFundModel extends Customer implements DisplayableListItem
 
     private static ArrayList<String> namesList = new ArrayList<>(Arrays.asList(NAMES));
 
-    public InvestmentFundModel(){
+    public InvestmentFund(){
         Random generator = new Random();
         name = NAMES[generator.nextInt(namesList.size())];
         namesList.remove(name);

@@ -1,8 +1,13 @@
 
 package StockExchange.model;
 
+import StockExchange.controller.MainSceneController;
+import javafx.collections.ObservableList;
+
 import java.lang.reflect.Array;
+import StockExchange.ApplicationExecutor;
 import java.util.*;
+import static java.lang.Thread.sleep;
 
 /**
  * @author jakub
@@ -12,6 +17,9 @@ public class Investor extends Customer {
     private String lastName;
     private String PESEL;
     private double budget;
+    private List<Currency> currenciesPurchased;
+    private List<Material> materialsPurchased;
+    private List<Share> sharesPurchased;
 
     public static String[] FIRSTNAMES = {
             "Christian",
@@ -46,6 +54,9 @@ public class Investor extends Customer {
     private static ArrayList<String> lastnames = new ArrayList<>(Arrays.asList(LASTNAMES));
 
     public Investor() {
+        materialsPurchased = new ArrayList<>();
+        currenciesPurchased = new ArrayList<>();
+        sharesPurchased = new ArrayList<>();
         Random generator = new Random();
         firstName = firstnames.get(generator.nextInt(firstnames.size()));
         firstnames.remove(firstName);
@@ -61,16 +72,61 @@ public class Investor extends Customer {
     }
 
     private String getTwoDigitNumberString(int i) {
-        if(i < 10) {
+        if (i < 10) {
             return String.valueOf(0) + i;
         } else {
             return String.valueOf(i);
         }
     }
 
+    public void investorOperations() {
+        ApplicationExecutor.getInstance().getBackgroundThreadPool().execute(() -> {
+            while (true) {
+                Random generator = new Random();
+                int cases = generator.nextInt(4) + 1;
+                switch (cases) {
+                    case 0:
+                        buyAssetsOnYourOwn();
+                    case 1:
+                        sellAssetsOnYourOwn();
+                    case 2:
+                        buyWithInvFuM();
+                    case 3:
+                        sellWithInfFuM();
+                    default:
+                        riseBudget();
+                }
+                try {
+                    sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
     public void buyAssetsOnYourOwn() {
+        Random generator = new Random();
+        int choice = generator.nextInt(3);
+        switch (choice) {
+            case 0:
+                //indeks gieldy
+                List<StockExchange> exchanges = new ArrayList<>(ApplicationModel.getInstance().getStockExchanges());
+                int stockNo = generator.nextInt(exchanges.size()); //indeks losowej gieldy
+                int indexNo = generator.nextInt(exchanges.get(stockNo).getIndexList().size()); //indeks losowego indeksu gieldy
+                int comNo = generator.nextInt(exchanges.get(stockNo).getIndexList().get(indexNo).getCompaniesList().size()); //indeks losowej spolki na indeksie
+                int sharesNo = exchanges.get(stockNo).getIndexList().get(indexNo).getCompaniesList().get(comNo).getSharesCount(); //liczba akcji
+                if (sharesNo > 0) {
+                        double sharesPurPr = exchanges.get(stockNo).getIndexList().get(indexNo).getCompaniesList().get(comNo).getCurrentPrice();
 
+                }
+
+
+            case 1:
+                ;
+            default:
+                ;
+        }
     }
 
     public void sellAssetsOnYourOwn() {
@@ -81,8 +137,13 @@ public class Investor extends Customer {
 
     }
 
-    public void sellWithInfFuM(){
+    public void sellWithInfFuM() {
 
+    }
+
+    public void riseBudget() {
+        Random generator = new Random();
+        this.budget *= (generator.nextDouble() + 1.0);
     }
 
 

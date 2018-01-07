@@ -18,49 +18,44 @@ import java.util.ResourceBundle;
 public class MainSceneController implements Initializable {
 
     @FXML
-    private CustomListView<StockExchangeModel> stockExchangeListView;
+    private CustomListView<StockExchange> stockExchangeListView;
     @FXML
-    private CustomListView<IndexModel> indexListView;
+    private CustomListView<Index> indexListView;
     @FXML
-    private CustomListView<MaterialModel> materialListView;
+    private CustomListView<Material> materialListView;
     @FXML
-    private CustomListView<CurrencyModel> currencyListView;
+    private CustomListView<Currency> currencyListView;
     @FXML
-    private CustomListView<CompanyModel> companyListView;
+    private CustomListView<Company> companyListView;
     @FXML
-    private CustomListView<CurrencyExchangeModel> currencyExchangeListView;
+    private CustomListView<CurrencyExchange> currencyExchangeListView;
     @FXML
-    private CustomListView<MaterialExchangeModel> materialExchangeListView;
+    private CustomListView<MaterialExchange> materialExchangeListView;
 
-    private ObservableList<StockExchangeModel> stockExchangeModels;
-    private ObservableList<IndexModel> indexListModels;
-    private ObservableList<MaterialModel> materialListModels;
-    private ObservableList<CurrencyModel> currencyListModels;
-    private ObservableList<CompanyModel> companyListModels;
-    private ObservableList<CurrencyExchangeModel> currencyExchangeListModels;
-    private ObservableList<MaterialExchangeModel> materialExchangeListModels;
+    private ApplicationModel applicationModel;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        initializeModels();
+        applicationModel = ApplicationModel.getInstance();
         setItemLists();
         initializeOnClickListeners();
     }
 
     private void addStockExchange() {
-        if(isListEmpty(currencyListModels) || isListEmpty(indexListModels)) {
+        if(isListEmpty(applicationModel.getCurrencyListModels()) || isListEmpty(applicationModel.getIndexListModels())) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Nie można utworzyć giełdy");
             alert.setContentText("Nie można utworzyć giełdy. Najpierw stwórz walutę, oraz index");
             alert.show();
         } else {
-            Optional<StockExchangeModel> newModel = new StockDialog(currencyListModels, indexListModels).showAndWait();
-            newModel.ifPresent(stockExchangeModels::add);
+            Optional<StockExchange> newModel = new StockDialog(applicationModel.getCurrencyListModels(), applicationModel.getIndexListModels()).showAndWait();
+            newModel.ifPresent(applicationModel.getStockExchanges()::add);
         }
     }
 
     private void addIndex() {
-        if(isListEmpty(companyListModels)) {
+        if(isListEmpty(applicationModel.getCompanyListModels())) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Nie można utworzyć indeksu");
             alert.setContentText("Nie można utworzyć indeksu. Najpierw stwórz spółkę");
@@ -68,36 +63,36 @@ public class MainSceneController implements Initializable {
         } else {
             TextInputDialog dialog = new TextInputDialog();
             dialog.showAndWait().ifPresent(name -> {
-                indexListModels.add(new IndexModel(name, companyListModels));
+                applicationModel.getIndexListModels().add(new Index(name, applicationModel.getCompanyListModels()));
             });
         }
     }
 
     private void addMaterial() {
-        if(isListEmpty(currencyListModels)) {
+        if(isListEmpty(applicationModel.getCurrencyListModels())) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Nie można utworzyć surowca");
             alert.setContentText("Nie można utworzyć surowca. Najpierw stwórz walutę");
             alert.show();
         } else {
-            materialListModels.add(new MaterialModel(currencyListModels));
+            applicationModel.getMaterialListModels().add(new Material(applicationModel.getCurrencyListModels()));
         }
     }
 
     private void addCurrency() {
-        currencyListModels.add(new CurrencyModel());
+        applicationModel.getCurrencyListModels().add(new Currency());
     }
 
     private void addCompany() {
-        companyListModels.add(new CompanyModel());
+        applicationModel.getCompanyListModels().add(new Company());
     }
 
     private void addCurrencyExchange() {
-        currencyExchangeListModels.add(new CurrencyExchangeModel());
+        applicationModel.getCurrencyExchangeListModels().add(new CurrencyExchange());
     }
 
     private void addMaterialExchange() {
-        materialExchangeListModels.add(new MaterialExchangeModel());
+        applicationModel.getMaterialExchangeListModels().add(new MaterialExchange());
     }
 
     private void initializeOnClickListeners() {
@@ -110,24 +105,14 @@ public class MainSceneController implements Initializable {
         materialExchangeListView.setOnClickListener(this::addMaterialExchange);
     }
 
-    private void initializeModels() {
-        stockExchangeModels = FXCollections.observableArrayList();
-        indexListModels = FXCollections.observableArrayList();
-        materialListModels = FXCollections.observableArrayList();
-        currencyListModels = FXCollections.observableArrayList();
-        companyListModels = FXCollections.observableArrayList();
-        currencyExchangeListModels = FXCollections.observableArrayList();
-        materialExchangeListModels = FXCollections.observableArrayList();
-    }
-
     private void setItemLists() {
-        stockExchangeListView.setItemList(stockExchangeModels);
-        indexListView.setItemList(indexListModels);
-        materialListView.setItemList(materialListModels);
-        currencyListView.setItemList(currencyListModels);
-        companyListView.setItemList(companyListModels);
-        currencyExchangeListView.setItemList(currencyExchangeListModels);
-        materialExchangeListView.setItemList(materialExchangeListModels);
+        stockExchangeListView.setItemList(applicationModel.getStockExchanges());
+        indexListView.setItemList(applicationModel.getIndexListModels());
+        materialListView.setItemList(applicationModel.getMaterialListModels());
+        currencyListView.setItemList(applicationModel.getCurrencyListModels());
+        companyListView.setItemList(applicationModel.getCompanyListModels());
+        currencyExchangeListView.setItemList(applicationModel.getCurrencyExchangeListModels());
+        materialExchangeListView.setItemList(applicationModel.getMaterialExchangeListModels());
     }
 
     private boolean isListEmpty(List<?> list) {

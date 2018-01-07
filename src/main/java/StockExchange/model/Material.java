@@ -1,19 +1,18 @@
 
 package StockExchange.model;
 
-import StockExchange.controller.MainSceneController;
 import StockExchange.ui.DisplayableListItem;
 import javafx.collections.ObservableList;
 
-import java.lang.reflect.Array;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
  *
  * @author jakub
  */
-public class MaterialModel extends Assets implements DisplayableListItem  {
-    private CurrencyModel currencyModel;
+public class Material extends Assets implements DisplayableListItem  {
+    private Currency currency;
     private String tradeUnit; //jednostka handlowa
     private double currentValue;
     private double minValue;
@@ -56,26 +55,27 @@ public class MaterialModel extends Assets implements DisplayableListItem  {
         return name;
     }
 
-    public MaterialModel(ObservableList<CurrencyModel> cModel){
+    public Material(ObservableList<Currency> cModel){
         Random generator = new Random();
         name = materials.get(generator.nextInt(materials.size()));
         materials.remove(name);
         double min = generator.nextDouble() * 12000;
         double max = min + generator.nextDouble() * 500;
         double akt = (max + min) / 2 + generator.nextDouble();
-        this.maxValue = max;
-        this.minValue =min;
-        this.currentValue = akt;
-        this.currencyModel = cModel.get(generator.nextInt(cModel.size()));
+        DecimalFormat two = new DecimalFormat("#0.00");
+        this.maxValue = Double.parseDouble(two.format(max).replace(",", "."));
+        this.minValue =Double.parseDouble(two.format(min).replace(",", "."));
+        this.currentValue = Double.parseDouble(two.format(Double.parseDouble(two.format(min).replace(",", "."))).replace(",", "."));
+        this.currency = cModel.get(generator.nextInt(cModel.size()));
         this.tradeUnit = UNITS[generator.nextInt(UNITS.length)];
     }
 
     /**
      *
-     * @param currencyModel
+     * @param currency
      */
-    public void setCurrencyModel(CurrencyModel currencyModel) {
-        this.currencyModel = currencyModel;
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
 
     /**
@@ -112,10 +112,10 @@ public class MaterialModel extends Assets implements DisplayableListItem  {
 
     /**
      *
-     * @return currencyModel
+     * @return currency
      */
-    public CurrencyModel getCurrencyModel() {
-        return currencyModel;
+    public Currency getCurrency() {
+        return currency;
     }
 
     /**

@@ -4,6 +4,7 @@ package StockExchange.model;
 import StockExchange.ui.DisplayableListItem;
 import StockExchange.util.RandomString;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.Random;
  *
  * @author jakub
  */
-public class CurrencyModel extends Assets implements DisplayableListItem {
+public class Currency extends Assets implements DisplayableListItem {
     private double purchasePrice;
     private double sellingPrice;
     private List<String> countriesList;
@@ -41,13 +42,14 @@ public class CurrencyModel extends Assets implements DisplayableListItem {
         return name;
     }
 
-    public CurrencyModel(){
+    public Currency(){
         if(CURRENCIES.size() > 0) {
             this.name = CURRENCIES.get(new Random().nextInt(CURRENCIES.size()));
             CURRENCIES.remove(this.name);
         } else {
             this.name = RandomString.nextString(3);
         }
+        DecimalFormat two = new DecimalFormat("#0.00");
         ArrayList<String> avalaibleCountries = new ArrayList<>(Arrays.asList(Countries.COUNTRIES));
         countriesList = new ArrayList<>();
         Random generator = new Random();
@@ -57,9 +59,8 @@ public class CurrencyModel extends Assets implements DisplayableListItem {
             this.countriesList.add(avalaibleCountries.get(element));
             avalaibleCountries.remove(element);
         }
-        double pPrice = generator.nextDouble()*3;
-        this.setPurchasePrice(pPrice);
-        this.setSellingPrice(pPrice + generator.nextDouble()/5);
+        purchasePrice = Double.parseDouble(two.format(generator.nextDouble()*3).replace(",", "."));
+        sellingPrice = Double.parseDouble(two.format(purchasePrice + generator.nextDouble()/5).replace(",", "."));
 
     }
 

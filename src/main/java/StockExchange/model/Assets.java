@@ -8,8 +8,6 @@ package StockExchange.model;
 
 public class Assets {
     protected String name;
-    private int salesMargin;
-    private int purchaseMargin;
 
     /**
      *
@@ -21,42 +19,11 @@ public class Assets {
 
     /**
      *
-     * @param salesMargin
-     */
-    public void setSalesMargin(int salesMargin) {
-        this.salesMargin = salesMargin;
-    }
-
-    /**
-     *
-     * @param purchaseMargin
-     */
-    public void setPurchaseMargin(int purchaseMargin) {
-        this.purchaseMargin = purchaseMargin;
-    }
-    
-    /**
-     *
      * @return name
      */
     public String getName() {
         return name;
     }
 
-    /**
-     *
-     * @return salesMargin
-     */
-    public int getSalesMargin() {
-        return salesMargin;
-    }
 
-    /**
-     *
-     * @return purchaseMargin
-     */
-    public int getPurchaseMargin() {
-        return purchaseMargin;
-    }
-    
 }

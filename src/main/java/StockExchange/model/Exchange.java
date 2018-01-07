@@ -7,10 +7,6 @@ package StockExchange.model;
 public class Exchange {
     protected double margin;
 
-    public int countMargin(){
-        return 0;
-    }
-
     /**
      *
      * @param margin

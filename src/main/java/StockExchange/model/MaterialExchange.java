@@ -10,18 +10,15 @@ import java.util.List;
  *
  * @author jakub
  */
-public class MaterialExchangeModel extends Exchange implements DisplayableListItem {
+public class MaterialExchange extends Exchange implements DisplayableListItem {
     private String name;
-    private List<MaterialModel> materialList = new ArrayList<>();
+    private List<Material> materialList = new ArrayList<>();
 
     @Override
     public String getDisplayName() {
         return name;
     }
 
-
-    @Override
-    public int countMargin(){ return 0; }
     
     /**
      *
@@ -44,7 +41,7 @@ public class MaterialExchangeModel extends Exchange implements DisplayableListIt
      *
      * @param materialList
      */
-    public void setMaterialList(List<MaterialModel> materialList) {
+    public void setMaterialList(List<Material> materialList) {
         this.materialList = materialList;
     }
 
@@ -52,7 +49,7 @@ public class MaterialExchangeModel extends Exchange implements DisplayableListIt
      *
      * @return materialList
      */
-    public List<MaterialModel> getMaterialList() {
+    public List<Material> getMaterialList() {
         return materialList;
     }
     

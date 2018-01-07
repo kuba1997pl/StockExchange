@@ -9,10 +9,10 @@ import java.util.List;
  *
  * @author jakub
  */
-public class CurrencyExchangeModel extends Exchange implements DisplayableListItem {
+public class CurrencyExchange extends Exchange implements DisplayableListItem {
 
     private String name;
-    private List<CurrencyModel> currencyList = new ArrayList<>();
+    private List<Currency> currencyList = new ArrayList<>();
 
 
     @Override
@@ -20,11 +20,6 @@ public class CurrencyExchangeModel extends Exchange implements DisplayableListIt
         return name;
     }
 
-
-    @Override
-    public int countMargin() {
-        return 0;
-    }
 
 
     /**
@@ -48,7 +43,7 @@ public class CurrencyExchangeModel extends Exchange implements DisplayableListIt
      *
      * @return
      */
-    public List<CurrencyModel> getCurrencyList() {
+    public List<Currency> getCurrencyList() {
         return currencyList;
     }
 
@@ -56,7 +51,7 @@ public class CurrencyExchangeModel extends Exchange implements DisplayableListIt
      *
      * @param currencyList
      */
-    public void setCurrencyList(List<CurrencyModel> currencyList) {
+    public void setCurrencyList(List<Currency> currencyList) {
         this.currencyList = currencyList;
     }
 
