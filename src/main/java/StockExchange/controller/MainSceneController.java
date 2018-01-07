@@ -11,7 +11,6 @@ import javafx.fxml.Initializable;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 
 public class MainSceneController implements Initializable {
 
@@ -42,13 +41,46 @@ public class MainSceneController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         initializeModels();
         setItemLists();
-        stockExchangeListView.setOnClickListener(() -> {
-            Optional<StockExchangeModel> newModel = new StockDialog().showAndWait();
-            newModel.ifPresent( stockExchangeModels::add);
-        });
-        indexListView.setOnClickListener(() -> {
-            indexListModels.add(new IndexModel(companyListModels));
-        });
+        initializeOnClickListeners();
+    }
+
+    private void addStockExchange() {
+        Optional<StockExchangeModel> newModel = new StockDialog(currencyListModels, indexListModels).showAndWait();
+        newModel.ifPresent(stockExchangeModels::add);
+    }
+
+    private void addIndex() {
+        indexListModels.add(new IndexModel(companyListModels));
+    }
+
+    private void addMaterial() {
+        materialListModels.add(new MaterialModel());
+    }
+
+    private void addCurrency() {
+        currencyListModels.add(new CurrencyModel());
+    }
+
+    private void addCompany() {
+        companyListModels.add(new CompanyModel());
+    }
+
+    private void addCurrencyExchange() {
+        currencyExchangeListModels.add(new CurrencyExchangeModel());
+    }
+
+    private void addMaterialExchange() {
+        materialExchangeListModels.add(new MaterialExchangeModel());
+    }
+
+    private void initializeOnClickListeners() {
+        stockExchangeListView.setOnClickListener(this::addStockExchange);
+        indexListView.setOnClickListener(this::addIndex);
+        materialListView.setOnClickListener(this::addMaterial);
+        currencyListView.setOnClickListener(this::addCurrency);
+        companyListView.setOnClickListener(this::addCompany);
+        currencyExchangeListView.setOnClickListener(this::addCurrencyExchange);
+        materialExchangeListView.setOnClickListener(this::addMaterialExchange);
     }
 
     private void initializeModels() {
@@ -70,6 +102,4 @@ public class MainSceneController implements Initializable {
         currencyExchangeListView.setItemList(currencyExchangeListModels);
         materialExchangeListView.setItemList(materialExchangeListModels);
     }
-
-
 }
