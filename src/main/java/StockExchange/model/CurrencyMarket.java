@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author jakub
  */
-public class CurrencyExchange extends Exchange implements DisplayableListItem {
+public class CurrencyMarket extends Exchange implements DisplayableListItem {
 
     private String name;
     private List<Currency> currencyList = new ArrayList<>();

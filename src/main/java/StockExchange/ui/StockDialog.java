@@ -2,7 +2,7 @@ package StockExchange.ui;
 
 import StockExchange.model.Currency;
 import StockExchange.model.Index;
-import StockExchange.model.StockExchange;
+import StockExchange.model.StockMarket;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -19,7 +19,7 @@ import javafx.util.Callback;
 
 import java.util.ArrayList;
 
-public class StockDialog extends Dialog<StockExchange> implements Callback<ButtonType, StockExchange>, ChangeListener<String>{
+public class StockDialog extends Dialog<StockMarket> implements Callback<ButtonType, StockMarket>, ChangeListener<String>{
 
     private static ButtonType saveButtonType = new ButtonType("Zapisz", ButtonBar.ButtonData.OK_DONE);
     private static ButtonType cancelButtonType = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -147,9 +147,9 @@ public class StockDialog extends Dialog<StockExchange> implements Callback<Butto
     }
 
     @Override
-    public StockExchange call(ButtonType param) {
+    public StockMarket call(ButtonType param) {
         if(param == saveButtonType) {
-            return new StockExchange(stockName.get(), countryName.get(), new Currency(), city.get(), address.get(), new ArrayList<>());
+            return new StockMarket(stockName.get(), countryName.get(), new Currency(), city.get(), address.get(), new ArrayList<>());
         }
         return null;
     }

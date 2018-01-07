@@ -3,8 +3,6 @@ package StockExchange.controller;
 import StockExchange.model.*;
 import StockExchange.ui.CustomListView;
 import StockExchange.ui.StockDialog;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -18,7 +16,7 @@ import java.util.ResourceBundle;
 public class MainSceneController implements Initializable {
 
     @FXML
-    private CustomListView<StockExchange> stockExchangeListView;
+    private CustomListView<StockMarket> stockExchangeListView;
     @FXML
     private CustomListView<Index> indexListView;
     @FXML
@@ -28,9 +26,9 @@ public class MainSceneController implements Initializable {
     @FXML
     private CustomListView<Company> companyListView;
     @FXML
-    private CustomListView<CurrencyExchange> currencyExchangeListView;
+    private CustomListView<CurrencyMarket> currencyExchangeListView;
     @FXML
-    private CustomListView<MaterialExchange> materialExchangeListView;
+    private CustomListView<MaterialMarket> materialExchangeListView;
 
     private ApplicationModel applicationModel;
 
@@ -49,8 +47,8 @@ public class MainSceneController implements Initializable {
             alert.setContentText("Nie można utworzyć giełdy. Najpierw stwórz walutę, oraz index");
             alert.show();
         } else {
-            Optional<StockExchange> newModel = new StockDialog(applicationModel.getCurrencyListModels(), applicationModel.getIndexListModels()).showAndWait();
-            newModel.ifPresent(applicationModel.getStockExchanges()::add);
+            Optional<StockMarket> newModel = new StockDialog(applicationModel.getCurrencyListModels(), applicationModel.getIndexListModels()).showAndWait();
+            newModel.ifPresent(applicationModel.getStockMarkets()::add);
         }
     }
 
@@ -88,11 +86,11 @@ public class MainSceneController implements Initializable {
     }
 
     private void addCurrencyExchange() {
-        applicationModel.getCurrencyExchangeListModels().add(new CurrencyExchange());
+        applicationModel.getCurrencyMarketListModels().add(new CurrencyMarket());
     }
 
     private void addMaterialExchange() {
-        applicationModel.getMaterialExchangeListModels().add(new MaterialExchange());
+        applicationModel.getMaterialMarketListModels().add(new MaterialMarket());
     }
 
     private void initializeOnClickListeners() {
@@ -106,13 +104,13 @@ public class MainSceneController implements Initializable {
     }
 
     private void setItemLists() {
-        stockExchangeListView.setItemList(applicationModel.getStockExchanges());
+        stockExchangeListView.setItemList(applicationModel.getStockMarkets());
         indexListView.setItemList(applicationModel.getIndexListModels());
         materialListView.setItemList(applicationModel.getMaterialListModels());
         currencyListView.setItemList(applicationModel.getCurrencyListModels());
         companyListView.setItemList(applicationModel.getCompanyListModels());
-        currencyExchangeListView.setItemList(applicationModel.getCurrencyExchangeListModels());
-        materialExchangeListView.setItemList(applicationModel.getMaterialExchangeListModels());
+        currencyExchangeListView.setItemList(applicationModel.getCurrencyMarketListModels());
+        materialExchangeListView.setItemList(applicationModel.getMaterialMarketListModels());
     }
 
     private boolean isListEmpty(List<?> list) {

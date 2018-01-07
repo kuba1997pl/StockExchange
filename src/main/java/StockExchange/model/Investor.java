@@ -1,10 +1,6 @@
 
 package StockExchange.model;
 
-import StockExchange.controller.MainSceneController;
-import javafx.collections.ObservableList;
-
-import java.lang.reflect.Array;
 import StockExchange.ApplicationExecutor;
 import java.util.*;
 import static java.lang.Thread.sleep;
@@ -111,14 +107,15 @@ public class Investor extends Customer {
         switch (choice) {
             case 0:
                 //indeks gieldy
-                List<StockExchange> exchanges = new ArrayList<>(ApplicationModel.getInstance().getStockExchanges());
+                List<StockMarket> exchanges = new ArrayList<>(ApplicationModel.getInstance().getStockMarkets());
                 int stockNo = generator.nextInt(exchanges.size()); //indeks losowej gieldy
                 int indexNo = generator.nextInt(exchanges.get(stockNo).getIndexList().size()); //indeks losowego indeksu gieldy
                 int comNo = generator.nextInt(exchanges.get(stockNo).getIndexList().get(indexNo).getCompaniesList().size()); //indeks losowej spolki na indeksie
                 int sharesNo = exchanges.get(stockNo).getIndexList().get(indexNo).getCompaniesList().get(comNo).getSharesCount(); //liczba akcji
                 if (sharesNo > 0) {
                         double sharesPurPr = exchanges.get(stockNo).getIndexList().get(indexNo).getCompaniesList().get(comNo).getCurrentPrice();
-
+//                        int sharesPurNo = generator.nextInt((int)(budget/sharesPurPr));
+//                        if (sharesPurNo <= sharesPurPr)
                 }
 
 

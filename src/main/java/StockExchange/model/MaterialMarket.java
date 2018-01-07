@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author jakub
  */
-public class MaterialExchange extends Exchange implements DisplayableListItem {
+public class MaterialMarket extends Exchange implements DisplayableListItem {
     private String name;
     private List<Material> materialList = new ArrayList<>();
 
