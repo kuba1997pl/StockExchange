@@ -5,6 +5,7 @@ import StockExchange.ui.DisplayableListItem;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import org.json.JSONArray;
  * @author jakub
  */
 
-public class Company implements DisplayableListItem {
+public class Company implements DisplayableListItem, Serializable {
     private String name;
     private LocalDate firstPricingDate;
     private double minPrice;

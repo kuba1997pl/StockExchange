@@ -1,10 +1,12 @@
 package StockExchange.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author jakub
  */
-public class Exchange {
+public class Exchange implements Serializable {
     protected double margin;
 
     /**

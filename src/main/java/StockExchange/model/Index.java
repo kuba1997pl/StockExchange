@@ -4,6 +4,7 @@ package StockExchange.model;
 import StockExchange.ui.DisplayableListItem;
 import javafx.collections.ObservableList;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
@@ -12,7 +13,7 @@ import java.util.Random;
  * @author jakub
  */
 
-public class Index implements DisplayableListItem {
+public class Index implements DisplayableListItem, Serializable {
 
     private String name;
     private double value;

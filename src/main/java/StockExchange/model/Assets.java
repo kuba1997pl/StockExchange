@@ -1,12 +1,15 @@
 
 package StockExchange.model;
 
+import java.io.Serializable;
+
+
 /**
  *
  * @author jakub
  */
 
-public class Assets {
+public class Assets implements Serializable {
     protected String name;
 
     /**

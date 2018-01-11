@@ -1,10 +1,12 @@
 package StockExchange.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author jakub
  */
-public class Countries {
+public class Countries implements Serializable {
 
     /**
      * list of available countries
