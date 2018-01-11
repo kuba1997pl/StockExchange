@@ -3,6 +3,10 @@ package StockExchange.model;
 public class MaterialInWallet extends Assets {
     private double amount;
 
+    public void incrementAmount(double byHowMuch) {
+        amount += byHowMuch;
+    }
+
     /**
      *
      * @param amount

@@ -59,22 +59,27 @@ public class Material extends Assets implements DisplayableListItem  {
 
     public Material(ObservableList<Currency> cModel){
         Random generator = new Random();
-        if(materials.size() > 0) {
+        if (materials.size() > 0) {
             name = materials.get(generator.nextInt(materials.size()));
             materials.remove(name);
         } else {
             String str = RandomString.nextString(10);
             name = str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
         }
-        double min = generator.nextDouble() * 12000;
-        double max = min + generator.nextDouble() * 500;
-        double akt = (max + min) / 2 + generator.nextDouble();
-        DecimalFormat two = new DecimalFormat("#0.00");
-        this.maxValue = Double.parseDouble(two.format(max).replace(",", "."));
-        this.minValue =Double.parseDouble(two.format(min).replace(",", "."));
-        this.currentValue = Double.parseDouble(two.format(Double.parseDouble(two.format(min).replace(",", "."))).replace(",", "."));
+        this.minValue = generator.nextDouble() * 12000;
+        this.maxValue = minValue + generator.nextDouble() * 500;
+        this.currentValue = minValue;
         this.currency = cModel.get(generator.nextInt(cModel.size()));
         this.tradeUnit = UNITS[generator.nextInt(UNITS.length)];
+    }
+
+    public double buyMaterial(double amount) {
+        double price = amount * currentValue;
+        currentValue *= 1.01;
+        if(currentValue > maxValue) {
+            maxValue = currentValue;
+        }
+        return price;
     }
 
     /**

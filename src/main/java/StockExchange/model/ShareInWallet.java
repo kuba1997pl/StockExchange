@@ -9,6 +9,10 @@ public class ShareInWallet extends Assets {
         this.name=name;
     }
 
+    public void incrementAmount(int byHowMuch) {
+        amount += byHowMuch;
+    }
+
     /**
      *
      * @param stockName

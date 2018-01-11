@@ -14,7 +14,6 @@ public class ApplicationModel {
     private ObservableList<MaterialMarket> materialMarketListModels;
     private static ApplicationModel instance;
 
-
     private ApplicationModel() {
         initializeModels();
     }

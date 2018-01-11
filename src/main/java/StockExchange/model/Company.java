@@ -88,6 +88,24 @@ public class Company implements DisplayableListItem {
         //System.out.println(this.firstPricingDate+"\n"+this.volume+"\n"+this.maxPrice+"\n"+this.minPrice);
     }
 
+    /**
+     *
+     * @param amount amount of shares to buy
+     * @return price of bought shares
+     */
+    public int buyShares(int amount) {
+        if(sharesCount >= amount) {
+            sharesCount -= amount;
+            int price = (int) (amount * currentPrice);
+            sales += price;
+            currentPrice *= 1.01;
+            if(currentPrice > maxPrice)
+                maxPrice = currentPrice;
+            volume += amount;
+            return price;
+        }
+        return -1;
+    }
 
     /**
      * @param currentPrice

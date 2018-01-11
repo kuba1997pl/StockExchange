@@ -126,6 +126,8 @@ public class MainSceneController implements Initializable {
         indexListView.setButtonDisabled(indexListViewBinding);
         BooleanBinding materialListViewBinding = new ListChangeBooleanBinding(() -> isListEmpty(currencyListModels), currencyListModels);
         materialListView.setButtonDisabled(materialListViewBinding);
+        BooleanBinding currencyMarketListViewBinding = new ListChangeBooleanBinding(() -> isListEmpty(currencyListModels), currencyListModels);
+        currencyExchangeListView.setButtonDisabled(currencyMarketListViewBinding);
     }
 
     private boolean isListEmpty(List<?> list) {

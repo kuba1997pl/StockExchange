@@ -5,6 +5,7 @@ import StockExchange.ApplicationExecutor;
 import javafx.collections.ObservableList;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.Thread.sleep;
 
@@ -34,6 +35,7 @@ public class Investor extends Customer {
             "Donald",
             "Dariusz",
     };
+
     public static String[] LASTNAMES = {
             "Grey",
             "Gates",
@@ -113,95 +115,58 @@ public class Investor extends Customer {
         int choice = generator.nextInt(3);
         switch (choice) {
             case 0:
-                //indeks gieldy
-                ObservableList<StockMarket> sMarkets = ApplicationModel.getInstance().getStockMarkets();
-                int stockNo = generator.nextInt(sMarkets.size()); //random stock market index
-                int indexNo = generator.nextInt(sMarkets.get(stockNo).getIndexList().size()); //random market index index
-                int comNo = generator.nextInt(sMarkets.get(stockNo).getIndexList().get(indexNo).getCompaniesList().size()); //random company from the index index
-                int sharesNo = sMarkets.get(stockNo).getIndexList().get(indexNo).getCompaniesList().get(comNo).getSharesCount(); //shares amount
-                if (sharesNo > 0) {
-                    double sharesPurPr = sMarkets.get(stockNo).getIndexList().get(indexNo).getCompaniesList().get(comNo).getCurrentPrice();
-                    int sharesPurNo;
-                    //random shares number;
-                    if (budget > (sharesNo * sharesPurPr))
-                        sharesPurNo = generator.nextInt(sharesNo);
-                    else
-                        //number of shares times their price must be less than budget
-                        sharesPurNo = generator.nextInt((int) (budget / sharesPurPr));
-                    //decreasing number of shares amount
-                    sMarkets.get(stockNo).getIndexList().get(indexNo).getCompaniesList().get(comNo).setSharesCount(sharesNo - sharesPurNo);
-                    // decreasing budget with also paying a margin
-                    budget -= (double) sharesPurNo * sharesPurPr;
-                    budget -= sMarkets.get(stockNo).getMargin() * (double) sharesPurNo * sharesPurPr;
-//                    buying shares makes their price higher - setting new price
-                    double priceChanged = 1.01 * sharesPurPr;
-                    sMarkets.get(stockNo).getIndexList().get(indexNo).getCompaniesList().get(comNo).setCurrentPrice(priceChanged);
-//                    checking if the new price isn't higher than maximum so far
-                    if (priceChanged > sMarkets.get(stockNo).getIndexList().get(indexNo).getCompaniesList().get(comNo).getMaxPrice())
-                        sMarkets.get(stockNo).getIndexList().get(indexNo).getCompaniesList().get(comNo).setMaxPrice(priceChanged);
-                    //updating value of main list
-                    ApplicationModel.getInstance().setStockMarkets(sMarkets);
-
-                    //checking if some company has already appeared on the list
-                    //and adding an element
-                    boolean checker = true;
-                    String stockName = sMarkets.get(stockNo).getName();
-                    String companyName = sMarkets.get(stockNo).getIndexList().get(indexNo).getCompaniesList().get(comNo).getName();
-                    for (ShareInWallet share : sharesPurchased) {
-                        if (share.getName() == companyName) {
-                            checker = false;
-                            //increasing number of already existing at list company
-                            share.setAmount(share.getAmount() + sharesPurNo);
-                            break;
-                        }
-                    }
-                    if (checker) {
-                        ShareInWallet newShare = new ShareInWallet(companyName, sharesPurNo);
-                        newShare.setStockName(stockName);
-                        sharesPurchased.add(newShare);
-                    }
-                }
-
+                buyShares();
             case 1:
-                ObservableList<MaterialMarket> mMarkets = ApplicationModel.getInstance().getMaterialMarketListModels();
-                int mMarketNo = generator.nextInt(mMarkets.size()); //random material market index
-                int mMaterialNo = generator.nextInt(mMarkets.get(mMarketNo).getMaterialList().size());
-                double materialCurVal = mMarkets.get(mMarketNo).getMaterialList().get(mMaterialNo).getCurrentValue();
-
-                double materialAmount = generator.nextDouble() * (budget / materialCurVal);//number of material units times their price must be less than budget;
-
-                // decreasing budget
-                budget -= (double) materialCurVal * materialAmount;
-                budget -= mMarkets.get(mMarketNo).getMargin() * materialCurVal * (double) materialAmount;
-//              buying materials makes their price higher - setting new price
-                double priceChanged2 = 1.01 * materialCurVal;
-                mMarkets.get(mMarketNo).getMaterialList().get(mMaterialNo).setCurrentValue(priceChanged2);
-//              checking if the new price isn't higher than maximum so far
-                if (priceChanged2 > mMarkets.get(mMarketNo).getMaterialList().get(mMaterialNo).getMaxValue())
-                    mMarkets.get(mMarketNo).getMaterialList().get(mMaterialNo).setMaxValue(priceChanged2);
-                //updating value of main list
-                ApplicationModel.getInstance().setMaterialMarketListModels(mMarkets);
-                //checking if the material has already appeared on the list
-                //and adding an element
-                boolean checker = true;
-                String materialName = mMarkets.get(mMarketNo).getMaterialList().get(mMaterialNo).getName();
-                for (MaterialInWallet material : materialsPurchased) {
-                    if (material.getName() == materialName) {
-                        checker = false;
-                        //increasing number of already existing at list company
-                        material.setAmount(material.getAmount() + materialAmount);
-                        break;
-                    }
-                }
-                if (checker) {
-                    MaterialInWallet newMaterial = new MaterialInWallet();
-                    newMaterial.setName(materialName);
-                    materialsPurchased.add(newMaterial);
-                }
-
+                buyMaterials();
             default:
                 //OGARNĄĆ POTEM!!!
-                ;
+        }
+    }
+
+    private void buyMaterials() {
+        Random generator = new Random();
+        ObservableList<MaterialMarket> materialMarkets = ApplicationModel.getInstance().getMaterialMarketListModels();
+        MaterialMarket market = materialMarkets.get(generator.nextInt(materialMarkets.size()));
+        Material material = market.getMaterialList().get(generator.nextInt(market.getMaterialList().size()));
+        double materialAmount = generator.nextDouble() * (budget / material.getCurrentValue());
+        budget -= market.getMargin() * material.buyMaterial(materialAmount);
+        Optional<MaterialInWallet> optionalMaterial = materialsPurchased.stream().filter(inWallet -> inWallet.name.equals(material.name)).findFirst();
+        if(optionalMaterial.isPresent()) {
+            optionalMaterial.get().incrementAmount(materialAmount);
+        } else {
+            MaterialInWallet newMaterial = new MaterialInWallet();
+            newMaterial.setName(material.name);
+            materialsPurchased.add(newMaterial);
+        }
+    }
+
+    private void buyShares() {
+        Random generator = new Random();
+        ObservableList<StockMarket> stockMarkets = ApplicationModel.getInstance().getStockMarkets();
+        StockMarket market = stockMarkets.get(generator.nextInt(stockMarkets.size()));
+        List<Company> companies = market.getIndexList()
+                .stream()
+                .map(Index::getCompaniesList)
+                .flatMap(Collection::stream)
+                .filter(company -> company.getSharesCount() > 0)
+                .collect(Collectors.toList());
+
+        Company company = companies.get(generator.nextInt(companies.size()));
+
+        int sharesPurchaseAmount = Math.min(company.getSharesCount(), (int) Math.floor(budget / company.getCurrentPrice()));
+
+        int boughtSharesPrice = company.buyShares(sharesPurchaseAmount);
+        if (boughtSharesPrice >= 0) {
+            budget -= (boughtSharesPrice + market.getMargin() * boughtSharesPrice);
+        }
+
+        Optional<ShareInWallet> optionalShare = sharesPurchased.stream().filter(shareInWallet -> shareInWallet.name.equals(market.getName())).findFirst();
+        if(optionalShare.isPresent()) {
+            optionalShare.get().incrementAmount(sharesPurchaseAmount);
+        } else {
+            ShareInWallet newShare = new ShareInWallet(company.getName(), sharesPurchaseAmount);
+            newShare.setStockName(market.getName());
+            sharesPurchased.add(newShare);
         }
     }
 
@@ -217,7 +182,6 @@ public class Investor extends Customer {
 
             default:
                 //OGARNĄĆ POTEM!!!
-                ;
         }
     }
 

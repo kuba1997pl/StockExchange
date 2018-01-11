@@ -4,13 +4,20 @@ import StockExchange.model.Currency;
 import StockExchange.model.CurrencyMarket;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class CurrencyExchangeDialog extends Dialog<CurrencyMarket> {
@@ -55,15 +62,41 @@ public class CurrencyExchangeDialog extends Dialog<CurrencyMarket> {
 
     private void addCurrency(ActionEvent event) {
         currenciesPane.getChildren().add(getCurrenciesAdder());
+        getDialogPane().getScene().getWindow().sizeToScene();
     }
 
     private HBox getCurrenciesAdder() {
         HBox pane = new HBox();
+        pane.setSpacing(20);
+        pane.setAlignment(Pos.CENTER);
+        pane.setPadding(new Insets(20, 0, 20, 0));
+
         ComboBox<Currency> firstCurrency = new ComboBox<>();
         firstCurrency.setButtonCell(new CustomListCell<>());
         firstCurrency.setCellFactory(param -> new CustomListCell<>());
         firstCurrency.setItems(currencyList);
-        pane.getChildren().add(firstCurrency);
+
+        HBox.setHgrow(firstCurrency, Priority.ALWAYS);
+        ImageView arrow = new ImageView(new Image(getClass().getResourceAsStream("/StockExchange/images/arrow.png"), 20, 20, true, true));
+
+
+        HBox.setHgrow(arrow, Priority.ALWAYS);
+
+        ComboBox<Currency> secondCurrency = new ComboBox<>();
+        secondCurrency.setButtonCell(new CustomListCell<>());
+        secondCurrency.setCellFactory(param -> new CustomListCell<>());
+        ObservableList<Currency> secondCurrencyList = FXCollections.observableArrayList();
+        secondCurrency.setItems(secondCurrencyList);
+
+        HBox.setHgrow(secondCurrency, Priority.ALWAYS);
+        firstCurrency.valueProperty().addListener((observable, oldValue, newValue) -> {
+            secondCurrencyList.clear();
+            ObservableList<Currency> tmp = FXCollections.observableArrayList(currencyList);
+            tmp.remove(newValue);
+            secondCurrencyList.addAll(tmp);
+        });
+
+        pane.getChildren().addAll(firstCurrency, arrow, secondCurrency);
         return pane;
     }
 

@@ -4,7 +4,6 @@ import StockExchange.ui.DisplayableListItem;
 import javafx.util.Pair;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +29,12 @@ public class CurrencyMarket extends Exchange implements DisplayableListItem {
         if(rate == null) throw new IllegalArgumentException("Supplied rate cannot be null");
         if(rate.equals(BigDecimal.ZERO)) throw new IllegalArgumentException("Supplied rate cannot be zero");
 
-        rates.put(currenciesPair, rate);
+        BigDecimal existingRate = rates.get(currenciesPair);
+        if(existingRate == null) {
+            rates.put(currenciesPair, rate);
+        } else {
+            throw new IllegalArgumentException("Supplied pair is already in the list");
+        }
     }
 
     /**
@@ -44,11 +48,6 @@ public class CurrencyMarket extends Exchange implements DisplayableListItem {
         BigDecimal rate = rates.get(new Pair<>(currencyIn, currencyOut));
         if(rate != null) {
             return rate.multiply(amount);
-        } else {
-            rate = rates.get(new Pair<>(currencyOut, currencyIn));
-            if(rate != null) {
-                return BigDecimal.ONE.divide(rate, RoundingMode.HALF_EVEN).multiply(amount);
-            }
         }
         return null;
     }
