@@ -34,7 +34,7 @@ public class Company implements DisplayableListItem, Serializable {
     private double maxPrice;
     private double currentPrice;
     private double openingPrice;
-    private IntegerProperty sharesCount = new SimpleIntegerProperty();
+    private int sharesCount;
     private double profit; // dochód = przychód - koszta
     private double income;
     private double equityCapital; // kapitał własny
@@ -76,7 +76,7 @@ public class Company implements DisplayableListItem, Serializable {
         }
         double min = generator.nextDouble() * 10;
         double max = min + generator.nextDouble() * 20;
-        this.sharesCount.setValue(generator.nextInt(1000));
+        this.sharesCount = generator.nextInt(1000);
         this.minPrice = Double.parseDouble(two.format(min).replace(",", "."));
         this.maxPrice = Double.parseDouble(two.format(max).replace(",", "."));
         this.openingPrice = Double.parseDouble(two.format((min + max) / 2.0).replace(",", "."));
@@ -102,9 +102,9 @@ public class Company implements DisplayableListItem, Serializable {
      */
 
     public double buyShares(int amount) {
-        int count = sharesCount.get();
+        int count = sharesCount;
         if (count >= amount) {
-            sharesCount.setValue(count - amount);
+            sharesCount = count - amount;
             double price = amount * currentPrice;
             sales += price; //income
             currentPrice *= 1.01;
@@ -139,8 +139,7 @@ public class Company implements DisplayableListItem, Serializable {
 
     private void releaseShares() {
         Random generator = new Random();
-        int count = sharesCount.get();
-        sharesCount.setValue(count + generator.nextInt(100));
+        sharesCount += generator.nextInt(100);
     }
 
     //Profit is dependent on income
@@ -162,7 +161,7 @@ public class Company implements DisplayableListItem, Serializable {
     }
 
     public void incrementSharesCount(int byHowMuch){
-        sharesCount+=byHowMuch;
+        sharesCount += byHowMuch;
     }
     public void decrementCurrentPrice(){
         currentPrice = currentPrice*0.99;
@@ -233,7 +232,7 @@ public class Company implements DisplayableListItem, Serializable {
      * @return sharesCount
      */
     public int getSharesCount() {
-        return sharesCount.get();
+        return sharesCount;
     }
 
     /**
@@ -282,7 +281,7 @@ public class Company implements DisplayableListItem, Serializable {
      *
      * @return
      */
-    public IntegerProperty sharesCountProperty() {
+    public int sharesCountProperty() {
         return sharesCount;
     }
 }

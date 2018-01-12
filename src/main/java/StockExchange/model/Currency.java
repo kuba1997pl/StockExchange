@@ -67,6 +67,11 @@ public class Currency extends Assets implements DisplayableListItem {
     }
 
 
+    public void decrementPrice(){
+        purchasePrice = purchasePrice * 0.99;
+        sellPrice = sellPrice * 0.99;
+    }
+
     /**
      *
      * @return purchasePrice of currency

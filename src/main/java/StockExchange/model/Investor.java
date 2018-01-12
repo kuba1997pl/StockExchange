@@ -133,14 +133,14 @@ public class Investor extends Customer implements DisplayableListItem {
         budget -= market.getMargin() * material.buyMaterial(materialAmount) * currencyOfMaterial.getPurchasePrice();
 
         boolean checker = true;
-        for(MaterialInWallet element: materialsPurchased) {
+        for (MaterialInWallet element : materialsPurchased) {
             if (material.getName().equals(element.getName())) {
                 checker = false;
                 element.incrementAmount(materialAmount);
             }
 
         }
-        if(checker){
+        if (checker) {
             MaterialInWallet newMaterial = new MaterialInWallet(materialAmount, market.getName());
             materialsPurchased.add(newMaterial);
         }
@@ -166,10 +166,14 @@ public class Investor extends Customer implements DisplayableListItem {
             budget -= (boughtSharesPrice + market.getMargin() * boughtSharesPrice);
         }
 
-        Optional<ShareInWallet> optionalShare = sharesPurchased.stream().filter(shareInWallet -> shareInWallet.name.equals(market.getName())).findFirst();
-        if (optionalShare.isPresent()) {
-            optionalShare.get().incrementAmount(sharesPurchaseAmount);
-        } else {
+        boolean checker = true;
+        for (ShareInWallet elem : sharesPurchased) {
+            if (company.getName().equals(elem.getName())) {
+                elem.incrementAmount(sharesPurchaseAmount);
+                checker = false;
+            }
+        }
+        if (checker) {
             ShareInWallet newShare = new ShareInWallet(company.getName(), sharesPurchaseAmount);
             newShare.setStockName(market.getName());
             sharesPurchased.add(newShare);
@@ -291,7 +295,7 @@ public class Investor extends Customer implements DisplayableListItem {
 
         //changing the budget
         budget += materialPrice * materialAmount * currencyValue; // x kursSprzedażyWaluty;
-        budget -= materialPrice * materialAmount * currencyValue* margin; // x kursSprzedażyWaluty
+        budget -= materialPrice * materialAmount * currencyValue * margin; // x kursSprzedażyWaluty
 
         //decrementing amount of material in wallet
         materialsPurchased.get(materialNumber).decrementAmount(materialAmount);
@@ -300,7 +304,32 @@ public class Investor extends Customer implements DisplayableListItem {
         material.decrementCurrentValue();
     }
 
+
     private void sellCurrencies() {
+        Random generator = new Random();
+        /* After changes in ApplicationModel it will work
+        ObservableList<CurrencyMarket> currencyMarket = ApplicationModel.getInstance().getCurrencyMarket();
+        */
+        int currencyNumber = generator.nextInt(currenciesPurchased.size());
+        //String currencyName = currencyMarket.get(currencyNumber).getName();
+        int indexOfCurrency = 0;
+        /*
+        for (Currency elem : currencyMarket) {
+            if (stockName.equals(elem.getName())) {
+                indexOfStock = stockMarkets.indexOf(elem);
+            }
+        }
+        */
+        //Currency currency = currencyMarket.get(indexOfCurrency);
+        double currencyAmount = generator.nextDouble() * currenciesPurchased.get(currencyNumber).getAmount();
+        //double currencySellPrice = currency.getSellPrice();
+        //double margin = currencyMarket.getMargin();
+
+        //budget+= currencyAmount*currencyAmount*(1- margin);
+
+        currenciesPurchased.get(currencyNumber).decrementAmount(currencyAmount);
+
+        //currency.decrementPrice();
     }
 
     /**
@@ -320,13 +349,14 @@ public class Investor extends Customer implements DisplayableListItem {
 
     }
 
-    private void buySharesWithIF(){
+    private void buySharesWithIF() {
 
     }
 
-    private void buyMaterialsWithIF(){
+    private void buyMaterialsWithIF() {
 
     }
+
     /**
      * selling assets with investment fund
      */

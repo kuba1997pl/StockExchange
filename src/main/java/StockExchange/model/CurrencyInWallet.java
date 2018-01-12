@@ -10,7 +10,7 @@ public class CurrencyInWallet extends Assets implements DisplayableListItem {
         amount += byHowMuch;
     }
 
-    public void decrementAmount(int byHowMuch) { amount -= byHowMuch; }
+    public void decrementAmount(double byHowMuch) { amount -= byHowMuch; }
 
     /**
      *
