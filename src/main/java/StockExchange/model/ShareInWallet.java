@@ -6,17 +6,18 @@ public class ShareInWallet extends Assets implements DisplayableListItem {
     private int amount;
     private String stockName;
 
-    public ShareInWallet(String name, int amount){
-        this.amount=amount;
-        this.name=name;
+    public ShareInWallet(String name, int amount) {
+        this.amount = amount;
+        this.name = name;
     }
 
     public void incrementAmount(int byHowMuch) {
         amount += byHowMuch;
     }
 
+    public void decrementAmount(int byHowMuch) { amount -= byHowMuch; }
+
     /**
-     *
      * @param stockName
      */
     public void setStockName(String stockName) {
@@ -24,7 +25,6 @@ public class ShareInWallet extends Assets implements DisplayableListItem {
     }
 
     /**
-     *
      * @return
      */
 
@@ -34,7 +34,6 @@ public class ShareInWallet extends Assets implements DisplayableListItem {
     }
 
     /**
-     *
      * @return amount
      */
     public int getAmount() {
@@ -42,7 +41,6 @@ public class ShareInWallet extends Assets implements DisplayableListItem {
     }
 
     /**
-     *
      * @param amount
      */
     public void setAmount(int amount) {

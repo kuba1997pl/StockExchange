@@ -62,6 +62,9 @@ public class InvestmentFund extends Customer implements DisplayableListItem {
     }
 
 
+
+
+
     public void buyAssets() {
 
     }

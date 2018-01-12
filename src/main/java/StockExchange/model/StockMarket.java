@@ -17,6 +17,9 @@ public class StockMarket extends Exchange implements DisplayableListItem {
     private String officeAdress;
     private List<Index> indexList;
 
+    public StockMarket(){
+
+    }
     public StockMarket(String name, String country, Currency currency, String city, String officeAdress, List<Index> indexList) {
         this.name = name;
         this.country = country;
@@ -25,7 +28,6 @@ public class StockMarket extends Exchange implements DisplayableListItem {
         this.officeAdress = officeAdress;
         this.indexList = indexList;
     }
-
 
 
     @Override

@@ -13,7 +13,8 @@ import static java.lang.Thread.sleep;
 /**
  * @author jakub
  */
-public class Investor extends Customer implements DisplayableListItem{
+
+public class Investor extends Customer implements DisplayableListItem {
     private String firstName;
     private String lastName;
     private String PESEL;
@@ -81,11 +82,11 @@ public class Investor extends Customer implements DisplayableListItem{
         }
     }
 
-    public void investorOperations() {
+    public synchronized void investorOperations() {
         ApplicationExecutor.getInstance().getBackgroundThreadPool().execute(() -> {
             while (true) {
                 Random generator = new Random();
-                int cases = generator.nextInt(4) + 1;
+                int cases = generator.nextInt(4);
                 switch (cases) {
                     case 0:
                         buyAssetsOnYourOwn();
@@ -109,7 +110,7 @@ public class Investor extends Customer implements DisplayableListItem{
 
 
     /**
-     * buying Assets on your Own
+     * buying Assets on your own
      */
     public void buyAssetsOnYourOwn() {
         Random generator = new Random();
@@ -120,6 +121,7 @@ public class Investor extends Customer implements DisplayableListItem{
             case 1:
                 buyMaterials();
             default:
+                buyCurrencies();
                 //OGARNĄĆ POTEM!!!
         }
     }
@@ -127,16 +129,32 @@ public class Investor extends Customer implements DisplayableListItem{
     private void buyMaterials() {
         Random generator = new Random();
         ObservableList<MaterialMarket> materialMarkets = ApplicationModel.getInstance().getMaterialMarkets();
+        ObservableList<Currency> currencies = ApplicationModel.getInstance().getCurrencies();
         MaterialMarket market = materialMarkets.get(generator.nextInt(materialMarkets.size()));
         Material material = market.getMaterialList().get(generator.nextInt(market.getMaterialList().size()));
+        //Value of currency is changing so each time I buy material I have to check the current value of its currency
+        Currency currencyOfMaterial = material.getCurrency();
+        for (Currency elem : currencies) {
+            if (elem.getName() == currencyOfMaterial.getName())
+                currencyOfMaterial = elem;
+        }
+
+
+        //DOKOŃCZYĆ!!!
+        //!!!
+        //!!!
+        //!!!
+        // UJĄĆ WALUTĘ!!!
+
+
         double materialAmount = generator.nextDouble() * (budget / material.getCurrentValue());
         budget -= market.getMargin() * material.buyMaterial(materialAmount);
+
         Optional<MaterialInWallet> optionalMaterial = materialsPurchased.stream().filter(inWallet -> inWallet.name.equals(material.name)).findFirst();
-        if(optionalMaterial.isPresent()) {
+        if (optionalMaterial.isPresent()) {
             optionalMaterial.get().incrementAmount(materialAmount);
         } else {
-            MaterialInWallet newMaterial = new MaterialInWallet();
-            newMaterial.setName(material.name);
+            MaterialInWallet newMaterial = new MaterialInWallet(materialAmount, market.getName());
             materialsPurchased.add(newMaterial);
         }
     }
@@ -156,13 +174,13 @@ public class Investor extends Customer implements DisplayableListItem{
 
         int sharesPurchaseAmount = Math.min(company.getSharesCount(), (int) Math.floor(budget / company.getCurrentPrice()));
 
-        int boughtSharesPrice = company.buyShares(sharesPurchaseAmount);
+        double boughtSharesPrice = company.buyShares(sharesPurchaseAmount);
         if (boughtSharesPrice >= 0) {
             budget -= (boughtSharesPrice + market.getMargin() * boughtSharesPrice);
         }
 
         Optional<ShareInWallet> optionalShare = sharesPurchased.stream().filter(shareInWallet -> shareInWallet.name.equals(market.getName())).findFirst();
-        if(optionalShare.isPresent()) {
+        if (optionalShare.isPresent()) {
             optionalShare.get().incrementAmount(sharesPurchaseAmount);
         } else {
             ShareInWallet newShare = new ShareInWallet(company.getName(), sharesPurchaseAmount);
@@ -171,29 +189,160 @@ public class Investor extends Customer implements DisplayableListItem{
         }
     }
 
+    private void buyCurrencies() {
+    }
+
+    /**
+     * selling Assets on your own
+     */
     public void sellAssetsOnYourOwn() {
 
         Random generator = new Random();
         int choice = generator.nextInt(3);
         switch (choice) {
             case 0:
-                int shareNo = generator.nextInt(sharesPurchased.size());
-
+                sellShares();
             case 1:
-
+                sellMaterials();
             default:
-                //OGARNĄĆ POTEM!!!
+                sellCurrencies();
+                // WALUTY OGARNĄĆ!!!
         }
     }
 
-    public void buyWithInvFuM() {
+    private void sellShares() {
+        Random generator = new Random();
+        ObservableList<StockMarket> stockMarkets = ApplicationModel.getInstance().getStockMarkets();
+        ObservableList<Company> companies = ApplicationModel.getInstance().getCompanies();
+        int companyNumber = generator.nextInt(sharesPurchased.size());
+        String stockName = sharesPurchased.get(companyNumber).getStockName();
+        String companyName = sharesPurchased.get(companyNumber).getName();
+
+        //looking for a stock where we can sell shares of chosen company
+        int indexOfStock = 0;
+        Optional<StockMarket> stockMarket = stockMarkets.stream().filter(market -> market.getName().equals(stockName)).findFirst();
+        for (StockMarket elem : stockMarkets) {
+            if (stockName.equals(elem.getName())) {
+                indexOfStock = stockMarkets.indexOf(elem);
+            }
+        }
+        StockMarket stockToSell = stockMarkets.get(indexOfStock);
+        //looking for a proper company
+        int indexOfCompany = 0;
+        for (Company elem : companies) {
+            if (companyName.equals(elem.getName())) {
+                indexOfCompany = companies.indexOf(elem);
+            }
+        }
+        Company company = companies.get(indexOfCompany);
+
+        int sharesCount = generator.nextInt(sharesPurchased.get(companyNumber).getAmount());
+        double sellPrice = company.getCurrentPrice();
+
+        //increasing budget;
+        budget += sharesCount * sellPrice;
+        //decreasing budget because of paying a margine
+        budget -= sharesCount * sellPrice * stockToSell.getMargin();
+
+        //decreasing number of Investor's shares
+        int currentSharesCount = generator.nextInt(sharesPurchased.get(companyNumber).getAmount());
+        sharesPurchased.get(companyNumber).setAmount(currentSharesCount - sharesCount);
+
+        //0. increasing number of Company's shares
+        //int companySharesAmount = company.getSharesCount();.
+        //dostepDoSpolkiWGlownejLiscieZeSpolkami.setSharesCount(companySharesAmount+=sharesCount);
+
+        //1. decreasing share price
+        //dostepDoSpolkiWGlownejLiscieZeSpolkami.setCurrentPrice(sellPrice *0.99);
+        //if(cenaMinSpolki>CurrentPrice)
+        //      cenaMinSpolkiNaGlownejLiscie = CurrentPrice;
+
+        //2. increasing volume
+        //int volume = dostepDoSpolkiWGlownejLiscieZeSpolkami.getVolume();
+        //dostepDoSpolkiWGlownejLiscieZeSpolkami.setVolume(volume + sharesCount);
+
+        //3. increasing sales
+        //double sales = company.getSales();
+        //dostepDoSpolkiWGlownejLiscieZeSpolkami.setSales(sales+sharesCount*sellPrice)
+    }
+
+    private void sellMaterials() {
+        Random generator = new Random();
+        ObservableList<MaterialMarket> materialMarkets = ApplicationModel.getInstance().getMaterialMarkets();
+        ObservableList<Material> materials = ApplicationModel.getInstance().getMaterials();
+        ObservableList<Currency> currencies = ApplicationModel.getInstance().getCurrencies();
+
+        int materialNumber = generator.nextInt(materialsPurchased.size());
+        //amount of material we have in wallet is maximum we can sell
+        double materialAmount = generator.nextDouble() * materialsPurchased.get(materialNumber).getAmount();
+        String marketName = materialsPurchased.get(materialNumber).getMarketName();
+        String materialName = materialsPurchased.get(materialNumber).getName();
+
+        double materialPrice = 0;
+        double minPriceSoFar = 0;
+        double margin = 0;
+        double currencyValue = 0;
+        Currency materialCurrency = null;
+
+        for (Material elem : materials) {
+            if (materialName.equals(elem.getName())) {
+                materialPrice = elem.getCurrentValue();
+                minPriceSoFar = elem.getMinValue();
+                materialCurrency = elem.getCurrency();
+            }
+        }
+
+        //WALUTĘ UJĄĆ!!
+        //
+        //
+        //
+        //
+        //!!!
+
+        //for(Currency elem : currencies){
+        //    if(materialCurrency.getName().equals(elem.getName()))
+        //}
+
+        for (MaterialMarket elem : materialMarkets) {
+            if (marketName.equals(elem.getName())) {
+                margin = elem.getMargin();
+            }
+        }
+
+        //changing the budget
+        budget += materialPrice * materialAmount; // kursSprzedażyWaluty;
+        budget -= materialPrice * materialAmount * margin; //kursSprzedażyWaluty
+
+        //decrementing amount of material in wallet
+        materialsPurchased.get(materialNumber).decrementAmount(materialAmount);
+
+        //0. ZDEKREMENTOWAĆ CENĘ SUROWCA NA LIŚCIE GŁÓWNEJ
+        //ListaGlownaSurowcow.setCurrentPrice(materialPrice*0.99);
+        //if(materialPrice*0.99 < minPriceSoFar)
+        //      ListaGlownaSurowcow.setMinPrice(materialPrice*0.99);
 
     }
 
-    public void sellWithInfFuM() {
+    private void sellCurrencies() {
+    }
+
+    /**
+     * buying assets with investment fund
+     */
+    private void buyWithInvFuM() {
 
     }
 
+    /**
+     * selling assets with investment fund
+     */
+    private void sellWithInfFuM() {
+
+    }
+
+    /**
+     * possibility to change budget
+     */
     public void riseBudget() {
         Random generator = new Random();
         if (budget < 0) {

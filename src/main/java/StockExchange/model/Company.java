@@ -1,6 +1,7 @@
 
 package StockExchange.model;
 
+import StockExchange.ApplicationExecutor;
 import StockExchange.ui.DisplayableListItem;
 
 import java.io.IOException;
@@ -15,6 +16,8 @@ import java.util.Random;
 import StockExchange.util.RandomString;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
+
+import static java.lang.Thread.sleep;
 
 /**
  * @author jakub
@@ -43,7 +46,7 @@ public class Company implements DisplayableListItem, Serializable {
             String jsonString = IOUtils.toString(inputStream);
             inputStream.close();
             JSONArray companies = new JSONArray(jsonString);
-            for(int i = 0; i<companies.length(); i++) {
+            for (int i = 0; i < companies.length(); i++) {
                 namesList.add(companies.getString(i));
             }
         } catch (IOException e) {
@@ -61,7 +64,7 @@ public class Company implements DisplayableListItem, Serializable {
         //String strForm = two.format(number);
         //number = Double.parseDouble(strForm.replace(",", "."));
         Random generator = new Random();
-        if(namesList.size() > 0) {
+        if (namesList.size() > 0) {
             name = namesList.get(generator.nextInt(namesList.size()));
             namesList.remove(name);
         } else {
@@ -72,13 +75,13 @@ public class Company implements DisplayableListItem, Serializable {
         this.sharesCount = generator.nextInt(1000);
         this.minPrice = Double.parseDouble(two.format(min).replace(",", "."));
         this.maxPrice = Double.parseDouble(two.format(max).replace(",", "."));
-        this.openingPrice = Double.parseDouble(two.format((min+max)/2.0).replace(",", "."));
+        this.openingPrice = Double.parseDouble(two.format((min + max) / 2.0).replace(",", "."));
         this.currentPrice = this.openingPrice;
-        this.shareCapital =Double.parseDouble(two.format(generator.nextDouble()*1000000).replace(",", "."));
-        this.equityCapital =  Double.parseDouble(two.format(shareCapital+generator.nextDouble()*1000000).replace(",", "."));
+        this.shareCapital = Double.parseDouble(two.format(generator.nextDouble() * 1000000).replace(",", "."));
+        this.equityCapital = Double.parseDouble(two.format(shareCapital + generator.nextDouble() * 1000000).replace(",", "."));
         this.profit = this.equityCapital * 100;
-        this.income = this.profit *12;
-        this.sales = Double.parseDouble(two.format(generator.nextDouble()*1000000).replace(",", "."));
+        this.income = this.profit * 12;
+        this.sales = Double.parseDouble(two.format(generator.nextDouble() * 1000000).replace(",", "."));
 
         //date generator
         int minDay = (int) LocalDate.of(1900, 1, 1).toEpochDay();
@@ -90,22 +93,66 @@ public class Company implements DisplayableListItem, Serializable {
     }
 
     /**
-     *
      * @param amount amount of shares to buy
      * @return price of bought shares
      */
-    public int buyShares(int amount) {
-        if(sharesCount >= amount) {
+
+    public double buyShares(int amount) {
+        if (sharesCount >= amount) {
             sharesCount -= amount;
-            int price = (int) (amount * currentPrice);
-            sales += price;
+            double price = amount * currentPrice;
+            sales += price; //income
             currentPrice *= 1.01;
-            if(currentPrice > maxPrice)
+            if (currentPrice > maxPrice)
                 maxPrice = currentPrice;
             volume += amount;
             return price;
         }
         return -1;
+    }
+
+    public synchronized void companyOperations(){
+        ApplicationExecutor.getInstance().getBackgroundThreadPool().execute(() -> {
+            while (true) {
+                Random generator = new Random();
+                int cases = generator.nextInt(2);
+                switch (cases) {
+                    case 0:
+                        increaseProfit();
+                    default:
+                        releaseShares();
+                }
+                //company's thread sleep ten times longer than infestor's thread
+                try {
+                    sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void releaseShares() {
+        Random generator = new Random();
+        sharesCount += generator.nextInt(100);
+    }
+
+    //Profit is dependent on income
+    //it increases the same time
+
+    public void increaseProfit() {
+        profit += increaseIncome() * 0.75;
+    }
+
+    private double increaseIncome() {
+        Random generator = new Random();
+        double incomeGrowth = generator.nextDouble() * 100000;
+        income += incomeGrowth;
+        return incomeGrowth;
+    }
+
+    private void buyAllYourShares(){
+
     }
 
     /**
@@ -121,7 +168,6 @@ public class Company implements DisplayableListItem, Serializable {
      */
 
     public double getCurrentPrice() {
-
         return currentPrice;
     }
 

@@ -6,16 +6,22 @@ public class CurrencyInWallet extends Assets implements DisplayableListItem {
     private String name;
     private double amount;
 
+    public void incrementAmount(int byHowMuch) {
+        amount += byHowMuch;
+    }
+
+    public void decrementAmount(int byHowMuch) { amount -= byHowMuch; }
+
+    /**
+     *
+     * @return amount od currency in wallet
+     */
     public CurrencyInWallet(String name) {
         this.name = name;
     }
 
     public double getAmount() {
         return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
     }
 
     @Override
