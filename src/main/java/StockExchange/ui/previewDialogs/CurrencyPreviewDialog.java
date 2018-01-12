@@ -18,6 +18,7 @@ public class CurrencyPreviewDialog extends PreviewDialog<Currency> {
         ListView<String> countries = new ListView<>();
         countries.setItems(FXCollections.observableArrayList(currency.getCountriesList()));
         grid.add(countries, 0, 2, 2, 1);
+        setTitle("Szczegóły waluty");
     }
 
     private static List<Pair<String, String>> getLabels(Currency currency) {

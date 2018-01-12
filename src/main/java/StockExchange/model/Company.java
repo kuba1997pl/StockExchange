@@ -14,6 +14,10 @@ import java.util.Arrays;
 import java.util.Random;
 
 import StockExchange.util.RandomString;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 
@@ -30,7 +34,7 @@ public class Company implements DisplayableListItem, Serializable {
     private double maxPrice;
     private double currentPrice;
     private double openingPrice;
-    private int sharesCount;
+    private IntegerProperty sharesCount = new SimpleIntegerProperty();
     private double profit; // dochód = przychód - koszta
     private double income;
     private double equityCapital; // kapitał własny
@@ -72,7 +76,7 @@ public class Company implements DisplayableListItem, Serializable {
         }
         double min = generator.nextDouble() * 10;
         double max = min + generator.nextDouble() * 20;
-        this.sharesCount = generator.nextInt(1000);
+        this.sharesCount.setValue(generator.nextInt(1000));
         this.minPrice = Double.parseDouble(two.format(min).replace(",", "."));
         this.maxPrice = Double.parseDouble(two.format(max).replace(",", "."));
         this.openingPrice = Double.parseDouble(two.format((min + max) / 2.0).replace(",", "."));
@@ -98,8 +102,9 @@ public class Company implements DisplayableListItem, Serializable {
      */
 
     public double buyShares(int amount) {
-        if (sharesCount >= amount) {
-            sharesCount -= amount;
+        int count = sharesCount.get();
+        if (count >= amount) {
+            sharesCount.setValue(count - amount);
             double price = amount * currentPrice;
             sales += price; //income
             currentPrice *= 1.01;
@@ -134,7 +139,8 @@ public class Company implements DisplayableListItem, Serializable {
 
     private void releaseShares() {
         Random generator = new Random();
-        sharesCount += generator.nextInt(100);
+        int count = sharesCount.get();
+        sharesCount.setValue(count + generator.nextInt(100));
     }
 
     //Profit is dependent on income
@@ -187,91 +193,6 @@ public class Company implements DisplayableListItem, Serializable {
     }
 
     /**
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * @param dataIwyceny
-     */
-    public void setFirstPricingDate(LocalDate dataIwyceny) {
-        this.firstPricingDate = firstPricingDate;
-    }
-
-    /**
-     * @param minPrice
-     */
-    public void setMinPrice(double minPrice) {
-        this.minPrice = minPrice;
-    }
-
-    /**
-     * @param maxPrice
-     */
-    public void setMaxPrice(double maxPrice) {
-        this.maxPrice = maxPrice;
-    }
-
-
-    /**
-     * @param openingPrice
-     */
-    public void setOpeningPrice(double openingPrice) {
-        this.openingPrice = openingPrice;
-    }
-
-    /**
-     * @param sharesCount
-     */
-    public void setSharesCount(int sharesCount) {
-        this.sharesCount = sharesCount;
-    }
-
-    /**
-     * @param profit
-     */
-    public void setProfit(int profit) {
-        this.profit = profit;
-    }
-
-    /**
-     * @param income
-     */
-    public void setIncome(int income) {
-        this.income = income;
-    }
-
-    /**
-     * @param equityCapital
-     */
-    public void setEquityCapital(int equityCapital) {
-        this.equityCapital = equityCapital;
-    }
-
-    /**
-     * @param shareCapital
-     */
-    public void setShareCapital(int shareCapital) {
-        this.shareCapital = shareCapital;
-    }
-
-    /**
-     * @param volume
-     */
-    public void setVolume(int volume) {
-        this.volume = volume;
-    }
-
-    /**
-     * @param sales
-     */
-    public void setSales(int sales) {
-        this.sales = sales;
-    }
-
-    /**
      * @return name
      */
     public String getName() {
@@ -312,7 +233,7 @@ public class Company implements DisplayableListItem, Serializable {
      * @return sharesCount
      */
     public int getSharesCount() {
-        return sharesCount;
+        return sharesCount.get();
     }
 
     /**
@@ -355,5 +276,13 @@ public class Company implements DisplayableListItem, Serializable {
      */
     public double getSales() {
         return sales;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public IntegerProperty sharesCountProperty() {
+        return sharesCount;
     }
 }

@@ -83,11 +83,11 @@ public class CustomListView<T extends DisplayableListItem> extends VBox implemen
         return buttonTextProperty().get();
     }
 
-    public boolean getButtonVisibility() {
+    public boolean getButtonVisibile() {
         return button.isVisible();
     }
 
-    public void setButtonVisibility(boolean visibility) {
+    public void setButtonVisibile(boolean visibility) {
         button.setVisible(visibility);
     }
 

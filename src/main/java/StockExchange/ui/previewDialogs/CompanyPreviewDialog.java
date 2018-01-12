@@ -10,6 +10,7 @@ public class CompanyPreviewDialog extends PreviewDialog<Company> {
 
     public CompanyPreviewDialog(Company company) {
         super(getLabels(company));
+        setTitle("Szczegóły spółki");
     }
 
     private static List<Pair<String, String>> getLabels(Company company) {

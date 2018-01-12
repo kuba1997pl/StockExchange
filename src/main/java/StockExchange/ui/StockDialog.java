@@ -149,12 +149,12 @@ public class StockDialog extends Dialog<StockMarket> {
 
     private StockMarket convertResult(ButtonType param) {
         if(param == saveButtonType) {
-            return new StockMarket(stockName.get(), countryName.get(), selectedCurrency.get(), city.get(), address.get(), new ArrayList<>(chosenSelectedIndices.get().getSelectedItems()));
+            return new StockMarket(stockName.get(), countryName.get(), selectedCurrency.get(), city.get(), address.get(), new ArrayList<>(chosenIndexesList));
         }
         return null;
     }
 
-    public void currencyChanged(ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) {
+    private void currencyChanged(ObservableValue<? extends Currency> observable, Currency oldValue, Currency newValue) {
         enableButtonIfFieldsNotEmpty();
     }
 

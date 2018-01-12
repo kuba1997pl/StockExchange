@@ -10,6 +10,7 @@ public class MaterialPreviewDialog extends PreviewDialog<Material> {
 
     public MaterialPreviewDialog(Material material) {
         super(getLabels(material));
+        setTitle("Szczegóły surowca");
     }
 
     private static List<Pair<String, String>> getLabels(Material material) {

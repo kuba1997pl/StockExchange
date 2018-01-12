@@ -17,16 +17,17 @@ public class InvestorPreviewDialog extends PreviewDialog<Investor> {
 
     public InvestorPreviewDialog(Investor investor) {
         super(getLabels(investor));
+        setTitle("Szczegóły inwestora");
         GridPane pane = getContentGrid();
         ListView<CurrencyInWallet> currenciesPurchased = new ListView<>();
         currenciesPurchased.setItems(FXCollections.observableArrayList(investor.getCurrenciesPurchased()));
         currenciesPurchased.setCellFactory(param -> new CustomListCell<>());
         int rowCount = pane.impl_getRowCount();
-        pane.add(currenciesPurchased, 0, rowCount++);
+        pane.add(currenciesPurchased, 0, rowCount);
         ListView<MaterialInWallet> materialsPurchased = new ListView<>();
         materialsPurchased.setItems(FXCollections.observableArrayList(investor.getMaterialsPurchased()));
         materialsPurchased.setCellFactory(param -> new CustomListCell<>());
-        pane.add(materialsPurchased, 1, rowCount++);
+        pane.add(materialsPurchased, 1, rowCount);
         ListView<ShareInWallet> sharesPurchased = new ListView<>();
         sharesPurchased.setItems(FXCollections.observableArrayList(investor.getSharesPurchased()));
         sharesPurchased.setCellFactory(param -> new CustomListCell<>());

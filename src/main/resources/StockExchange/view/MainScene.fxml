@@ -19,11 +19,8 @@
             <CustomListView fx:id="materialExchangeListView" buttonText="Dodaj rynek surowców" labelText="Rynki surowców"/>
         </HBox>
         <HBox>
-            <CustomListView fx:id="currencyPreviewList" buttonVisibility="false" labelText="Waluty"/>
-            <CustomListView fx:id="materialsPreviewList" buttonVisibility="false"  labelText="Surowce"/>
-            <CustomListView fx:id="companiesPreviewList" buttonVisibility="false"  labelText="Akcje"/>
-            <CustomListView fx:id="investorsPreviewList" buttonVisibility="false"  labelText="Inwestorzy"/>
-            <CustomListView fx:id="fundsPreviewList" buttonVisibility="false"  labelText="Fundusze inwestycyjne"/>
+            <CustomListView fx:id="investorsPreviewList" buttonVisibile="false" labelText="Inwestorzy"/>
+            <CustomListView fx:id="fundsPreviewList" buttonVisibile="false" labelText="Fundusze inwestycyjne"/>
         </HBox>
     </VBox>
 

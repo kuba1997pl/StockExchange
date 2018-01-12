@@ -1,6 +1,8 @@
 package StockExchange.controller;
 
 import StockExchange.bindings.ListChangeBooleanBinding;
+import StockExchange.managers.IndexesManager;
+import StockExchange.managers.InvestorsManager;
 import StockExchange.model.*;
 import StockExchange.ui.*;
 import StockExchange.ui.previewDialogs.*;
@@ -33,12 +35,6 @@ public class MainSceneController implements Initializable {
     @FXML
     private CustomListView<MaterialMarket> materialExchangeListView;
     @FXML
-    private CustomListView<Currency> currencyPreviewList;
-    @FXML
-    private CustomListView<Material> materialsPreviewList;
-    @FXML
-    private CustomListView<Company> companiesPreviewList;
-    @FXML
     private CustomListView<Investor> investorsPreviewList;
     @FXML
     private CustomListView<InvestmentFund> fundsPreviewList;
@@ -52,6 +48,8 @@ public class MainSceneController implements Initializable {
         setItemLists();
         initializeOnClickListeners();
         addButtonVisibilityModifiers();
+        InvestorsManager.start();
+        IndexesManager.start();
     }
 
     private void addStockExchange() {
@@ -113,9 +111,11 @@ public class MainSceneController implements Initializable {
         companyListView.setOnClickListener(this::addCompany);
         currencyExchangeListView.setOnClickListener(this::addCurrencyExchange);
         materialExchangeListView.setOnClickListener(this::addMaterialExchange);
-        currencyPreviewList.addOnDoubleClickItemListener(currency -> new CurrencyPreviewDialog(currency).show());
-        materialsPreviewList.addOnDoubleClickItemListener(material -> new MaterialPreviewDialog(material).show());
-        companiesPreviewList.addOnDoubleClickItemListener(company -> new CompanyPreviewDialog(company).show());
+        stockExchangeListView.addOnDoubleClickItemListener(stockMarket -> new StockMarketPreviewDialog(stockMarket).show());
+        currencyListView.addOnDoubleClickItemListener(currency -> new CurrencyPreviewDialog(currency).show());
+        materialListView.addOnDoubleClickItemListener(material -> new MaterialPreviewDialog(material).show());
+        companyListView.addOnDoubleClickItemListener(company -> new CompanyPreviewDialog(company).show());
+        indexListView.addOnDoubleClickItemListener(index -> new IndexPreviewDialog(index).show());
         investorsPreviewList.addOnDoubleClickItemListener(investor -> new InvestorPreviewDialog(investor).show());
         fundsPreviewList.addOnDoubleClickItemListener(investmentFund -> new InvestmentFundPreviewDialog(investmentFund).show());
     }
@@ -128,9 +128,6 @@ public class MainSceneController implements Initializable {
         companyListView.setItemList(applicationModel.getCompanies());
         currencyExchangeListView.setItemList(applicationModel.getCurrencyMarkets());
         materialExchangeListView.setItemList(applicationModel.getMaterialMarkets());
-        currencyPreviewList.setItemList(applicationModel.getCurrencies());
-        materialsPreviewList.setItemList(applicationModel.getMaterials());
-        companiesPreviewList.setItemList(applicationModel.getCompanies());
         investorsPreviewList.setItemList(applicationModel.getInvestors());
         fundsPreviewList.setItemList(applicationModel.getInvestmentFunds());
     }

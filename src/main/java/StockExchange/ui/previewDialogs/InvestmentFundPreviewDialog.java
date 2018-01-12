@@ -10,6 +10,7 @@ public class InvestmentFundPreviewDialog extends PreviewDialog<InvestmentFund> {
 
     public InvestmentFundPreviewDialog(InvestmentFund investmendFund) {
         super(getLabels(investmendFund));
+        setTitle("Szczegóły funduszu inwestycyjnego");
     }
 
     private static List<Pair<String, String>> getLabels(InvestmentFund investmentFund) {

@@ -51,7 +51,6 @@ public class InvestmentFund extends Customer implements DisplayableListItem {
             "Rozrzutny",
             "Chytry",
             "Szkodnik"
-
     };
 
     private static ArrayList<String> namesList = new ArrayList<>(Arrays.asList(NAMES));
@@ -61,7 +60,7 @@ public class InvestmentFund extends Customer implements DisplayableListItem {
         sharesPurchased = new ArrayList<>();
         materialsPurchased = new ArrayList<>();
         Random generator = new Random();
-        name = NAMES[generator.nextInt(namesList.size())];
+        name = namesList.get(generator.nextInt(namesList.size()));
         namesList.remove(name);
         budget = generator.nextDouble() * 100000;
         managerFirstName = FIRSTNAMES[generator.nextInt(FIRSTNAMES.length)];

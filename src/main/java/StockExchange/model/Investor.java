@@ -4,7 +4,11 @@ package StockExchange.model;
 import StockExchange.ApplicationExecutor;
 import StockExchange.ui.DisplayableListItem;
 import javafx.collections.ObservableList;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,48 +27,32 @@ public class Investor extends Customer implements DisplayableListItem {
     private List<MaterialInWallet> materialsPurchased;
     private List<ShareInWallet> sharesPurchased;
 
-    public static String[] FIRSTNAMES = {
-            "Christian",
-            "Bill",
-            "Tony",
-            "Lucjusz",
-            "Zdzisław",
-            "Jarosław",
-            "Marian",
-            "Gordon",
-            "Bruce",
-            "Jordan",
-            "Donald",
-            "Dariusz",
-    };
+    private static ArrayList<String> namesList = new ArrayList<>();
 
-    public static String[] LASTNAMES = {
-            "Grey",
-            "Gates",
-            "Stark",
-            "Malfoy",
-            "Majchrzak",
-            "Kowalski",
-            "Szczygieł",
-            "Gekko",
-            "Wayne",
-            "Belfort",
-            "Trump",
-            "Brzezinski"
-    };
-
-    private static ArrayList<String> firstnames = new ArrayList<>(Arrays.asList(FIRSTNAMES));
-    private static ArrayList<String> lastnames = new ArrayList<>(Arrays.asList(LASTNAMES));
+    static {
+        InputStream inputStream = Company.class.getResourceAsStream("/StockExchange/dataSamples/namesSample.json");
+        try {
+            String jsonString = IOUtils.toString(inputStream);
+            inputStream.close();
+            JSONArray companies = new JSONArray(jsonString);
+            for (int i = 0; i < companies.length(); i++) {
+                namesList.add(companies.getString(i));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Investor() {
         materialsPurchased = new ArrayList<>();
         currenciesPurchased = new ArrayList<>();
         sharesPurchased = new ArrayList<>();
         Random generator = new Random();
-        firstName = firstnames.get(generator.nextInt(firstnames.size()));
-        firstnames.remove(firstName);
-        lastName = lastnames.get(generator.nextInt(lastnames.size()));
-        lastnames.remove(lastName);
+        String name = namesList.get(generator.nextInt(namesList.size()));
+        namesList.remove(name);
+        String[] splitName = name.split("\\s+");
+        firstName = splitName[0];
+        lastName = splitName[1];
         StringBuilder builder = new StringBuilder();
         this.PESEL = builder
                 .append(getTwoDigitNumberString(generator.nextInt(100))) //rok
@@ -323,11 +311,10 @@ public class Investor extends Customer implements DisplayableListItem {
         int choice = generator.nextInt(3);
         switch (choice) {
             case 0:
-                ;buySharesWithIF();
+                buySharesWithIF();
             case 1:
-                ;buyMaterialsWithIF();
+                buyMaterialsWithIF();
             default:
-                ;
                 //OGARNĄĆ POTEM!!!
         }
 
@@ -411,6 +398,6 @@ public class Investor extends Customer implements DisplayableListItem {
 
     @Override
     public String getDisplayName() {
-        return firstName + lastName;
+        return firstName + " " + lastName;
     }
 }
