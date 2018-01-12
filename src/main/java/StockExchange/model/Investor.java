@@ -133,27 +133,26 @@ public class Investor extends Customer implements DisplayableListItem {
         MaterialMarket market = materialMarkets.get(generator.nextInt(materialMarkets.size()));
         Material material = market.getMaterialList().get(generator.nextInt(market.getMaterialList().size()));
         //Value of currency is changing so each time I buy material I have to check the current value of its currency
-        Currency currencyOfMaterial = material.getCurrency();
+        String currencyName = material.getCurrency().getName();
+        int indexOfCurrency = 0;
         for (Currency elem : currencies) {
-            if (elem.getName().equals(currencyOfMaterial.getName()))
-                currencyOfMaterial = elem;
+            if (elem.getName().equals(currencyName))
+                indexOfCurrency = currencies.indexOf(elem);
         }
+        Currency currencyOfMaterial = currencies.get(indexOfCurrency);
 
+        double materialAmount = generator.nextDouble() * (budget / (material.getCurrentValue() * currencyOfMaterial.getPurchasePrice()));
+        budget -= market.getMargin() * material.buyMaterial(materialAmount) * currencyOfMaterial.getPurchasePrice();
 
-        //DOKOŃCZYĆ!!!
-        //!!!
-        //!!!
-        //!!!
-        // UJĄĆ WALUTĘ!!!
+        boolean checker = true;
+        for(MaterialInWallet element: materialsPurchased) {
+            if (material.getName().equals(element.getName())) {
+                checker = false;
+                element.incrementAmount(materialAmount);
+            }
 
-
-        double materialAmount = generator.nextDouble() * (budget / material.getCurrentValue());
-        budget -= market.getMargin() * material.buyMaterial(materialAmount);
-
-        Optional<MaterialInWallet> optionalMaterial = materialsPurchased.stream().filter(inWallet -> inWallet.name.equals(material.name)).findFirst();
-        if (optionalMaterial.isPresent()) {
-            optionalMaterial.get().incrementAmount(materialAmount);
-        } else {
+        }
+        if(checker){
             MaterialInWallet newMaterial = new MaterialInWallet(materialAmount, market.getName());
             materialsPurchased.add(newMaterial);
         }
@@ -289,23 +288,22 @@ public class Investor extends Customer implements DisplayableListItem {
         }
         MaterialMarket materialMarket = materialMarkets.get(indexOfMaterialMarket);
 
-        //WALUTĘ UJĄĆ!!!
-        //
-        //!!!
-
-        //for(Currency elem : currencies){
-        //    if(materialCurrency.getName().equals(elem.getName()))
-        //}
+        String currencyName = material.getCurrency().getName();
+        int indexOfCurrency = 0;
+        for (Currency elem : currencies) {
+            if (elem.getName().equals(currencyName))
+                indexOfCurrency = currencies.indexOf(elem);
+        }
+        Currency currencyOfMaterial = currencies.get(indexOfCurrency);
 
         double materialPrice = material.getCurrentValue();
         double minPriceSoFar = material.getMinValue();
         double margin = materialMarket.getMargin();
-        double currencyValue = 0;
-        Currency materialCurrency = null;
+        double currencyValue = currencyOfMaterial.getSellPrice();
 
         //changing the budget
-        budget += materialPrice * materialAmount; // x kursSprzedażyWaluty;
-        budget -= materialPrice * materialAmount * margin; // x kursSprzedażyWaluty
+        budget += materialPrice * materialAmount * currencyValue; // x kursSprzedażyWaluty;
+        budget -= materialPrice * materialAmount * currencyValue* margin; // x kursSprzedażyWaluty
 
         //decrementing amount of material in wallet
         materialsPurchased.get(materialNumber).decrementAmount(materialAmount);
@@ -321,9 +319,27 @@ public class Investor extends Customer implements DisplayableListItem {
      * buying assets with investment fund
      */
     private void buyWithInvFuM() {
+        Random generator = new Random();
+        int choice = generator.nextInt(3);
+        switch (choice) {
+            case 0:
+                ;buySharesWithIF();
+            case 1:
+                ;buyMaterialsWithIF();
+            default:
+                ;
+                //OGARNĄĆ POTEM!!!
+        }
 
     }
 
+    private void buySharesWithIF(){
+
+    }
+
+    private void buyMaterialsWithIF(){
+
+    }
     /**
      * selling assets with investment fund
      */

@@ -15,6 +15,8 @@ import java.util.Random;
  */
 public class Currency extends Assets implements DisplayableListItem {
     private List<String> countriesList;
+
+
     private double purchasePrice;
     private double sellPrice;
 
@@ -62,6 +64,23 @@ public class Currency extends Assets implements DisplayableListItem {
             }
         }
 
+    }
+
+
+    /**
+     *
+     * @return purchasePrice of currency
+     */
+    public double getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    /**
+     *
+     * @return sellPrice of currency
+     */
+    public double getSellPrice() {
+        return sellPrice;
     }
 
     /**

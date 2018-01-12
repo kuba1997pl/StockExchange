@@ -23,8 +23,10 @@ public class InvestmentFund extends Customer implements DisplayableListItem {
     private List<ShareInWallet> sharesPurchased;
     private double budget;
 
+
     public static String[] NAMES = {
             "Rób Pieniążki Zawodowo",
+
             "Śpij na pieniądzach!",
             "Dreams fulfiller",
             "Du hast was du willst",
@@ -54,16 +56,19 @@ public class InvestmentFund extends Customer implements DisplayableListItem {
 
     private static ArrayList<String> namesList = new ArrayList<>(Arrays.asList(NAMES));
 
-    public InvestmentFund(){
+    public InvestmentFund() {
+        currenciesPurchased = new ArrayList<>();
+        sharesPurchased = new ArrayList<>();
+        materialsPurchased = new ArrayList<>();
         Random generator = new Random();
         name = NAMES[generator.nextInt(namesList.size())];
         namesList.remove(name);
-        budget = generator.nextDouble()*100000;
+        budget = generator.nextDouble() * 100000;
         managerFirstName = FIRSTNAMES[generator.nextInt(FIRSTNAMES.length)];
         managerLastName = LASTNAMES[generator.nextInt(LASTNAMES.length)];
     }
 
-    public synchronized void investmentFundOperations(){
+    public synchronized void investmentFundOperations() {
         ApplicationExecutor.getInstance().getBackgroundThreadPool().execute(() -> {
             while (true) {
                 Random generator = new Random();
@@ -109,26 +114,25 @@ public class InvestmentFund extends Customer implements DisplayableListItem {
         MaterialMarket market = materialMarkets.get(generator.nextInt(materialMarkets.size()));
         Material material = market.getMaterialList().get(generator.nextInt(market.getMaterialList().size()));
         //Value of currency is changing so each time I buy material I have to check the current value of its currency
-        Currency currencyOfMaterial = material.getCurrency();
+        String currencyName = material.getCurrency().getName();
+        int indexOfCurrency = 0;
         for (Currency elem : currencies) {
-            if (elem.getName() == currencyOfMaterial.getName())
-                currencyOfMaterial = elem;
+            if (elem.getName().equals(currencyName))
+                indexOfCurrency = currencies.indexOf(elem);
         }
+        Currency currencyOfMaterial = currencies.get(indexOfCurrency);
 
-        //DOKOŃCZYĆ!!!
-        //!!!
-        //!!!
-        //!!!
-        // UJĄĆ WALUTĘ!!!
+        double materialAmount = generator.nextDouble() * (budget / (material.getCurrentValue() * currencyOfMaterial.getPurchasePrice()));
+        budget -= market.getMargin() * material.buyMaterial(materialAmount) * currencyOfMaterial.getPurchasePrice();
 
-
-        double materialAmount = generator.nextDouble() * (budget / material.getCurrentValue());
-        budget -= market.getMargin() * material.buyMaterial(materialAmount);
-
-        Optional<MaterialInWallet> optionalMaterial = materialsPurchased.stream().filter(inWallet -> inWallet.name.equals(material.name)).findFirst();
-        if (optionalMaterial.isPresent()) {
-            optionalMaterial.get().incrementAmount(materialAmount);
-        } else {
+        boolean checker = true;
+        for (MaterialInWallet element : materialsPurchased) {
+            if (material.getName().equals(element.getName())) {
+                checker = false;
+                element.incrementAmount(materialAmount);
+            }
+        }
+        if (checker) {
             MaterialInWallet newMaterial = new MaterialInWallet(materialAmount, market.getName());
             materialsPurchased.add(newMaterial);
         }
@@ -264,23 +268,22 @@ public class InvestmentFund extends Customer implements DisplayableListItem {
         }
         MaterialMarket materialMarket = materialMarkets.get(indexOfMaterialMarket);
 
-        //WALUTĘ UJĄĆ!!!
-        //
-        //!!!
-
-        //for(Currency elem : currencies){
-        //    if(materialCurrency.getName().equals(elem.getName()))
-        //}
+        String currencyName = material.getCurrency().getName();
+        int indexOfCurrency = 0;
+        for (Currency elem : currencies) {
+            if (elem.getName().equals(currencyName))
+                indexOfCurrency = currencies.indexOf(elem);
+        }
+        Currency currencyOfMaterial = currencies.get(indexOfCurrency);
 
         double materialPrice = material.getCurrentValue();
         double minPriceSoFar = material.getMinValue();
         double margin = materialMarket.getMargin();
-        double currencyValue = 0;
-        Currency materialCurrency = null;
+        double currencyValue = currencyOfMaterial.getSellPrice();
 
         //changing the budget
-        budget += materialPrice * materialAmount; // x kursSprzedażyWaluty;
-        budget -= materialPrice * materialAmount * margin; // x kursSprzedażyWaluty
+        budget += materialPrice * materialAmount * currencyValue; // x kursSprzedażyWaluty;
+        budget -= materialPrice * materialAmount * currencyValue* margin; // x kursSprzedażyWaluty
 
         //decrementing amount of material in wallet
         materialsPurchased.get(materialNumber).decrementAmount(materialAmount);
@@ -297,6 +300,30 @@ public class InvestmentFund extends Customer implements DisplayableListItem {
         return name;
     }
 
+
+    /**
+     *
+     * @return  list of currencies purchased by IF
+     */
+    public List<CurrencyInWallet> getCurrenciesPurchased() {
+        return currenciesPurchased;
+    }
+
+    /**
+     *
+     * @return list of materials purchased by IF
+     */
+    public List<MaterialInWallet> getMaterialsPurchased() {
+        return materialsPurchased;
+    }
+
+    /**
+     *
+     * @return list of shares purchased by IF
+     */
+    public List<ShareInWallet> getSharesPurchased() {
+        return sharesPurchased;
+    }
 
     /**
      * @return name
