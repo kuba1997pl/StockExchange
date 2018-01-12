@@ -1,4 +1,3 @@
-
 package StockExchange.model;
 
 import java.io.Serializable;

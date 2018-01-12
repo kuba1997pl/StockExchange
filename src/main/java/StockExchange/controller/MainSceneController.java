@@ -31,8 +31,6 @@ public class MainSceneController implements Initializable {
     @FXML
     private CustomListView<Company> companyListView;
     @FXML
-    private CustomListView<CurrencyMarket> currencyExchangeListView;
-    @FXML
     private CustomListView<MaterialMarket> materialExchangeListView;
     @FXML
     private CustomListView<Investor> investorsPreviewList;
@@ -95,10 +93,6 @@ public class MainSceneController implements Initializable {
         applicationModel.getCompanies().add(new Company());
     }
 
-    private void addCurrencyExchange() {
-        new CurrencyExchangeDialog(applicationModel.getCurrencies()).showAndWait().ifPresent(applicationModel.getCurrencyMarkets()::add);
-    }
-
     private void addMaterialExchange() {
         applicationModel.getMaterialMarkets().add(new MaterialMarket());
     }
@@ -109,7 +103,6 @@ public class MainSceneController implements Initializable {
         materialListView.setOnClickListener(this::addMaterial);
         currencyListView.setOnClickListener(this::addCurrency);
         companyListView.setOnClickListener(this::addCompany);
-        currencyExchangeListView.setOnClickListener(this::addCurrencyExchange);
         materialExchangeListView.setOnClickListener(this::addMaterialExchange);
         stockExchangeListView.addOnDoubleClickItemListener(stockMarket -> new StockMarketPreviewDialog(stockMarket).show());
         currencyListView.addOnDoubleClickItemListener(currency -> new CurrencyPreviewDialog(currency).show());
@@ -126,7 +119,6 @@ public class MainSceneController implements Initializable {
         materialListView.setItemList(applicationModel.getMaterials());
         currencyListView.setItemList(applicationModel.getCurrencies());
         companyListView.setItemList(applicationModel.getCompanies());
-        currencyExchangeListView.setItemList(applicationModel.getCurrencyMarkets());
         materialExchangeListView.setItemList(applicationModel.getMaterialMarkets());
         investorsPreviewList.setItemList(applicationModel.getInvestors());
         fundsPreviewList.setItemList(applicationModel.getInvestmentFunds());
@@ -143,7 +135,6 @@ public class MainSceneController implements Initializable {
         BooleanBinding materialListViewBinding = new ListChangeBooleanBinding(() -> isListEmpty(currencyListModels), currencyListModels);
         materialListView.setButtonDisabled(materialListViewBinding);
         BooleanBinding currencyMarketListViewBinding = new ListChangeBooleanBinding(() -> isListEmpty(currencyListModels), currencyListModels);
-        currencyExchangeListView.setButtonDisabled(currencyMarketListViewBinding);
     }
 
     private boolean isListEmpty(List<?> list) {

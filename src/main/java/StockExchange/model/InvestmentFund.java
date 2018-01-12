@@ -3,6 +3,7 @@ package StockExchange.model;
 
 import StockExchange.ApplicationExecutor;
 import StockExchange.ui.DisplayableListItem;
+import StockExchange.util.RandomString;
 import javafx.collections.ObservableList;
 
 import java.lang.reflect.Array;
@@ -24,9 +25,8 @@ public class InvestmentFund extends Customer implements DisplayableListItem {
     private double budget;
 
 
-    public static String[] NAMES = {
+    private static String[] NAMES = {
             "Rób Pieniążki Zawodowo",
-
             "Śpij na pieniądzach!",
             "Dreams fulfiller",
             "Du hast was du willst",
@@ -34,7 +34,7 @@ public class InvestmentFund extends Customer implements DisplayableListItem {
             "Agresywny",
             "Stabilność przede wszystkim"
     };
-    public static String[] FIRSTNAMES = {
+    private static String[] FIRSTNAMES = {
             "Zdzisław",
             "Piotr",
             "Andrzej",
@@ -43,7 +43,7 @@ public class InvestmentFund extends Customer implements DisplayableListItem {
             "Bożydar",
             "James"
     };
-    public static String[] LASTNAMES = {
+    private static String[] LASTNAMES = {
             "Masztalerz",
             "Wąsik",
             "Boligłowa",
@@ -60,8 +60,12 @@ public class InvestmentFund extends Customer implements DisplayableListItem {
         sharesPurchased = new ArrayList<>();
         materialsPurchased = new ArrayList<>();
         Random generator = new Random();
-        name = namesList.get(generator.nextInt(namesList.size()));
-        namesList.remove(name);
+        if(namesList.size() > 0) {
+            name = namesList.get(generator.nextInt(namesList.size()));
+            namesList.remove(name);
+        } else {
+            name = RandomString.nextString(10);
+        }
         budget = generator.nextDouble() * 100000;
         managerFirstName = FIRSTNAMES[generator.nextInt(FIRSTNAMES.length)];
         managerLastName = LASTNAMES[generator.nextInt(LASTNAMES.length)];
@@ -69,7 +73,7 @@ public class InvestmentFund extends Customer implements DisplayableListItem {
 
     public synchronized void investmentFundOperations() {
         ApplicationExecutor.getInstance().getBackgroundThreadPool().execute(() -> {
-            while (true) {
+            while (!Thread.currentThread().isInterrupted()) {
                 Random generator = new Random();
                 int cases = generator.nextInt(2);
                 switch (cases) {

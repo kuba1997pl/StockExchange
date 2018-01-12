@@ -64,9 +64,6 @@ public class Company implements DisplayableListItem, Serializable {
     }
 
     public Company() {
-        DecimalFormat two = new DecimalFormat("#0.00");
-        //String strForm = two.format(number);
-        //number = Double.parseDouble(strForm.replace(",", "."));
         Random generator = new Random();
         if (namesList.size() > 0) {
             name = namesList.get(generator.nextInt(namesList.size()));
@@ -74,18 +71,16 @@ public class Company implements DisplayableListItem, Serializable {
         } else {
             name = RandomString.nextString(10);
         }
-        double min = generator.nextDouble() * 10;
-        double max = min + generator.nextDouble() * 20;
-        this.sharesCount = generator.nextInt(1000);
-        this.minPrice = Double.parseDouble(two.format(min).replace(",", "."));
-        this.maxPrice = Double.parseDouble(two.format(max).replace(",", "."));
-        this.openingPrice = Double.parseDouble(two.format((min + max) / 2.0).replace(",", "."));
-        this.currentPrice = this.openingPrice;
-        this.shareCapital = Double.parseDouble(two.format(generator.nextDouble() * 1000000).replace(",", "."));
-        this.equityCapital = Double.parseDouble(two.format(shareCapital + generator.nextDouble() * 1000000).replace(",", "."));
-        this.profit = this.equityCapital * 100;
-        this.income = this.profit * 12;
-        this.sales = Double.parseDouble(two.format(generator.nextDouble() * 1000000).replace(",", "."));
+        sharesCount = generator.nextInt(1000);
+        minPrice = generator.nextDouble() * 10;
+        maxPrice = minPrice + generator.nextDouble() * 20;
+        openingPrice = (minPrice + maxPrice) / 2;
+        currentPrice = this.openingPrice;
+        shareCapital = generator.nextDouble() * 1000000;
+        equityCapital = shareCapital + generator.nextDouble() * 1000000;
+        profit = this.equityCapital * 100;
+        income = this.profit * 12;
+        sales = generator.nextDouble() * 1000000;
 
         //date generator
         int minDay = (int) LocalDate.of(1900, 1, 1).toEpochDay();
@@ -93,7 +88,6 @@ public class Company implements DisplayableListItem, Serializable {
         long losDz = minDay + generator.nextInt(maxDay - minDay);
         this.firstPricingDate = LocalDate.ofEpochDay(losDz);
         this.volume = generator.nextInt(1000);
-        //System.out.println(this.firstPricingDate+"\n"+this.volume+"\n"+this.maxPrice+"\n"+this.minPrice);
     }
 
     /**
@@ -102,9 +96,8 @@ public class Company implements DisplayableListItem, Serializable {
      */
 
     public double buyShares(int amount) {
-        int count = sharesCount;
-        if (count >= amount) {
-            sharesCount = count - amount;
+        if (sharesCount >= amount) {
+            sharesCount -= amount;
             double price = amount * currentPrice;
             sales += price; //income
             currentPrice *= 1.01;
@@ -277,11 +270,4 @@ public class Company implements DisplayableListItem, Serializable {
         return sales;
     }
 
-    /**
-     *
-     * @return
-     */
-    public int sharesCountProperty() {
-        return sharesCount;
-    }
 }
