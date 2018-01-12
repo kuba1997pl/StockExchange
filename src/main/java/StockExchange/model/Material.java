@@ -82,6 +82,11 @@ public class Material extends Assets implements DisplayableListItem  {
         return price;
     }
 
+    public void decrementCurrentValue(){
+        currentValue *= 0.99;
+        if (currentValue < minValue)
+            minValue = currentValue;
+    }
     /**
      *
      * @param currency

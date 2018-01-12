@@ -135,7 +135,7 @@ public class Investor extends Customer implements DisplayableListItem {
         //Value of currency is changing so each time I buy material I have to check the current value of its currency
         Currency currencyOfMaterial = material.getCurrency();
         for (Currency elem : currencies) {
-            if (elem.getName() == currencyOfMaterial.getName())
+            if (elem.getName().equals(currencyOfMaterial.getName()))
                 currencyOfMaterial = elem;
         }
 
@@ -248,22 +248,17 @@ public class Investor extends Customer implements DisplayableListItem {
         int currentSharesCount = generator.nextInt(sharesPurchased.get(companyNumber).getAmount());
         sharesPurchased.get(companyNumber).setAmount(currentSharesCount - sharesCount);
 
-        //0. increasing number of Company's shares
-        //int companySharesAmount = company.getSharesCount();.
-        //dostepDoSpolkiWGlownejLiscieZeSpolkami.setSharesCount(companySharesAmount+=sharesCount);
+        //increasing number of Company's shares
+        company.incrementSharesCount(sharesCount);
 
-        //1. decreasing share price
-        //dostepDoSpolkiWGlownejLiscieZeSpolkami.setCurrentPrice(sellPrice *0.99);
-        //if(cenaMinSpolki>CurrentPrice)
-        //      cenaMinSpolkiNaGlownejLiscie = CurrentPrice;
+        //1decreasing share price
+        company.decrementCurrentPrice();
 
-        //2. increasing volume
-        //int volume = dostepDoSpolkiWGlownejLiscieZeSpolkami.getVolume();
-        //dostepDoSpolkiWGlownejLiscieZeSpolkami.setVolume(volume + sharesCount);
+        // increasing volume
+        company.changeVolume(sharesCount);
 
-        //3. increasing sales
-        //double sales = company.getSales();
-        //dostepDoSpolkiWGlownejLiscieZeSpolkami.setSales(sales+sharesCount*sellPrice)
+        //increasing shares
+        company.increaseSales(sharesCount * sellPrice);
     }
 
     private void sellMaterials() {
@@ -278,24 +273,23 @@ public class Investor extends Customer implements DisplayableListItem {
         String marketName = materialsPurchased.get(materialNumber).getMarketName();
         String materialName = materialsPurchased.get(materialNumber).getName();
 
-        double materialPrice = 0;
-        double minPriceSoFar = 0;
-        double margin = 0;
-        double currencyValue = 0;
-        Currency materialCurrency = null;
-
+        int indexOfMaterial = 0;
         for (Material elem : materials) {
             if (materialName.equals(elem.getName())) {
-                materialPrice = elem.getCurrentValue();
-                minPriceSoFar = elem.getMinValue();
-                materialCurrency = elem.getCurrency();
+                indexOfMaterial = materials.indexOf(elem);
             }
         }
+        Material material = materials.get(indexOfMaterial);
 
-        //WALUTĘ UJĄĆ!!
-        //
-        //
-        //
+        int indexOfMaterialMarket = 0;
+        for (MaterialMarket elem : materialMarkets) {
+            if (marketName.equals(elem.getName())) {
+                indexOfMaterialMarket = materialMarkets.indexOf(elem);
+            }
+        }
+        MaterialMarket materialMarket = materialMarkets.get(indexOfMaterialMarket);
+
+        //WALUTĘ UJĄĆ!!!
         //
         //!!!
 
@@ -303,24 +297,21 @@ public class Investor extends Customer implements DisplayableListItem {
         //    if(materialCurrency.getName().equals(elem.getName()))
         //}
 
-        for (MaterialMarket elem : materialMarkets) {
-            if (marketName.equals(elem.getName())) {
-                margin = elem.getMargin();
-            }
-        }
+        double materialPrice = material.getCurrentValue();
+        double minPriceSoFar = material.getMinValue();
+        double margin = materialMarket.getMargin();
+        double currencyValue = 0;
+        Currency materialCurrency = null;
 
         //changing the budget
-        budget += materialPrice * materialAmount; // kursSprzedażyWaluty;
-        budget -= materialPrice * materialAmount * margin; //kursSprzedażyWaluty
+        budget += materialPrice * materialAmount; // x kursSprzedażyWaluty;
+        budget -= materialPrice * materialAmount * margin; // x kursSprzedażyWaluty
 
         //decrementing amount of material in wallet
         materialsPurchased.get(materialNumber).decrementAmount(materialAmount);
 
-        //0. ZDEKREMENTOWAĆ CENĘ SUROWCA NA LIŚCIE GŁÓWNEJ
-        //ListaGlownaSurowcow.setCurrentPrice(materialPrice*0.99);
-        //if(materialPrice*0.99 < minPriceSoFar)
-        //      ListaGlownaSurowcow.setMinPrice(materialPrice*0.99);
-
+        //decrementing price of material
+        material.decrementCurrentValue();
     }
 
     private void sellCurrencies() {
@@ -382,7 +373,6 @@ public class Investor extends Customer implements DisplayableListItem {
     }
 
     /**
-     *
      * @return currenciesPurchased
      */
     public List<CurrencyInWallet> getCurrenciesPurchased() {
@@ -390,7 +380,6 @@ public class Investor extends Customer implements DisplayableListItem {
     }
 
     /**
-     *
      * @return materialsPurchased
      */
     public List<MaterialInWallet> getMaterialsPurchased() {
@@ -398,7 +387,6 @@ public class Investor extends Customer implements DisplayableListItem {
     }
 
     /**
-     *
      * @return sharesPurchased
      */
     public List<ShareInWallet> getSharesPurchased() {

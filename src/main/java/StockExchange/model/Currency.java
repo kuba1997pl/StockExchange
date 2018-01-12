@@ -15,6 +15,8 @@ import java.util.Random;
  */
 public class Currency extends Assets implements DisplayableListItem {
     private List<String> countriesList;
+    private double purchasePrice;
+    private double sellPrice;
 
     private static ArrayList<String> CURRENCIES = new ArrayList<>();
 
