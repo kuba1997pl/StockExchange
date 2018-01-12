@@ -3,18 +3,28 @@
 <?import StockExchange.ui.CustomListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
 <ScrollPane xmlns="http://javafx.com/javafx/8.0.121"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="StockExchange.controller.MainSceneController">
-    <HBox>
-        <CustomListView fx:id="stockExchangeListView" buttonText="Dodaj giełdę" labelText="Giełdy"/>
-        <CustomListView fx:id="indexListView" buttonText="Dodaj indeks" labelText="Indeksy"/>
-        <CustomListView fx:id="materialListView" buttonText="Dodaj surowiec" labelText="Surowce"/>
-        <CustomListView fx:id="currencyListView" buttonText="Dodaj walutę" labelText="Waluty"/>
-        <CustomListView fx:id="companyListView" buttonText="Dodaj spółkę" labelText="Spółki"/>
-        <CustomListView fx:id="currencyExchangeListView" buttonText="Dodaj rynek walut" labelText="Rynki walut"/>
-        <CustomListView fx:id="materialExchangeListView" buttonText="Dodaj rynek surowców" labelText="Rynki surowców"/>
-    </HBox>
+    <VBox>
+        <HBox>
+            <CustomListView fx:id="stockExchangeListView" buttonText="Dodaj giełdę" labelText="Giełdy"/>
+            <CustomListView fx:id="indexListView" buttonText="Dodaj indeks" labelText="Indeksy"/>
+            <CustomListView fx:id="materialListView" buttonText="Dodaj surowiec" labelText="Surowce"/>
+            <CustomListView fx:id="currencyListView" buttonText="Dodaj walutę" labelText="Waluty"/>
+            <CustomListView fx:id="companyListView" buttonText="Dodaj spółkę" labelText="Spółki"/>
+            <CustomListView fx:id="currencyExchangeListView" buttonText="Dodaj rynek walut" labelText="Rynki walut"/>
+            <CustomListView fx:id="materialExchangeListView" buttonText="Dodaj rynek surowców" labelText="Rynki surowców"/>
+        </HBox>
+        <HBox>
+            <CustomListView fx:id="currencyPreviewList" buttonVisibility="false" labelText="Waluty"/>
+            <CustomListView fx:id="materialsPreviewList" buttonVisibility="false"  labelText="Surowce"/>
+            <CustomListView fx:id="companiesPreviewList" buttonVisibility="false"  labelText="Akcje"/>
+            <CustomListView fx:id="investorsPreviewList" buttonVisibility="false"  labelText="Inwestorzy"/>
+            <CustomListView fx:id="fundsPreviewList" buttonVisibility="false"  labelText="Fundusze inwestycyjne"/>
+        </HBox>
+    </VBox>
 
 </ScrollPane>

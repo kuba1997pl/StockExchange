@@ -1,8 +1,14 @@
 package StockExchange.model;
 
-class CurrencyInWallet extends Assets {
-        private String name;
-        private double amount;
+import StockExchange.ui.DisplayableListItem;
+
+public class CurrencyInWallet extends Assets implements DisplayableListItem {
+    private String name;
+    private double amount;
+
+    public CurrencyInWallet(String name) {
+        this.name = name;
+    }
 
     public double getAmount() {
         return amount;
@@ -10,5 +16,10 @@ class CurrencyInWallet extends Assets {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return name;
     }
 }

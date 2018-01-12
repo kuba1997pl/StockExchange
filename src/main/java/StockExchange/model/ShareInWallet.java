@@ -1,6 +1,8 @@
 package StockExchange.model;
 
-public class ShareInWallet extends Assets {
+import StockExchange.ui.DisplayableListItem;
+
+public class ShareInWallet extends Assets implements DisplayableListItem {
     private int amount;
     private String stockName;
 
@@ -45,5 +47,10 @@ public class ShareInWallet extends Assets {
      */
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return stockName;
     }
 }

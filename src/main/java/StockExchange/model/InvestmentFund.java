@@ -12,7 +12,7 @@ import java.util.Random;
 /**
  * @author jakub
  */
-public class InvestmentFund extends Customer implements DisplayableListItem{
+public class InvestmentFund extends Customer implements DisplayableListItem {
     private String name;
     private String managerFirstName;
     private String managerLastName;
@@ -97,19 +97,4 @@ public class InvestmentFund extends Customer implements DisplayableListItem{
     public void setName(String name) {
         this.name = name;
     }
-
-    /**
-     * @param managerFirstName
-     */
-    public void setManagerFirstName(String managerFirstName) {
-        this.managerFirstName = managerFirstName;
-    }
-
-    /**
-     * @param managerLastName
-     */
-    public void setManagerLastName(String managerLastName) {
-        this.managerLastName = managerLastName;
-    }
-
 }

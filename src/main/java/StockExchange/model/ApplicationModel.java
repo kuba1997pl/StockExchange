@@ -6,12 +6,15 @@ import javafx.collections.ObservableList;
 public class ApplicationModel {
 
     private ObservableList<StockMarket> stockMarkets;
-    private ObservableList<Index> indexListModels;
-    private ObservableList<Material> materialListModels;
-    private ObservableList<Currency> currencyListModels;
-    private ObservableList<Company> companyListModels;
-    private ObservableList<CurrencyMarket> currencyMarketListModels;
-    private ObservableList<MaterialMarket> materialMarketListModels;
+    private ObservableList<Index> indexes;
+    private ObservableList<Material> materials;
+    private ObservableList<Currency> currencies;
+    private ObservableList<Company> companies;
+    private ObservableList<CurrencyMarket> currencyMarkets;
+    private ObservableList<MaterialMarket> materialMarkets;
+    private ObservableList<Investor> investors;
+    private ObservableList<InvestmentFund> investmentFunds;
+
     private static ApplicationModel instance;
 
     private ApplicationModel() {
@@ -20,12 +23,14 @@ public class ApplicationModel {
 
     private void initializeModels() {
         stockMarkets = FXCollections.observableArrayList();
-        indexListModels = FXCollections.observableArrayList();
-        materialListModels = FXCollections.observableArrayList();
-        currencyListModels = FXCollections.observableArrayList();
-        companyListModels = FXCollections.observableArrayList();
-        currencyMarketListModels = FXCollections.observableArrayList();
-        materialMarketListModels = FXCollections.observableArrayList();
+        indexes = FXCollections.observableArrayList();
+        materials = FXCollections.observableArrayList();
+        currencies = FXCollections.observableArrayList();
+        companies = FXCollections.observableArrayList();
+        currencyMarkets = FXCollections.observableArrayList();
+        materialMarkets = FXCollections.observableArrayList();
+        investors = FXCollections.observableArrayList();
+        investmentFunds = FXCollections.observableArrayList();
     }
 
     public static ApplicationModel getInstance() {
@@ -47,105 +52,57 @@ public class ApplicationModel {
      *
      * @return
      */
-    public ObservableList<Index> getIndexListModels() {
-        return indexListModels;
+    public ObservableList<Index> getIndexes() {
+        return indexes;
     }
 
     /**
      *
      * @return
      */
-    public ObservableList<Material> getMaterialListModels() {
-        return materialListModels;
+    public ObservableList<Material> getMaterials() {
+        return materials;
     }
 
-    public ObservableList<Currency> getCurrencyListModels() {
-        return currencyListModels;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public ObservableList<Company> getCompanyListModels() {
-        return companyListModels;
+    public ObservableList<Currency> getCurrencies() {
+        return currencies;
     }
 
     /**
      *
      * @return
      */
-    public ObservableList<CurrencyMarket> getCurrencyMarketListModels() {
-        return currencyMarketListModels;
+    public ObservableList<Company> getCompanies() {
+        return companies;
     }
 
     /**
      *
      * @return
      */
-    public ObservableList<MaterialMarket> getMaterialMarketListModels() { return materialMarketListModels; }
-
-    /**
-     *
-     * @param stockMarkets
-     */
-    public void setStockMarkets(ObservableList<StockMarket> stockMarkets) {
-        this.stockMarkets = stockMarkets;
+    public ObservableList<CurrencyMarket> getCurrencyMarkets() {
+        return currencyMarkets;
     }
 
     /**
      *
-     * @param indexListModels
+     * @return
      */
-    public void setIndexListModels(ObservableList<Index> indexListModels) {
-        this.indexListModels = indexListModels;
+    public ObservableList<MaterialMarket> getMaterialMarkets() { return materialMarkets; }
+
+    /**
+     *
+     * @return
+     */
+    public ObservableList<Investor> getInvestors() {
+        return investors;
     }
 
     /**
      *
-     * @param materialListModels
+     * @return
      */
-    public void setMaterialListModels(ObservableList<Material> materialListModels) {
-        this.materialListModels = materialListModels;
-    }
-
-    /**
-     *
-     * @param currencyListModels
-     */
-    public void setCurrencyListModels(ObservableList<Currency> currencyListModels) {
-        this.currencyListModels = currencyListModels;
-    }
-
-    /**
-     *
-     * @param companyListModels
-     */
-    public void setCompanyListModels(ObservableList<Company> companyListModels) {
-        this.companyListModels = companyListModels;
-    }
-
-    /**
-     *
-     * @param currencyMarketListModels
-     */
-    public void setCurrencyMarketListModels(ObservableList<CurrencyMarket> currencyMarketListModels) {
-        this.currencyMarketListModels = currencyMarketListModels;
-    }
-
-    /**
-     *
-     * @param materialMarketListModels
-     */
-    public void setMaterialMarketListModels(ObservableList<MaterialMarket> materialMarketListModels) {
-        this.materialMarketListModels = materialMarketListModels;
-    }
-
-    /**
-     *
-     * @param instance
-     */
-    public static void setInstance(ApplicationModel instance) {
-        ApplicationModel.instance = instance;
+    public ObservableList<InvestmentFund> getInvestmentFunds() {
+        return investmentFunds;
     }
 }

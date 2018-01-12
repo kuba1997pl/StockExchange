@@ -2,6 +2,7 @@
 package StockExchange.model;
 
 import StockExchange.ApplicationExecutor;
+import StockExchange.ui.DisplayableListItem;
 import javafx.collections.ObservableList;
 
 import java.util.*;
@@ -12,7 +13,7 @@ import static java.lang.Thread.sleep;
 /**
  * @author jakub
  */
-public class Investor extends Customer {
+public class Investor extends Customer implements DisplayableListItem{
     private String firstName;
     private String lastName;
     private String PESEL;
@@ -125,7 +126,7 @@ public class Investor extends Customer {
 
     private void buyMaterials() {
         Random generator = new Random();
-        ObservableList<MaterialMarket> materialMarkets = ApplicationModel.getInstance().getMaterialMarketListModels();
+        ObservableList<MaterialMarket> materialMarkets = ApplicationModel.getInstance().getMaterialMarkets();
         MaterialMarket market = materialMarkets.get(generator.nextInt(materialMarkets.size()));
         Material material = market.getMaterialList().get(generator.nextInt(market.getMaterialList().size()));
         double materialAmount = generator.nextDouble() * (budget / material.getCurrentValue());
@@ -232,30 +233,31 @@ public class Investor extends Customer {
     }
 
     /**
-     * @param firstName
+     *
+     * @return currenciesPurchased
      */
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public List<CurrencyInWallet> getCurrenciesPurchased() {
+        return currenciesPurchased;
     }
 
     /**
-     * @param lastName
+     *
+     * @return materialsPurchased
      */
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public List<MaterialInWallet> getMaterialsPurchased() {
+        return materialsPurchased;
     }
 
     /**
-     * @param PESEL
+     *
+     * @return sharesPurchased
      */
-    public void setPESEL(String PESEL) {
-        this.PESEL = PESEL;
+    public List<ShareInWallet> getSharesPurchased() {
+        return sharesPurchased;
     }
 
-    /**
-     * @param budget
-     */
-    public void setBudget(double budget) {
-        this.budget = budget;
+    @Override
+    public String getDisplayName() {
+        return firstName + lastName;
     }
 }

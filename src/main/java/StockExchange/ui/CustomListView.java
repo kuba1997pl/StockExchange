@@ -1,7 +1,6 @@
 package StockExchange.ui;
 
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,6 +15,7 @@ import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 /**
  * Custom view for showing listView with a headline and an action button
@@ -83,6 +83,14 @@ public class CustomListView<T extends DisplayableListItem> extends VBox implemen
         return buttonTextProperty().get();
     }
 
+    public boolean getButtonVisibility() {
+        return button.isVisible();
+    }
+
+    public void setButtonVisibility(boolean visibility) {
+        button.setVisible(visibility);
+    }
+
     private StringProperty buttonTextProperty() {
         return button.textProperty();
     }
@@ -93,6 +101,15 @@ public class CustomListView<T extends DisplayableListItem> extends VBox implemen
 
     public void setOnClickListener(OnCustomListViewButtonClickListener onClickListener) {
         this.onClickListener = onClickListener;
+    }
+
+    public void addOnDoubleClickItemListener(Consumer<T> function) {
+        listView.setOnMouseClicked(mouseEvent -> {
+            if(mouseEvent.getClickCount() == 2) {
+                T item = listView.getSelectionModel().getSelectedItem();
+                function.accept(item);
+            }
+        });
     }
 
 }

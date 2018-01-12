@@ -4,7 +4,6 @@ package StockExchange.model;
 import StockExchange.ui.DisplayableListItem;
 import StockExchange.util.RandomString;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,16 +46,20 @@ public class Currency extends Assets implements DisplayableListItem {
         } else {
             this.name = RandomString.nextString(3, true);
         }
-        DecimalFormat two = new DecimalFormat("#0.00");
         ArrayList<String> avalaibleCountries = new ArrayList<>(Arrays.asList(Countries.COUNTRIES));
         countriesList = new ArrayList<>();
-        Random generator = new Random();
-        int cList = generator.nextInt(4) + 1;
-        for (int i = 0; i <= cList; i++) {
-            int element = generator.nextInt(avalaibleCountries.size());
-            this.countriesList.add(avalaibleCountries.get(element));
-            avalaibleCountries.remove(element);
+        if(this.name.equals("Złoty (PLN)")) {
+            countriesList.addAll(Arrays.asList(Countries.COUNTRIES));
+        } else {
+            Random generator = new Random();
+            int cList = generator.nextInt(4) + 1;
+            for (int i = 0; i <= cList; i++) {
+                int element = generator.nextInt(avalaibleCountries.size());
+                this.countriesList.add(avalaibleCountries.get(element));
+                avalaibleCountries.remove(element);
+            }
         }
+
     }
 
     /**
