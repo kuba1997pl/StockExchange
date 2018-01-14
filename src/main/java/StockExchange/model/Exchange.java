@@ -1,6 +1,7 @@
 package StockExchange.model;
 
 import java.io.Serializable;
+import java.util.Random;
 
 /**
  *
@@ -9,12 +10,8 @@ import java.io.Serializable;
 public class Exchange implements Serializable {
     protected double margin;
 
-    /**
-     *
-     * @param margin
-     */
-    public void setMargin(double margin) {
-        this.margin = margin;
+    public Exchange() {
+        margin = new Random().nextDouble() * 0.04 + 0.01;
     }
 
     /**

@@ -72,42 +72,43 @@ public class Customer implements Serializable {
         }
     }
 
-    private void buyShares() {
-        if (ApplicationModel.getInstance().getStockMarkets().size() > 0) {
-            Random generator = new Random();
-            ObservableList<StockMarket> stockMarkets = ApplicationModel.getInstance().getStockMarkets();
+    private synchronized void buyShares() {
+        Random generator = new Random();
+        List<StockMarket> stockMarkets = ApplicationModel.getInstance().getStockMarkets();
+        if(stockMarkets.size() > 0) {
             StockMarket market = stockMarkets.get(generator.nextInt(stockMarkets.size()));
-            List<Company> companies = market.getIndexList()
-                    .stream()
-                    .map(Index::getCompaniesList)
-                    .flatMap(Collection::stream)
-                    .filter(company -> company.getSharesCount() > 0)
-                    .collect(Collectors.toList());
+            List<Index> indexList = market.getIndexList();
+            if(indexList.size() > 0) {
+                Index index = indexList.get(generator.nextInt(indexList.size()));
+                List<Company> companies = index.getCompaniesList();
+                if(companies.size() > 0) {
+                    Company company = companies.get(generator.nextInt(companies.size()));
+                    if(company.getSharesCount() > 0) {
+                        int bound = Math.min(company.getSharesCount(), (int) Math.floor(budget / company.getCurrentPrice()));
+                        if (bound > 0) {
+                            int sharesPurchaseAmount = generator.nextInt(bound);
 
-            Company company = companies.get(generator.nextInt(companies.size()));
+                            double boughtSharesPrice = company.buyShares(sharesPurchaseAmount);
+                            if (boughtSharesPrice >= 0) {
+                                budget -= (boughtSharesPrice + market.getMargin() * boughtSharesPrice);
+                            }
 
-            int bound = Math.min(company.getSharesCount(), (int) Math.floor(budget / company.getCurrentPrice()));
-            if (bound > 0) {
-                int sharesPurchaseAmount = generator.nextInt(bound);
+                            company.incrementCurrentPrice();
 
-                double boughtSharesPrice = company.buyShares(sharesPurchaseAmount);
-                if (boughtSharesPrice >= 0) {
-                    budget -= (boughtSharesPrice + market.getMargin() * boughtSharesPrice);
-                }
-
-                company.incrementCurrentPrice();
-
-                boolean checker = true;
-                for (ShareInWallet elem : sharesPurchased) {
-                    if (company.getName().equals(elem.getName())) {
-                        elem.incrementAmount(sharesPurchaseAmount);
-                        checker = false;
+                            boolean checker = true;
+                            for (ShareInWallet elem : sharesPurchased) {
+                                if (company.getName().equals(elem.getName())) {
+                                    elem.incrementAmount(sharesPurchaseAmount);
+                                    checker = false;
+                                }
+                            }
+                            if (checker) {
+                                ShareInWallet newShare = new ShareInWallet(company.getName(), sharesPurchaseAmount);
+                                newShare.setStockName(market.getName());
+                                sharesPurchased.add(newShare);
+                            }
+                        }
                     }
-                }
-                if (checker) {
-                    ShareInWallet newShare = new ShareInWallet(company.getName(), sharesPurchaseAmount);
-                    newShare.setStockName(market.getName());
-                    sharesPurchased.add(newShare);
                 }
             }
         }
@@ -186,7 +187,7 @@ public class Customer implements Serializable {
                     }
                 }
 
-                if (stockToSell != null && company != null) {
+                if (stockToSell != null && company != null && share.getAmount() > 0) {
                     int sharesCount = generator.nextInt(share.getAmount());
                     double sellPrice = company.getCurrentPrice();
 

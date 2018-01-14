@@ -27,7 +27,7 @@ public class IndexPreviewDialog extends PreviewDialog<Index> {
     private static List<Pair<String, String>> getLabels(Index index) {
         List<Pair<String, String>> list = new ArrayList<>();
         list.add(new Pair<>("Nazwa:", index.getDisplayName()));
-        list.add(new Pair<>("Wartość:", Double.toString(index.getValue())));
+        list.add(new Pair<>("Wartość:", String.format("%10.2f", index.getValue())));
         return list;
     }
 }

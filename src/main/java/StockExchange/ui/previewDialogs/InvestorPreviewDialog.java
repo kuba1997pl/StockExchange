@@ -1,11 +1,10 @@
 package StockExchange.ui.previewDialogs;
 
-import StockExchange.model.CurrencyInWallet;
-import StockExchange.model.Investor;
-import StockExchange.model.MaterialInWallet;
-import StockExchange.model.ShareInWallet;
+import StockExchange.model.*;
 import StockExchange.ui.CustomListCell;
 import javafx.collections.FXCollections;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
@@ -15,8 +14,12 @@ import java.util.List;
 
 public class InvestorPreviewDialog extends PreviewDialog<Investor> {
 
+    private static ButtonType deleteButtonType = new ButtonType("Usuń spółkę", ButtonBar.ButtonData.OK_DONE);
+    private Investor investor;
+
     public InvestorPreviewDialog(Investor investor) {
         super(getLabels(investor));
+        this.investor = investor;
         setTitle("Szczegóły inwestora");
         GridPane pane = getContentGrid();
         ListView<CurrencyInWallet> currenciesPurchased = new ListView<>();
@@ -32,6 +35,15 @@ public class InvestorPreviewDialog extends PreviewDialog<Investor> {
         sharesPurchased.setItems(FXCollections.observableArrayList(investor.getSharesPurchased()));
         sharesPurchased.setCellFactory(param -> new CustomListCell<>());
         pane.add(sharesPurchased, 2, rowCount);
+        getDialogPane().getButtonTypes().add(deleteButtonType);
+        setResultConverter(this::close);
+    }
+
+    private Investor close(ButtonType param) {
+        if(param == deleteButtonType) {
+            ApplicationModel.getInstance().getInvestors().remove(investor);
+        }
+        return null;
     }
 
     private static List<Pair<String, String>> getLabels(Investor investor) {

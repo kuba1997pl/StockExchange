@@ -4,17 +4,23 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
-public class ApplicationModel {
+import java.io.IOException;
+import java.io.ObjectStreamException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ApplicationModel implements Serializable {
 
     private ObservableList<StockMarket> stockMarkets;
     private ObservableList<Index> indexes;
     private ObservableList<Material> materials;
     private ObservableList<Currency> currencies;
     private ObservableList<Company> companies;
-    private CurrencyMarket currencyMarket;
     private ObservableList<MaterialMarket> materialMarkets;
     private ObservableList<Investor> investors;
     private ObservableList<InvestmentFund> investmentFunds;
+    private CurrencyMarket currencyMarket;
 
     private static ApplicationModel instance;
 
@@ -42,6 +48,10 @@ public class ApplicationModel {
                 currencyMarket.addCurrency(currency);
             }
         }
+    }
+
+    public static void setInstance(ApplicationModel instance) {
+        ApplicationModel.instance = instance;
     }
 
     public static ApplicationModel getInstance() {
@@ -115,5 +125,30 @@ public class ApplicationModel {
      */
     public CurrencyMarket getCurrencyMarket() {
         return currencyMarket;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        out.writeObject(new ArrayList<>(stockMarkets));
+        out.writeObject(new ArrayList<>(indexes));
+        out.writeObject(new ArrayList<>(materials));
+        out.writeObject(new ArrayList<>(currencies));
+        out.writeObject(new ArrayList<>(companies));
+        out.writeObject(new ArrayList<>(materialMarkets));
+        out.writeObject(new ArrayList<>(investors));
+        out.writeObject(new ArrayList<>(investmentFunds));
+        out.writeObject(currencyMarket);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        stockMarkets = FXCollections.observableArrayList((List<StockMarket>) in.readObject());
+        indexes = FXCollections.observableArrayList((List<Index>) in.readObject());
+        materials = FXCollections.observableArrayList((List<Material>) in.readObject());
+        currencies = FXCollections.observableArrayList((List<Currency>) in.readObject());
+        companies = FXCollections.observableArrayList((List<Company>) in.readObject());
+        materialMarkets = FXCollections.observableArrayList((List<MaterialMarket>) in.readObject());
+        investors = FXCollections.observableArrayList((List<Investor>) in.readObject());
+        investmentFunds = FXCollections.observableArrayList((List<InvestmentFund>) in.readObject());
+        currencyMarket = (CurrencyMarket) in.readObject();
     }
 }

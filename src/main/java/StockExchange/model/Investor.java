@@ -54,7 +54,7 @@ public class Investor extends Customer implements DisplayableListItem {
                 .append(getTwoDigitNumberString(generator.nextInt(12) + 1)) //miesiac
                 .append(getTwoDigitNumberString(generator.nextInt(28) + 1)) // dzien
                 .append(getTwoDigitNumberString(generator.nextInt(100000))).toString();
-        this.budget = generator.nextDouble() * 1000000.0;
+        this.budget = generator.nextDouble() * 1000000 + 1000000;
         ApplicationExecutor.getInstance().getBackgroundThreadPool().execute(this::investorOperations);
     }
 
@@ -310,8 +310,6 @@ public class Investor extends Customer implements DisplayableListItem {
         }
     }
 
-    ;
-
     private void sellMaterialsWithIF() {
         Random generator = new Random();
 
@@ -402,8 +400,6 @@ public class Investor extends Customer implements DisplayableListItem {
         }
     }
 
-    ;
-
     /**
      * possibility to change budget
      */
@@ -413,7 +409,7 @@ public class Investor extends Customer implements DisplayableListItem {
             //giving a chance to a bankrupt
             budget += -budget + generator.nextDouble() * 100;
         } else
-            budget = (generator.nextDouble() + 1.0);
+            budget += (generator.nextDouble() * 10000);
     }
 
 

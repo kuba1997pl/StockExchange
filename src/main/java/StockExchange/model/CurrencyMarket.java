@@ -1,15 +1,17 @@
 package StockExchange.model;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Model class representing currency exchange market
  */
-public class CurrencyMarket extends Exchange {
+public class CurrencyMarket extends Exchange implements Serializable {
 
     private List<Currency> currencyList;
 
     public CurrencyMarket() {
+        super();
         currencyList = new ArrayList<>();
     }
 

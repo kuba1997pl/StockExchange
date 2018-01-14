@@ -11,13 +11,18 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import StockExchange.util.RandomString;
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.chart.XYChart;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 
@@ -41,6 +46,43 @@ public class Company implements DisplayableListItem, Serializable {
     private double shareCapital; // kapitał zakładowy
     private int volume; //ilość akcji, które zmieniły właściciela- wolumen
     private double sales; //przychód - podatek, obroty POPRAW!
+
+    private long firstMeasurementTime = 0;
+    private ObservableList<XYChart.Series<Number, Number>> chartData;
+    private ObservableList<XYChart.Data<Number, Number>> currentPriceSeries;
+
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        out.writeObject(name);
+        out.writeObject(firstPricingDate);
+        out.writeDouble(minPrice);
+        out.writeDouble(maxPrice);
+        out.writeDouble(currentPrice);
+        out.writeDouble(openingPrice);
+        out.writeInt(sharesCount);
+        out.writeDouble(profit);
+        out.writeDouble(income);
+        out.writeDouble(equityCapital);
+        out.writeDouble(shareCapital);
+        out.writeInt(volume);
+        out.writeDouble(sales);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        name = (String) in.readObject();
+        firstPricingDate = (LocalDate) in.readObject();
+        minPrice = in.readDouble();
+        maxPrice = in.readDouble();
+        currentPrice = in.readDouble();
+        openingPrice = in.readDouble();
+        sharesCount = in.readInt();
+        profit = in.readDouble();
+        income = in.readDouble();
+        equityCapital = in.readDouble();
+        shareCapital = in.readDouble();
+        volume = in.readInt();
+        sales = in.readDouble();
+    }
 
     private static ArrayList<String> namesList = new ArrayList<>();
 
@@ -88,14 +130,34 @@ public class Company implements DisplayableListItem, Serializable {
         long losDz = minDay + generator.nextInt(maxDay - minDay);
         this.firstPricingDate = LocalDate.ofEpochDay(losDz);
         this.volume = generator.nextInt(1000);
+        chartData = FXCollections.observableArrayList();
+        currentPriceSeries = FXCollections.observableArrayList();
+        chartData.add(new XYChart.Series<>("Aktualna cena", currentPriceSeries));
+        startDataMiner();
         ApplicationExecutor.getInstance().getBackgroundThreadPool().execute(this::companyOperations);
+    }
+
+    private void startDataMiner() {
+        ApplicationExecutor.getInstance().getBackgroundThreadPool().execute(() -> {
+            while(!Thread.currentThread().isInterrupted()) {
+                try {
+                    if(firstMeasurementTime == 0) {
+                        firstMeasurementTime = System.currentTimeMillis()/1000;
+                    }
+                    long currentTime = (System.currentTimeMillis()/1000) - firstMeasurementTime;
+                    Platform.runLater(() -> currentPriceSeries.add(new XYChart.Data<>(currentTime, currentPrice)));
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     /**
      * @param amount amount of shares to buy
      * @return price of bought shares
      */
-
     public double buyShares(int amount) {
         if (sharesCount >= amount) {
             sharesCount -= amount;
@@ -274,4 +336,11 @@ public class Company implements DisplayableListItem, Serializable {
         return sales;
     }
 
+    /**
+     *
+     * @return chartData
+     */
+    public ObservableList<XYChart.Series<Number, Number>> getChartData() {
+        return chartData;
+    }
 }

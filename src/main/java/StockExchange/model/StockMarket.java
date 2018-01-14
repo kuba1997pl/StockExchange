@@ -3,12 +3,13 @@ package StockExchange.model;
 
 import StockExchange.ui.DisplayableListItem;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author jakub
  */
-public class StockMarket extends Exchange implements DisplayableListItem {
+public class StockMarket extends Exchange implements DisplayableListItem, Serializable {
 
     private String name;
     private String country;
@@ -21,6 +22,7 @@ public class StockMarket extends Exchange implements DisplayableListItem {
 
     }
     public StockMarket(String name, String country, Currency currency, String city, String officeAdress, List<Index> indexList) {
+        super();
         this.name = name;
         this.country = country;
         this.currency = currency;

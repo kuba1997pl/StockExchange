@@ -4,6 +4,7 @@ package StockExchange.model;
 import StockExchange.ui.DisplayableListItem;
 import StockExchange.util.RandomString;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -12,11 +13,12 @@ import java.util.Random;
  *
  * @author jakub
  */
-public class MaterialMarket extends Exchange implements DisplayableListItem {
+public class MaterialMarket extends Exchange implements DisplayableListItem, Serializable {
     private String name;
-    private List<Material> materialList = new ArrayList<>();
+    private List<Material> materialList;
 
     public MaterialMarket() {
+        super();
         name = RandomString.nextString(10);
         materialList = new ArrayList<>();
         Random generator = new Random();

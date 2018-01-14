@@ -8,12 +8,18 @@ import StockExchange.ui.*;
 import StockExchange.ui.previewDialogs.*;
 import javafx.beans.binding.BooleanBinding;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 
+import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -42,6 +48,10 @@ public class MainSceneController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        initialize();
+    }
+
+    private void initialize() {
         applicationModel = ApplicationModel.getInstance();
         setItemLists();
         initializeOnClickListeners();
@@ -111,6 +121,38 @@ public class MainSceneController implements Initializable {
         indexListView.addOnDoubleClickItemListener(index -> new IndexPreviewDialog(index).show());
         investorsPreviewList.addOnDoubleClickItemListener(investor -> new InvestorPreviewDialog(investor).show());
         fundsPreviewList.addOnDoubleClickItemListener(investmentFund -> new InvestmentFundPreviewDialog(investmentFund).show());
+        materialExchangeListView.addOnDoubleClickItemListener(materialMarket -> new MaterialMarketPreviewDialog(materialMarket).show());
+    }
+
+    @FXML
+    private void saveState(ActionEvent event) {
+        try {
+            FileOutputStream fileOut = new FileOutputStream("state.ser");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(ApplicationModel.getInstance());
+            out.close();
+            fileOut.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void loadState(ActionEvent event) {
+        try {
+            Path state = Paths.get("state.ser");
+            InputStream in = Files.newInputStream(state);
+            ObjectInputStream ois = new ObjectInputStream(in);
+            ApplicationModel.setInstance((ApplicationModel) ois.readObject());
+            initialize();
+        } catch (NoSuchFileException e) {
+            Alert noSuchFileAlert = new Alert(Alert.AlertType.ERROR);
+            noSuchFileAlert.setTitle("Nie ma z czego załadować");
+            noSuchFileAlert.setContentText("Przed załadowaniem stanu aplikacji proszę go najpierw zapisać");
+            noSuchFileAlert.show();
+        } catch(ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setItemLists() {

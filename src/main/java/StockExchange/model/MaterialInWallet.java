@@ -2,7 +2,9 @@ package StockExchange.model;
 
 import StockExchange.ui.DisplayableListItem;
 
-public class MaterialInWallet extends Assets implements DisplayableListItem {
+import java.io.Serializable;
+
+public class MaterialInWallet extends Assets implements DisplayableListItem, Serializable {
     private double amount;
     private String marketName;
 

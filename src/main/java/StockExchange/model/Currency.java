@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.XYChart;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +29,19 @@ public class Currency extends Assets implements DisplayableListItem {
     private ObservableList<XYChart.Data<Number, Number>> purchasePriceSeries;
     private ObservableList<XYChart.Data<Number, Number>> sellPriceSeries;
     private long firstMeasurementTime = 0;
+
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        out.writeObject(countriesList);
+        out.writeDouble(purchasePrice);
+        out.writeDouble(sellPrice);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        countriesList = (List<String>) in.readObject();
+        purchasePrice = in.readDouble();
+        sellPrice = in.readDouble();
+    }
 
     private static ArrayList<String> CURRENCIES = new ArrayList<>();
 
@@ -60,7 +74,7 @@ public class Currency extends Assets implements DisplayableListItem {
             this.name = RandomString.nextString(3, true);
         }
         Random generator = new Random();
-        sellPrice = (generator.nextGaussian() + 1) * 2.5 + 0.1;
+        sellPrice = ( generator.nextDouble() + 1) * 2.5 + 0.1;
         purchasePrice = sellPrice * ( 1.1 + generator.nextDouble() * 0.5 );
         ArrayList<String> avalaibleCountries = new ArrayList<>(Arrays.asList(Countries.COUNTRIES));
         countriesList = new ArrayList<>();
@@ -107,8 +121,8 @@ public class Currency extends Assets implements DisplayableListItem {
         sellPrice = sellPrice * 0.99;
     }
     public void incrementPrice(){
-        sellPrice*=1.01;
-        purchasePrice*=1.01;
+        sellPrice*=1.02;
+        purchasePrice*=1.02;
     }
 
     /**

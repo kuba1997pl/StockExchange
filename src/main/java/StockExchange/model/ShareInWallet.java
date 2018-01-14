@@ -2,7 +2,9 @@ package StockExchange.model;
 
 import StockExchange.ui.DisplayableListItem;
 
-public class ShareInWallet extends Assets implements DisplayableListItem {
+import java.io.Serializable;
+
+public class ShareInWallet extends Assets implements DisplayableListItem, Serializable {
     private int amount;
     private String stockName;
 

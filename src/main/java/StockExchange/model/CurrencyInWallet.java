@@ -2,7 +2,9 @@ package StockExchange.model;
 
 import StockExchange.ui.DisplayableListItem;
 
-public class CurrencyInWallet extends Assets implements DisplayableListItem {
+import java.io.Serializable;
+
+public class CurrencyInWallet extends Assets implements DisplayableListItem, Serializable {
     private double amount;
 
     public void incrementAmount(double byHowMuch) {

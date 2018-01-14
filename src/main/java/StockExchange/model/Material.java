@@ -11,6 +11,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.chart.XYChart;
 import javafx.util.Pair;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -18,7 +20,7 @@ import java.util.*;
  *
  * @author jakub
  */
-public class Material extends Assets implements DisplayableListItem  {
+public class Material extends Assets implements DisplayableListItem, Serializable {
     private Currency currency;
     private String tradeUnit; //jednostka handlowa
     private double initialValue;
@@ -28,6 +30,25 @@ public class Material extends Assets implements DisplayableListItem  {
     private double maxValue;
     private ObservableList<XYChart.Series<Number, Number>> chartData;
     private ObservableList<XYChart.Data<Number, Number>> chartDataList;
+
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        out.writeObject(currency);
+        out.writeObject(tradeUnit);
+        out.writeDouble(initialValue);
+        out.writeDouble(currentValue);
+        out.writeDouble(minValue);
+        out.writeDouble(maxValue);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        currency = (Currency) in.readObject();
+        tradeUnit = (String) in.readObject();
+        initialValue = in.readDouble();
+        currentValue = in.readDouble();
+        minValue = in.readDouble();
+        maxValue = in.readDouble();
+    }
 
     public static String[] MATERIALS = {
             "Kakao",
