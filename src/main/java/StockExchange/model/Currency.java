@@ -71,6 +71,10 @@ public class Currency extends Assets implements DisplayableListItem {
         purchasePrice = purchasePrice * 0.99;
         sellPrice = sellPrice * 0.99;
     }
+    public void incrementPrice(){
+        sellPrice*=1.01;
+        purchasePrice*=1.01;
+    }
 
     /**
      *

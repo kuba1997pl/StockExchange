@@ -181,6 +181,31 @@ public class Investor extends Customer implements DisplayableListItem {
     }
 
     private void buyCurrencies() {
+        Random generator = new Random();
+        CurrencyMarket currencyMarket = ApplicationModel.getInstance().getCurrencyMarket();
+        List<Currency> currencies = currencyMarket.getCurrencyList();
+        int currencyNumber = generator.nextInt(currencies.size());
+        Currency currency = currencies.get(currencyNumber);
+        double currencyAmount = generator.nextDouble() * (budget / currency.getPurchasePrice());
+        boolean checker = true;
+
+        for (CurrencyInWallet elem : currenciesPurchased) {
+            if (elem.getName().equals(currency.getName())) {
+                checker = false;
+                elem.incrementAmount(currencyAmount);
+            }
+        }
+        if (checker) {
+            CurrencyInWallet newCurrency = new CurrencyInWallet(currencyAmount, currency.getName());
+            currenciesPurchased.add(newCurrency);
+        }
+
+        double currencyPurchasePrice = currency.getPurchasePrice();
+        double margin = currencyMarket.getMargin();
+        budget -= currencyAmount * currencyPurchasePrice * (1 + margin);
+
+        currency.incrementPrice();
+
     }
 
     /**
@@ -307,29 +332,27 @@ public class Investor extends Customer implements DisplayableListItem {
 
     private void sellCurrencies() {
         Random generator = new Random();
-        /* After changes in ApplicationModel it will work
-        ObservableList<CurrencyMarket> currencyMarket = ApplicationModel.getInstance().getCurrencyMarket();
-        */
+        // After changes in ApplicationModel it will work
+        CurrencyMarket currencyMarket = ApplicationModel.getInstance().getCurrencyMarket();
+        List<Currency> currencyList = currencyMarket.getCurrencyList();
         int currencyNumber = generator.nextInt(currenciesPurchased.size());
-        //String currencyName = currencyMarket.get(currencyNumber).getName();
+        String currencyName = currenciesPurchased.get(currencyNumber).getName();
         int indexOfCurrency = 0;
-        /*
-        for (Currency elem : currencyMarket) {
-            if (stockName.equals(elem.getName())) {
-                indexOfStock = stockMarkets.indexOf(elem);
+        for (Currency elem : currencyList) {
+            if (currencyName.equals(elem.getName())) {
+                indexOfCurrency = currencyList.indexOf(elem);
             }
         }
-        */
-        //Currency currency = currencyMarket.get(indexOfCurrency);
+        Currency currency = currencyList.get(indexOfCurrency);
         double currencyAmount = generator.nextDouble() * currenciesPurchased.get(currencyNumber).getAmount();
-        //double currencySellPrice = currency.getSellPrice();
-        //double margin = currencyMarket.getMargin();
+        double currencySellPrice = currency.getSellPrice();
+        double margin = currencyMarket.getMargin();
 
-        //budget+= currencyAmount*currencyAmount*(1- margin);
+        budget += currencyAmount * currencyAmount * (1 - margin);
 
         currenciesPurchased.get(currencyNumber).decrementAmount(currencyAmount);
 
-        //currency.decrementPrice();
+        currency.decrementPrice();
     }
 
     /**
