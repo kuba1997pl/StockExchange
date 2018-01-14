@@ -22,7 +22,6 @@ public class Investor extends Customer implements DisplayableListItem {
     private String firstName;
     private String lastName;
     private String PESEL;
-    private double budget;
     private static ArrayList<String> namesList = new ArrayList<>();
 
     static {
@@ -109,13 +108,13 @@ public class Investor extends Customer implements DisplayableListItem {
     }
 
     private void buySharesWithIF() {
-        if ( ApplicationModel.getInstance().getInvestmentFunds().size() > 0) {
+        if (ApplicationModel.getInstance().getInvestmentFunds().size() > 0) {
             Random generator = new Random();
             ObservableList<InvestmentFund> investmentFunds = ApplicationModel.getInstance().getInvestmentFunds();
             ObservableList<Company> companies = ApplicationModel.getInstance().getCompanies();
             int investmentFundNumber = generator.nextInt(investmentFunds.size());
             List<ShareInWallet> sharesToBuy = investmentFunds.get(investmentFundNumber).getSharesPurchased();
-            if(sharesToBuy.size() > 0) {
+            if (sharesToBuy.size() > 0) {
                 int shareNumber = generator.nextInt(sharesToBuy.size());
                 String companyName = sharesToBuy.get(shareNumber).getName();
                 int indexOfCompany = 0;
@@ -157,10 +156,10 @@ public class Investor extends Customer implements DisplayableListItem {
         ObservableList<Currency> currencies = ApplicationModel.getInstance().getCurrencies();
         ObservableList<Material> materials = ApplicationModel.getInstance().getMaterials();
 
-        if(investmentFunds.size() > 0 && currencies.size() > 0 && materials.size() > 0) {
+        if (investmentFunds.size() > 0 && currencies.size() > 0 && materials.size() > 0) {
             int investmentFundNumber = generator.nextInt(investmentFunds.size());
             List<MaterialInWallet> materialsToBuy = investmentFunds.get(investmentFundNumber).getMaterialsPurchased();
-            if(materialsToBuy.size() > 0) {
+            if (materialsToBuy.size() > 0) {
                 int materialNumber = generator.nextInt(materialsToBuy.size());
                 String materialName = materialsToBuy.get(materialNumber).getName();
 
@@ -209,11 +208,11 @@ public class Investor extends Customer implements DisplayableListItem {
     private void buyCurrenciesWitfIF() {
         Random generator = new Random();
         ObservableList<InvestmentFund> investmentFunds = ApplicationModel.getInstance().getInvestmentFunds();
-        if(investmentFunds.size() > 0) {
+        if (investmentFunds.size() > 0) {
             ObservableList<Currency> currencies = ApplicationModel.getInstance().getCurrencies();
             int investmentFundNumber = generator.nextInt(investmentFunds.size());
             List<CurrencyInWallet> currenciesToBuy = investmentFunds.get(investmentFundNumber).getCurrenciesPurchased();
-            if(currenciesToBuy.size() > 0) {
+            if (currenciesToBuy.size() > 0) {
                 int currencyNumber = generator.nextInt(currenciesToBuy.size());
                 String currencyName = currenciesToBuy.get(currencyNumber).getName();
 
@@ -269,13 +268,141 @@ public class Investor extends Customer implements DisplayableListItem {
 
     private void sellSharesWithIF() {
 
+        Random generator = new Random();
+
+        ObservableList<InvestmentFund> investmentFunds = ApplicationModel.getInstance().getInvestmentFunds();
+        ObservableList<Company> companies = ApplicationModel.getInstance().getCompanies();
+        if (investmentFunds.size() > 0 && companies.size() > 0 && sharesPurchased.size() > 0) {
+
+            int shareNumber = generator.nextInt(sharesPurchased.size());
+            String companyName = sharesPurchased.get(shareNumber).getName();
+            int shareMaxCount = sharesPurchased.get(shareNumber).getAmount();
+
+            int investmentFundNumber = generator.nextInt(investmentFunds.size());
+            double investmentFundBudget = investmentFunds.get(investmentFundNumber).getBudget();
+            List<ShareInWallet> investmentFundShares = investmentFunds.get(investmentFundNumber).getSharesPurchased();
+
+            int indexOfCompany = 0;
+            for (Company elem : companies) {
+                if (elem.getName().equals(companyName))
+                    indexOfCompany = companies.indexOf(elem);
+            }
+            Company company = companies.get(indexOfCompany);
+            double sharePrice = company.getCurrentPrice();
+            int shareAmount = generator.nextInt(Math.min(shareMaxCount, (int) Math.floor(investmentFundBudget / company.getCurrentPrice())));
+
+            budget += shareAmount * sharePrice;
+            investmentFunds.get(investmentFundNumber).decreaseBudget(shareAmount * sharePrice);
+            sharesPurchased.get(shareNumber).decrementAmount(shareAmount);
+
+            boolean checker = true;
+            for (ShareInWallet elem : investmentFundShares) {
+                if (company.getName().equals(elem.getName())) {
+                    elem.incrementAmount(shareAmount);
+                    checker = false;
+                }
+            }
+            if (checker) {
+                ShareInWallet newShare = new ShareInWallet(company.getName(), shareAmount);
+                newShare.setStockName(sharesPurchased.get(shareNumber).getStockName());
+                investmentFundShares.add(newShare);
+            }
+        }
     }
+
+    ;
 
     private void sellMaterialsWithIF() {
+        Random generator = new Random();
+
+        ObservableList<InvestmentFund> investmentFunds = ApplicationModel.getInstance().getInvestmentFunds();
+        ObservableList<Material> materials = ApplicationModel.getInstance().getMaterials();
+        ObservableList<Currency> currencies = ApplicationModel.getInstance().getCurrencies();
+        if (investmentFunds.size() > 0 && currencies.size() > 0 && materials.size() > 0 && materialsPurchased.size() > 0) {
+
+            int materialNumber = generator.nextInt(materialsPurchased.size());
+            String materialName = materialsPurchased.get(materialNumber).getName();
+            double materialMaxCount = materialsPurchased.get(materialNumber).getAmount();
+            String materialMarket = materialsPurchased.get(materialNumber).getMarketName();
+
+            int investmentFundNumber = generator.nextInt(investmentFunds.size());
+            double investmentFundBudget = investmentFunds.get(investmentFundNumber).getBudget();
+            List<MaterialInWallet> investmentFundMaterials = investmentFunds.get(investmentFundNumber).getMaterialsPurchased();
+
+            int indexOfMaterial = 0;
+            for (Material elem : materials) {
+                if (elem.getName().equals(materialName))
+                    indexOfMaterial = materials.indexOf(elem);
+            }
+
+            Material material = materials.get(indexOfMaterial);
+            double materialPrice = material.getCurrentValue();
+            double materialAmount = generator.nextDouble() * Math.min(materialMaxCount, (int) Math.floor(investmentFundBudget / materialPrice));
+
+            budget += materialAmount * materialPrice;
+            investmentFunds.get(investmentFundNumber).decreaseBudget(materialAmount * materialPrice);
+            materialsPurchased.get(materialNumber).decrementAmount(materialAmount);
+
+            boolean checker = true;
+            for (MaterialInWallet elem : investmentFundMaterials) {
+                if (materialName.equals(elem.getName())) {
+                    elem.incrementAmount(materialAmount);
+                    checker = false;
+                }
+            }
+            if (checker) {
+                MaterialInWallet newMaterial = new MaterialInWallet(materialAmount, materialMarket, materialName);
+                investmentFundMaterials.add(newMaterial);
+            }
+        }
     }
 
+
     private void sellCurrenciesWithIF() {
+
+        Random generator = new Random();
+
+        ObservableList<InvestmentFund> investmentFunds = ApplicationModel.getInstance().getInvestmentFunds();
+        ObservableList<Currency> currencies = ApplicationModel.getInstance().getCurrencies();
+        if (investmentFunds.size() > 0 && currencies.size() > 0 && currenciesPurchased.size() > 0) {
+
+            int currencyNumber = generator.nextInt(currenciesPurchased.size());
+            String currencyName = currenciesPurchased.get(currencyNumber).getName();
+            double currencyMaxCount = currenciesPurchased.get(currencyNumber).getAmount();
+
+            int investmentFundNumber = generator.nextInt(investmentFunds.size());
+            double investmentFundBudget = investmentFunds.get(investmentFundNumber).getBudget();
+            List<CurrencyInWallet> investmentFundCurrencies = investmentFunds.get(investmentFundNumber).getCurrenciesPurchased();
+
+            int indexOfCurrency = 0;
+            for (Currency elem : currencies) {
+                if (elem.getName().equals(currencyName))
+                    indexOfCurrency = currencies.indexOf(elem);
+            }
+
+            Currency currency = currencies.get(indexOfCurrency);
+            double currencySellPrice = currency.getSellPrice();
+            double currencyAmount = generator.nextDouble() * Math.min(currencyMaxCount, (int) Math.floor(investmentFundBudget / currencySellPrice));
+
+            budget += currencyAmount * currencySellPrice;
+            investmentFunds.get(investmentFundNumber).decreaseBudget(currencyAmount * currencySellPrice);
+            currenciesPurchased.get(currencyNumber).decrementAmount(currencyAmount);
+
+            boolean checker = true;
+            for (CurrencyInWallet elem : investmentFundCurrencies) {
+                if (currencyName.equals(elem.getName())) {
+                    elem.incrementAmount(currencyAmount);
+                    checker = false;
+                }
+            }
+            if (checker) {
+                CurrencyInWallet newCurrency = new CurrencyInWallet(currencyAmount, currencyName);
+                investmentFundCurrencies.add(newCurrency);
+            }
+        }
     }
+
+    ;
 
     /**
      * possibility to change budget

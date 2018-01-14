@@ -7,10 +7,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author jakub
  */
-public class Customer implements Serializable{
+public class Customer implements Serializable {
     private String name;
     protected double budget;
     protected List<CurrencyInWallet> currenciesPurchased = new ArrayList<>();
@@ -35,13 +34,13 @@ public class Customer implements Serializable{
     }
 
     private void buyMaterials() {
-        if(ApplicationModel.getInstance().getMaterialMarkets().size() > 0) {
+        if (ApplicationModel.getInstance().getMaterialMarkets().size() > 0) {
             Random generator = new Random();
             ObservableList<MaterialMarket> materialMarkets = ApplicationModel.getInstance().getMaterialMarkets();
             ObservableList<Currency> currencies = ApplicationModel.getInstance().getCurrencies();
             MaterialMarket market = materialMarkets.get(generator.nextInt(materialMarkets.size()));
             List<Material> materialList = market.getMaterialList();
-            if(materialList.size() > 0) {
+            if (materialList.size() > 0) {
                 Material material = materialList.get(generator.nextInt(materialList.size()));
                 //Value of currency is changing so each time I buy material I have to check the current value of its currency
                 String currencyName = material.getCurrency().getName();
@@ -74,7 +73,7 @@ public class Customer implements Serializable{
     }
 
     private void buyShares() {
-        if(ApplicationModel.getInstance().getStockMarkets().size() > 0) {
+        if (ApplicationModel.getInstance().getStockMarkets().size() > 0) {
             Random generator = new Random();
             ObservableList<StockMarket> stockMarkets = ApplicationModel.getInstance().getStockMarkets();
             StockMarket market = stockMarkets.get(generator.nextInt(stockMarkets.size()));
@@ -88,7 +87,7 @@ public class Customer implements Serializable{
             Company company = companies.get(generator.nextInt(companies.size()));
 
             int bound = Math.min(company.getSharesCount(), (int) Math.floor(budget / company.getCurrentPrice()));
-            if(bound > 0) {
+            if (bound > 0) {
                 int sharesPurchaseAmount = generator.nextInt(bound);
 
                 double boughtSharesPrice = company.buyShares(sharesPurchaseAmount);
@@ -115,7 +114,7 @@ public class Customer implements Serializable{
     }
 
     private void buyCurrencies() {
-        if(ApplicationModel.getInstance().getCurrencyMarket().getCurrencyList().size() > 0) {
+        if (ApplicationModel.getInstance().getCurrencyMarket().getCurrencyList().size() > 0) {
             Random generator = new Random();
             CurrencyMarket currencyMarket = ApplicationModel.getInstance().getCurrencyMarket();
             List<Currency> currencies = currencyMarket.getCurrencyList();
@@ -161,11 +160,11 @@ public class Customer implements Serializable{
     }
 
     private void sellShares() {
-        if(sharesPurchased.size() > 0) {
+        if (sharesPurchased.size() > 0) {
             Random generator = new Random();
             ObservableList<StockMarket> stockMarkets = ApplicationModel.getInstance().getStockMarkets();
             ObservableList<Company> companies = ApplicationModel.getInstance().getCompanies();
-            if(stockMarkets.size() > 0 && companies.size() > 0) {
+            if (stockMarkets.size() > 0 && companies.size() > 0) {
                 ShareInWallet share = sharesPurchased.get(generator.nextInt(sharesPurchased.size()));
                 String stockName = share.getStockName();
                 String companyName = share.getName();
@@ -187,7 +186,7 @@ public class Customer implements Serializable{
                     }
                 }
 
-                if(stockToSell != null && company != null) {
+                if (stockToSell != null && company != null) {
                     int sharesCount = generator.nextInt(share.getAmount());
                     double sellPrice = company.getCurrentPrice();
 
@@ -217,7 +216,7 @@ public class Customer implements Serializable{
     }
 
     private void sellMaterials() {
-        if(materialsPurchased.size() > 0) {
+        if (materialsPurchased.size() > 0) {
             Random generator = new Random();
             ObservableList<MaterialMarket> materialMarkets = ApplicationModel.getInstance().getMaterialMarkets();
             ObservableList<Material> materials = ApplicationModel.getInstance().getMaterials();
@@ -272,12 +271,12 @@ public class Customer implements Serializable{
 
 
     private synchronized void sellCurrencies() {
-        if(currenciesPurchased.size() > 0) {
+        if (currenciesPurchased.size() > 0) {
             Random generator = new Random();
             // After changes in ApplicationModel it will work
             CurrencyMarket currencyMarket = ApplicationModel.getInstance().getCurrencyMarket();
             List<Currency> currencyList = currencyMarket.getCurrencyList();
-            if(currencyList.size() > 0) {
+            if (currencyList.size() > 0) {
                 CurrencyInWallet currencyInWallet = currenciesPurchased.get(generator.nextInt(currenciesPurchased.size()));
                 Currency currency = null;
                 // find our currency on a global currencies list
@@ -286,7 +285,7 @@ public class Customer implements Serializable{
                         currency = elem;
                     }
                 }
-                if(currency != null) {
+                if (currency != null) {
                     double currencyAmount = generator.nextDouble() * currencyInWallet.getAmount();
                     double currencySellPrice = currency.getSellPrice();
                     double margin = currencyMarket.getMargin();
@@ -299,5 +298,33 @@ public class Customer implements Serializable{
                 }
             }
         }
+    }
+
+    /**
+     * @return budget
+     */
+    public double getBudget() {
+        return budget;
+    }
+
+    /**
+     * @return currenciesPurchased of customer
+     */
+    public List<CurrencyInWallet> getCurrenciesPurchased() {
+        return currenciesPurchased;
+    }
+
+    /**
+     * @return materialsPurchased of customer
+     */
+    public List<MaterialInWallet> getMaterialsPurchased() {
+        return materialsPurchased;
+    }
+
+    /**
+     * @return sharesPurchased of customer
+     */
+    public List<ShareInWallet> getSharesPurchased() {
+        return sharesPurchased;
     }
 }

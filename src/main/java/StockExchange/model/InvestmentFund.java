@@ -91,6 +91,7 @@ public class InvestmentFund extends Customer implements DisplayableListItem {
     public void increaseBudget(double byHowMuch){
         budget+=byHowMuch;
     }
+    public void decreaseBudget(double byHowMuch) {budget -= byHowMuch;}
 
     @Override
     public String getDisplayName() {
