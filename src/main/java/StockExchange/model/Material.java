@@ -1,10 +1,15 @@
 
 package StockExchange.model;
 
+import StockExchange.ApplicationExecutor;
 import StockExchange.ui.DisplayableListItem;
 import StockExchange.util.RandomString;
+import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.chart.XYChart;
+import javafx.util.Pair;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -16,9 +21,13 @@ import java.util.*;
 public class Material extends Assets implements DisplayableListItem  {
     private Currency currency;
     private String tradeUnit; //jednostka handlowa
+    private double initialValue;
+    private long firstMeasurementTime = 0;
     private double currentValue;
     private double minValue;
     private double maxValue;
+    private ObservableList<XYChart.Series<Number, Number>> chartData;
+    private ObservableList<XYChart.Data<Number, Number>> chartDataList;
 
     public static String[] MATERIALS = {
             "Kakao",
@@ -66,11 +75,33 @@ public class Material extends Assets implements DisplayableListItem  {
             String str = RandomString.nextString(10);
             name = str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
         }
-        this.minValue = generator.nextDouble() * 12000;
-        this.maxValue = minValue + generator.nextDouble() * 500;
-        this.currentValue = minValue;
-        this.currency = cModel.get(generator.nextInt(cModel.size()));
-        this.tradeUnit = UNITS[generator.nextInt(UNITS.length)];
+        minValue = generator.nextDouble() * 12000;
+        maxValue = minValue + generator.nextDouble() * 500;
+        currentValue = minValue;
+        initialValue = currentValue;
+        currency = cModel.get(generator.nextInt(cModel.size()));
+        tradeUnit = UNITS[generator.nextInt(UNITS.length)];
+        chartData = FXCollections.observableArrayList();
+        chartDataList = FXCollections.observableArrayList();
+        startDataMiner();
+    }
+
+    private void startDataMiner() {
+        ApplicationExecutor.getInstance().getBackgroundThreadPool().execute(() -> {
+            chartData.add(new XYChart.Series<>(name, chartDataList));
+            while(!Thread.currentThread().isInterrupted()) {
+                try {
+                    if(firstMeasurementTime == 0) {
+                        firstMeasurementTime = System.currentTimeMillis()/1000;
+                    }
+                    long currentTime = (System.currentTimeMillis()/1000) - firstMeasurementTime;
+                    Platform.runLater(() -> chartDataList.add(new XYChart.Data<>(currentTime, currentValue)));
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public double buyMaterial(double amount) {
@@ -172,5 +203,11 @@ public class Material extends Assets implements DisplayableListItem  {
         return maxValue;
     }
 
-
+    /**
+     *
+     * @return
+     */
+    public ObservableList<XYChart.Series<Number, Number>> getChartData() {
+        return chartData;
+    }
 }

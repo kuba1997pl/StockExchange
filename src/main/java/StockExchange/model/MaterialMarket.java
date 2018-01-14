@@ -2,9 +2,11 @@
 package StockExchange.model;
 
 import StockExchange.ui.DisplayableListItem;
+import StockExchange.util.RandomString;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -14,18 +16,21 @@ public class MaterialMarket extends Exchange implements DisplayableListItem {
     private String name;
     private List<Material> materialList = new ArrayList<>();
 
+    public MaterialMarket() {
+        name = RandomString.nextString(10);
+        materialList = new ArrayList<>();
+        Random generator = new Random();
+        List<Material> materials = ApplicationModel.getInstance().getMaterials();
+        for(Material material: materials) {
+            if(generator.nextInt(2) == 1) {
+                materialList.add(material);
+            }
+        }
+    }
+
     @Override
     public String getDisplayName() {
         return name;
-    }
-
-    
-    /**
-     *
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -35,15 +40,7 @@ public class MaterialMarket extends Exchange implements DisplayableListItem {
     public String getName() {
         return name;
     }
-    
 
-    /**
-     *
-     * @param materialList
-     */
-    public void setMaterialList(List<Material> materialList) {
-        this.materialList = materialList;
-    }
 
     /**
      *

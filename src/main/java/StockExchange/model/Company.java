@@ -88,6 +88,7 @@ public class Company implements DisplayableListItem, Serializable {
         long losDz = minDay + generator.nextInt(maxDay - minDay);
         this.firstPricingDate = LocalDate.ofEpochDay(losDz);
         this.volume = generator.nextInt(1000);
+        ApplicationExecutor.getInstance().getBackgroundThreadPool().execute(this::companyOperations);
     }
 
     /**
@@ -109,25 +110,23 @@ public class Company implements DisplayableListItem, Serializable {
         return -1;
     }
 
-    public synchronized void companyOperations(){
-        ApplicationExecutor.getInstance().getBackgroundThreadPool().execute(() -> {
-            while (true) {
-                Random generator = new Random();
-                int cases = generator.nextInt(2);
-                switch (cases) {
-                    case 0:
-                        increaseProfit();
-                    default:
-                        releaseShares();
-                }
-                //company's thread sleep ten times longer than infestor's thread
-                try {
-                    sleep(10000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+    private synchronized void companyOperations(){
+        while (!Thread.currentThread().isInterrupted()) {
+            Random generator = new Random();
+            int cases = generator.nextInt(2);
+            switch (cases) {
+                case 0:
+                    increaseProfit();
+                default:
+                    releaseShares();
             }
-        });
+            //company's thread sleep ten times longer than infestor's thread
+            try {
+                sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void releaseShares() {

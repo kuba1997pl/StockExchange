@@ -1,8 +1,13 @@
 
 package StockExchange.model;
 
+import StockExchange.ApplicationExecutor;
 import StockExchange.ui.DisplayableListItem;
 import StockExchange.util.RandomString;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.chart.XYChart;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +24,10 @@ public class Currency extends Assets implements DisplayableListItem {
 
     private double purchasePrice;
     private double sellPrice;
+    private ObservableList<XYChart.Series<Number, Number>> chartData;
+    private ObservableList<XYChart.Data<Number, Number>> purchasePriceSeries;
+    private ObservableList<XYChart.Data<Number, Number>> sellPriceSeries;
+    private long firstMeasurementTime = 0;
 
     private static ArrayList<String> CURRENCIES = new ArrayList<>();
 
@@ -50,12 +59,14 @@ public class Currency extends Assets implements DisplayableListItem {
         } else {
             this.name = RandomString.nextString(3, true);
         }
+        Random generator = new Random();
+        sellPrice = (generator.nextGaussian() + 1) * 2.5 + 0.1;
+        purchasePrice = sellPrice * ( 1.1 + generator.nextDouble() * 0.5 );
         ArrayList<String> avalaibleCountries = new ArrayList<>(Arrays.asList(Countries.COUNTRIES));
         countriesList = new ArrayList<>();
         if(this.name.equals("Złoty (PLN)")) {
             countriesList.addAll(Arrays.asList(Countries.COUNTRIES));
         } else {
-            Random generator = new Random();
             int cList = generator.nextInt(4) + 1;
             for (int i = 0; i <= cList; i++) {
                 int element = generator.nextInt(avalaibleCountries.size());
@@ -63,9 +74,33 @@ public class Currency extends Assets implements DisplayableListItem {
                 avalaibleCountries.remove(element);
             }
         }
-
+        chartData = FXCollections.observableArrayList();
+        purchasePriceSeries = FXCollections.observableArrayList();
+        sellPriceSeries = FXCollections.observableArrayList();
+        chartData.add(new XYChart.Series<>("Cena kupna", purchasePriceSeries));
+        chartData.add(new XYChart.Series<>("Cena sprzedaży", sellPriceSeries));
+        startDataMiner();
     }
 
+    private void startDataMiner() {
+        ApplicationExecutor.getInstance().getBackgroundThreadPool().execute(() -> {
+            while(!Thread.currentThread().isInterrupted()) {
+                try {
+                    if(firstMeasurementTime == 0) {
+                        firstMeasurementTime = System.currentTimeMillis()/1000;
+                    }
+                    long currentTime = (System.currentTimeMillis()/1000) - firstMeasurementTime;
+                    Platform.runLater(() -> {
+                        purchasePriceSeries.add(new XYChart.Data<>(currentTime, purchasePrice));
+                        sellPriceSeries.add(new XYChart.Data<>(currentTime, sellPrice));
+                    });
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
     public void decrementPrice(){
         purchasePrice = purchasePrice * 0.99;
@@ -107,5 +142,12 @@ public class Currency extends Assets implements DisplayableListItem {
     public List<String> getCountriesList() {
         return countriesList;
     }
-  
+
+    /**
+     *
+     * @return
+     */
+    public ObservableList<XYChart.Series<Number, Number>> getChartData() {
+        return chartData;
+    }
 }

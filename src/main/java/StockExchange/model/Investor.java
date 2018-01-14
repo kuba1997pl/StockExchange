@@ -23,7 +23,6 @@ public class Investor extends Customer implements DisplayableListItem {
     private String lastName;
     private String PESEL;
     private double budget;
-
     private static ArrayList<String> namesList = new ArrayList<>();
 
     static {
@@ -57,6 +56,7 @@ public class Investor extends Customer implements DisplayableListItem {
                 .append(getTwoDigitNumberString(generator.nextInt(28) + 1)) // dzien
                 .append(getTwoDigitNumberString(generator.nextInt(100000))).toString();
         this.budget = generator.nextDouble() * 1000000.0;
+        ApplicationExecutor.getInstance().getBackgroundThreadPool().execute(this::investorOperations);
     }
 
     private String getTwoDigitNumberString(int i) {
@@ -67,32 +67,29 @@ public class Investor extends Customer implements DisplayableListItem {
         }
     }
 
-    public synchronized void investorOperations() {
-        ApplicationExecutor.getInstance().getBackgroundThreadPool().execute(() -> {
-            while (true) {
-                Random generator = new Random();
-                int cases = generator.nextInt(4);
-                switch (cases) {
-                    case 0:
-                        buyAssetsOnYourOwn();
-                    case 1:
-                        sellAssetsOnYourOwn();
-                    case 2:
-                        buyWithInvFuM();
-                    case 3:
-                        sellWithInfFuM();
-                    default:
-                        riseBudget();
-                }
-                try {
-                    sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+    private synchronized void investorOperations() {
+        while (!Thread.currentThread().isInterrupted()) {
+            Random generator = new Random();
+            int cases = generator.nextInt(5);
+            switch (cases) {
+                case 0:
+                    buyAssetsOnYourOwn();
+                case 1:
+                    sellAssetsOnYourOwn();
+                case 2:
+                    buyWithInvFuM();
+                case 3:
+                    sellWithInfFuM();
+                default:
+                    riseBudget();
             }
-        });
+            try {
+                sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
-
 
     /**
      * buying assets with investment fund
@@ -112,42 +109,45 @@ public class Investor extends Customer implements DisplayableListItem {
     }
 
     private void buySharesWithIF() {
-        Random generator = new Random();
-        ObservableList<InvestmentFund> investmentFunds = ApplicationModel.getInstance().getInvestmentFunds();
-        ObservableList<Company> companies = ApplicationModel.getInstance().getCompanies();
-        int investmentFundNumber = generator.nextInt(investmentFunds.size());
-        List<ShareInWallet> sharesToBuy = investmentFunds.get(investmentFundNumber).getSharesPurchased();
-        int shareNumber = generator.nextInt(sharesToBuy.size());
-        String companyName = sharesToBuy.get(shareNumber).getName();
-        int indexOfCompany = 0;
-        for (Company elem : companies) {
-            if (companyName.equals(elem.getName())) {
-                indexOfCompany = companies.indexOf(elem);
+        if ( ApplicationModel.getInstance().getInvestmentFunds().size() > 0) {
+            Random generator = new Random();
+            ObservableList<InvestmentFund> investmentFunds = ApplicationModel.getInstance().getInvestmentFunds();
+            ObservableList<Company> companies = ApplicationModel.getInstance().getCompanies();
+            int investmentFundNumber = generator.nextInt(investmentFunds.size());
+            List<ShareInWallet> sharesToBuy = investmentFunds.get(investmentFundNumber).getSharesPurchased();
+            if(sharesToBuy.size() > 0) {
+                int shareNumber = generator.nextInt(sharesToBuy.size());
+                String companyName = sharesToBuy.get(shareNumber).getName();
+                int indexOfCompany = 0;
+                for (Company elem : companies) {
+                    if (companyName.equals(elem.getName())) {
+                        indexOfCompany = companies.indexOf(elem);
+                    }
+                }
+                Company company = companies.get(indexOfCompany);
+                double sharePrice = company.getCurrentPrice();
+                int sharesAmount = generator.nextInt(Math.min(sharesToBuy.get(shareNumber).getAmount(), (int) Math.floor(budget / company.getCurrentPrice())));
+                //decreasing budget of investor
+                budget -= sharePrice * sharesAmount;
+                //increasing budget of IF
+                investmentFunds.get(investmentFundNumber).increaseBudget(sharePrice * sharesAmount);
+                //decreasing amount of IF shares
+                sharesToBuy.get(shareNumber).decrementAmount(sharesAmount);
+
+                boolean checker = true;
+                for (ShareInWallet elem : sharesPurchased) {
+                    if (company.getName().equals(elem.getName())) {
+                        elem.incrementAmount(sharesAmount);
+                        checker = false;
+                    }
+                }
+                if (checker) {
+                    ShareInWallet newShare = new ShareInWallet(company.getName(), sharesAmount);
+                    newShare.setStockName(sharesToBuy.get(shareNumber).getStockName());
+                    sharesPurchased.add(newShare);
+                }
             }
         }
-        Company company = companies.get(indexOfCompany);
-        double sharePrice = company.getCurrentPrice();
-        int sharesAmount = generator.nextInt(Math.min(sharesToBuy.get(shareNumber).getAmount(), (int) Math.floor(budget / company.getCurrentPrice())));
-        //decreasing budget of investor
-        budget -= sharePrice * sharesAmount;
-        //increasing budget of IF
-        investmentFunds.get(investmentFundNumber).increaseBudget(sharePrice * sharesAmount);
-        //decreasing amount of IF shares
-        sharesToBuy.get(shareNumber).decrementAmount(sharesAmount);
-
-        boolean checker = true;
-        for (ShareInWallet elem : sharesPurchased) {
-            if (company.getName().equals(elem.getName())) {
-                elem.incrementAmount(sharesAmount);
-                checker = false;
-            }
-        }
-        if (checker) {
-            ShareInWallet newShare = new ShareInWallet(company.getName(), sharesAmount);
-            newShare.setStockName(sharesToBuy.get(shareNumber).getStockName());
-            sharesPurchased.add(newShare);
-        }
-
     }
 
     private void buyMaterialsWithIF() {
@@ -262,20 +262,14 @@ public class Investor extends Customer implements DisplayableListItem {
     }
 
     private void sellSharesWithIF() {
-        
-    }
 
-    ;
+    }
 
     private void sellMaterialsWithIF() {
     }
 
-    ;
-
     private void sellCurrenciesWithIF() {
     }
-
-    ;
 
     /**
      * possibility to change budget

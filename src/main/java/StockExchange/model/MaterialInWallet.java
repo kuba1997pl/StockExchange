@@ -6,10 +6,10 @@ public class MaterialInWallet extends Assets implements DisplayableListItem {
     private double amount;
     private String marketName;
 
-    public MaterialInWallet(double amount, String name, String marketName){
-        this.amount= amount;
-        this.name = name;
-        this.marketName= getMarketName();
+    public MaterialInWallet(double amount, String marketName, String materialName){
+        this.amount = amount;
+        this.marketName  = marketName;
+        this.name = materialName;
     }
 
     /**
@@ -33,7 +33,6 @@ public class MaterialInWallet extends Assets implements DisplayableListItem {
      * @return amount
      */
     public double getAmount() {
-
         return amount;
     }
 

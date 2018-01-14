@@ -3,7 +3,6 @@ package StockExchange.model;
 import StockExchange.ui.DisplayableListItem;
 
 public class CurrencyInWallet extends Assets implements DisplayableListItem {
-    private String name;
     private double amount;
 
     public void incrementAmount(double byHowMuch) {

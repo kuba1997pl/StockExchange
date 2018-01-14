@@ -10,8 +10,8 @@ public class ApplicationExecutor {
     private BlockingQueue<Runnable> blockingQueue;
 
     private ApplicationExecutor() {
-        blockingQueue = new ArrayBlockingQueue<>(50);
-        this.backgroundThreadPool = new ThreadPoolExecutor(10, 20, 1000, TimeUnit.MILLISECONDS, blockingQueue);
+        blockingQueue = new ArrayBlockingQueue<>(5000);
+        this.backgroundThreadPool = new ThreadPoolExecutor(1000, 1000, 1000, TimeUnit.MILLISECONDS, blockingQueue);
     }
 
     public static ApplicationExecutor getInstance() {
