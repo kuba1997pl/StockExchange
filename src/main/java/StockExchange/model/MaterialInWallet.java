@@ -6,8 +6,9 @@ public class MaterialInWallet extends Assets implements DisplayableListItem {
     private double amount;
     private String marketName;
 
-    public MaterialInWallet(double amount, String marketName){
+    public MaterialInWallet(double amount, String name, String marketName){
         this.amount= amount;
+        this.name = name;
         this.marketName= getMarketName();
     }
 

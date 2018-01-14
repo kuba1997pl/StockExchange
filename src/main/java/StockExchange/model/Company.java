@@ -156,6 +156,11 @@ public class Company implements DisplayableListItem, Serializable {
     public void incrementSharesCount(int byHowMuch){
         sharesCount += byHowMuch;
     }
+    public void incrementCurrentPrice(){
+        currentPrice = currentPrice*1.01;
+        if(currentPrice > maxPrice)
+            maxPrice = currentPrice;
+    }
     public void decrementCurrentPrice(){
         currentPrice = currentPrice*0.99;
         if(currentPrice < minPrice)

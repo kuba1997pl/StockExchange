@@ -54,6 +54,8 @@ public class Customer implements Serializable{
 
         double materialAmount = generator.nextDouble() * (budget / (material.getCurrentValue() * currencyOfMaterial.getPurchasePrice()));
         budget -= market.getMargin() * material.buyMaterial(materialAmount) * currencyOfMaterial.getPurchasePrice();
+        //incrementing current Price
+        material.incrementCurrentValue();
 
         boolean checker = true;
         for (MaterialInWallet element : materialsPurchased) {
@@ -64,7 +66,7 @@ public class Customer implements Serializable{
 
         }
         if (checker) {
-            MaterialInWallet newMaterial = new MaterialInWallet(materialAmount, market.getName());
+            MaterialInWallet newMaterial = new MaterialInWallet(materialAmount, material.getName(), market.getName());
             materialsPurchased.add(newMaterial);
         }
     }
@@ -82,12 +84,14 @@ public class Customer implements Serializable{
 
         Company company = companies.get(generator.nextInt(companies.size()));
 
-        int sharesPurchaseAmount = Math.min(company.getSharesCount(), (int) Math.floor(budget / company.getCurrentPrice()));
+        int sharesPurchaseAmount = generator.nextInt(Math.min(company.getSharesCount(), (int) Math.floor(budget / company.getCurrentPrice())));
 
         double boughtSharesPrice = company.buyShares(sharesPurchaseAmount);
         if (boughtSharesPrice >= 0) {
             budget -= (boughtSharesPrice + market.getMargin() * boughtSharesPrice);
         }
+
+        company.incrementCurrentPrice();
 
         boolean checker = true;
         for (ShareInWallet elem : sharesPurchased) {

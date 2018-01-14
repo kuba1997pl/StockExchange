@@ -23,9 +23,6 @@ public class Investor extends Customer implements DisplayableListItem {
     private String lastName;
     private String PESEL;
     private double budget;
-    private List<CurrencyInWallet> currenciesPurchased;
-    private List<MaterialInWallet> materialsPurchased;
-    private List<ShareInWallet> sharesPurchased;
 
     private static ArrayList<String> namesList = new ArrayList<>();
 
@@ -130,14 +127,121 @@ public class Investor extends Customer implements DisplayableListItem {
         }
         Company company = companies.get(indexOfCompany);
         double sharePrice = company.getCurrentPrice();
-        int shareAmount = generator.nextInt((int)(budget/sharePrice));
+        int sharesAmount = generator.nextInt(Math.min(sharesToBuy.get(shareNumber).getAmount(), (int) Math.floor(budget / company.getCurrentPrice())));
+        //decreasing budget of investor
+        budget -= sharePrice * sharesAmount;
+        //increasing budget of IF
+        investmentFunds.get(investmentFundNumber).increaseBudget(sharePrice * sharesAmount);
+        //decreasing amount of IF shares
+        sharesToBuy.get(shareNumber).decrementAmount(sharesAmount);
+
+        boolean checker = true;
+        for (ShareInWallet elem : sharesPurchased) {
+            if (company.getName().equals(elem.getName())) {
+                elem.incrementAmount(sharesAmount);
+                checker = false;
+            }
+        }
+        if (checker) {
+            ShareInWallet newShare = new ShareInWallet(company.getName(), sharesAmount);
+            newShare.setStockName(sharesToBuy.get(shareNumber).getStockName());
+            sharesPurchased.add(newShare);
+        }
+
     }
 
     private void buyMaterialsWithIF() {
 
+        Random generator = new Random();
+        ObservableList<InvestmentFund> investmentFunds = ApplicationModel.getInstance().getInvestmentFunds();
+        ObservableList<Currency> currencies = ApplicationModel.getInstance().getCurrencies();
+        ObservableList<Material> materials = ApplicationModel.getInstance().getMaterials();
+        int investmentFundNumber = generator.nextInt(investmentFunds.size());
+        List<MaterialInWallet> materialsToBuy = investmentFunds.get(investmentFundNumber).getMaterialsPurchased();
+        int materialNumber = generator.nextInt(materialsToBuy.size());
+        String materialName = materialsToBuy.get(materialNumber).getName();
+
+        int indexOfMaterial = 0;
+        for (Material elem : materials) {
+            if (materialName.equals(elem.getName())) {
+                indexOfMaterial = materials.indexOf(elem);
+            }
+        }
+        Material material = materials.get(indexOfMaterial);
+
+        String currencyName = material.getCurrency().getName();
+        int indexOfCurrency = 0;
+        for (Currency elem : currencies) {
+            if (elem.getName().equals(currencyName))
+                indexOfCurrency = currencies.indexOf(elem);
+        }
+        Currency currencyOfMaterial = currencies.get(indexOfCurrency);
+
+        double materialPrice = material.getCurrentValue() * currencyOfMaterial.getPurchasePrice();
+
+        double materialAmount = generator.nextDouble()*Math.min(materialsToBuy.get(materialNumber).getAmount(), (int) Math.floor(budget / materialPrice));
+
+        budget -= materialPrice * materialAmount;
+        //increasing budget of IF
+        investmentFunds.get(investmentFundNumber).increaseBudget(materialPrice * materialAmount);
+        //decreasing amount of IF materials
+        materialsToBuy.get(materialNumber).decrementAmount(materialAmount);
+
+        boolean checker = true;
+        for (MaterialInWallet elem : materialsPurchased) {
+            if (material.getName().equals(elem.getName())) {
+                elem.incrementAmount(materialAmount);
+                checker = false;
+            }
+        }
+        if (checker) {
+            MaterialInWallet newMaterial = new MaterialInWallet(materialAmount, material.getName(), materialsToBuy.get(materialNumber).getMarketName());
+            materialsPurchased.add(newMaterial);
+        }
+
     }
 
-    private void buyCurrenciesWitfIF(){
+    private void buyCurrenciesWitfIF() {
+        Random generator = new Random();
+        ObservableList<InvestmentFund> investmentFunds = ApplicationModel.getInstance().getInvestmentFunds();
+        ObservableList<Currency> currencies = ApplicationModel.getInstance().getCurrencies();
+        int investmentFundNumber = generator.nextInt(investmentFunds.size());
+        List<CurrencyInWallet> currenciesToBuy = investmentFunds.get(investmentFundNumber).getCurrenciesPurchased();
+        int currencyNumber = generator.nextInt(currenciesToBuy.size());
+        String currencyName = currenciesToBuy.get(currencyNumber).getName();
+
+        int indexOfCurrency= 0;
+        for (Currency elem : currencies) {
+            if (currencyName.equals(elem.getName())) {
+                indexOfCurrency = currencies.indexOf(elem);
+            }
+        }
+        Currency currency = currencies.get(indexOfCurrency);
+
+        double currencyPurchasePrice = currency.getPurchasePrice();
+
+        double currencyAmount = generator.nextDouble()*Math.min(currenciesToBuy.get(currencyNumber).getAmount(), (int) Math.floor(budget / currencyPurchasePrice));
+
+        //decreasing investor's budget
+        budget -= currencyPurchasePrice * currencyAmount;
+        //increasing budget of IF
+        investmentFunds.get(investmentFundNumber).increaseBudget(currencyPurchasePrice * currencyAmount);
+        //decreasing amount of IF currencies
+        currenciesToBuy.get(currencyNumber).decrementAmount(currencyAmount);
+
+        boolean checker = true;
+        for (CurrencyInWallet elem : currenciesPurchased) {
+            if (currency.getName().equals(elem.getName())) {
+                elem.incrementAmount(currencyAmount);
+                checker = false;
+            }
+        }
+        if (checker) {
+            CurrencyInWallet newCurrency = new CurrencyInWallet(currencyAmount, currencyName);
+            currenciesPurchased.add(newCurrency);
+        }
+
+
 
     }
 
@@ -157,9 +261,22 @@ public class Investor extends Customer implements DisplayableListItem {
         }
     }
 
-    private void sellSharesWithIF(){};
-    private void sellMaterialsWithIF(){};
-    private void sellCurrenciesWithIF(){};
+    private void sellSharesWithIF() {
+        
+    }
+
+    ;
+
+    private void sellMaterialsWithIF() {
+    }
+
+    ;
+
+    private void sellCurrenciesWithIF() {
+    }
+
+    ;
+
     /**
      * possibility to change budget
      */
