@@ -87,26 +87,29 @@ public class Customer implements Serializable{
 
             Company company = companies.get(generator.nextInt(companies.size()));
 
-            int sharesPurchaseAmount = generator.nextInt(Math.min(company.getSharesCount(), (int) Math.floor(budget / company.getCurrentPrice())));
+            int bound = Math.min(company.getSharesCount(), (int) Math.floor(budget / company.getCurrentPrice()));
+            if(bound > 0) {
+                int sharesPurchaseAmount = generator.nextInt(bound);
 
-            double boughtSharesPrice = company.buyShares(sharesPurchaseAmount);
-            if (boughtSharesPrice >= 0) {
-                budget -= (boughtSharesPrice + market.getMargin() * boughtSharesPrice);
-            }
-
-            company.incrementCurrentPrice();
-
-            boolean checker = true;
-            for (ShareInWallet elem : sharesPurchased) {
-                if (company.getName().equals(elem.getName())) {
-                    elem.incrementAmount(sharesPurchaseAmount);
-                    checker = false;
+                double boughtSharesPrice = company.buyShares(sharesPurchaseAmount);
+                if (boughtSharesPrice >= 0) {
+                    budget -= (boughtSharesPrice + market.getMargin() * boughtSharesPrice);
                 }
-            }
-            if (checker) {
-                ShareInWallet newShare = new ShareInWallet(company.getName(), sharesPurchaseAmount);
-                newShare.setStockName(market.getName());
-                sharesPurchased.add(newShare);
+
+                company.incrementCurrentPrice();
+
+                boolean checker = true;
+                for (ShareInWallet elem : sharesPurchased) {
+                    if (company.getName().equals(elem.getName())) {
+                        elem.incrementAmount(sharesPurchaseAmount);
+                        checker = false;
+                    }
+                }
+                if (checker) {
+                    ShareInWallet newShare = new ShareInWallet(company.getName(), sharesPurchaseAmount);
+                    newShare.setStockName(market.getName());
+                    sharesPurchased.add(newShare);
+                }
             }
         }
     }

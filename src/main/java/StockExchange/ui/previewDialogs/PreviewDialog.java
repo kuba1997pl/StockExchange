@@ -23,7 +23,9 @@ class PreviewDialog<T> extends Dialog<T> {
             gridPane.add(new Label(pair.getKey()), 0, i);
             gridPane.add(new Label(pair.getValue()), 1, i);
         }
-        pane.setContent(gridPane);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(gridPane);
+        pane.setContent(scrollPane);
         pane.getButtonTypes().addAll(closeButtonType);
     }
 

@@ -156,47 +156,52 @@ public class Investor extends Customer implements DisplayableListItem {
         ObservableList<InvestmentFund> investmentFunds = ApplicationModel.getInstance().getInvestmentFunds();
         ObservableList<Currency> currencies = ApplicationModel.getInstance().getCurrencies();
         ObservableList<Material> materials = ApplicationModel.getInstance().getMaterials();
-        int investmentFundNumber = generator.nextInt(investmentFunds.size());
-        List<MaterialInWallet> materialsToBuy = investmentFunds.get(investmentFundNumber).getMaterialsPurchased();
-        int materialNumber = generator.nextInt(materialsToBuy.size());
-        String materialName = materialsToBuy.get(materialNumber).getName();
 
-        int indexOfMaterial = 0;
-        for (Material elem : materials) {
-            if (materialName.equals(elem.getName())) {
-                indexOfMaterial = materials.indexOf(elem);
+        if(investmentFunds.size() > 0 && currencies.size() > 0 && materials.size() > 0) {
+            int investmentFundNumber = generator.nextInt(investmentFunds.size());
+            List<MaterialInWallet> materialsToBuy = investmentFunds.get(investmentFundNumber).getMaterialsPurchased();
+            if(materialsToBuy.size() > 0) {
+                int materialNumber = generator.nextInt(materialsToBuy.size());
+                String materialName = materialsToBuy.get(materialNumber).getName();
+
+                int indexOfMaterial = 0;
+                for (Material elem : materials) {
+                    if (materialName.equals(elem.getName())) {
+                        indexOfMaterial = materials.indexOf(elem);
+                    }
+                }
+                Material material = materials.get(indexOfMaterial);
+
+                String currencyName = material.getCurrency().getName();
+                int indexOfCurrency = 0;
+                for (Currency elem : currencies) {
+                    if (elem.getName().equals(currencyName))
+                        indexOfCurrency = currencies.indexOf(elem);
+                }
+                Currency currencyOfMaterial = currencies.get(indexOfCurrency);
+
+                double materialPrice = material.getCurrentValue() * currencyOfMaterial.getPurchasePrice();
+
+                double materialAmount = generator.nextDouble() * Math.min(materialsToBuy.get(materialNumber).getAmount(), (int) Math.floor(budget / materialPrice));
+
+                budget -= materialPrice * materialAmount;
+                //increasing budget of IF
+                investmentFunds.get(investmentFundNumber).increaseBudget(materialPrice * materialAmount);
+                //decreasing amount of IF materials
+                materialsToBuy.get(materialNumber).decrementAmount(materialAmount);
+
+                boolean checker = true;
+                for (MaterialInWallet elem : materialsPurchased) {
+                    if (material.getName().equals(elem.getName())) {
+                        elem.incrementAmount(materialAmount);
+                        checker = false;
+                    }
+                }
+                if (checker) {
+                    MaterialInWallet newMaterial = new MaterialInWallet(materialAmount, material.getName(), materialsToBuy.get(materialNumber).getMarketName());
+                    materialsPurchased.add(newMaterial);
+                }
             }
-        }
-        Material material = materials.get(indexOfMaterial);
-
-        String currencyName = material.getCurrency().getName();
-        int indexOfCurrency = 0;
-        for (Currency elem : currencies) {
-            if (elem.getName().equals(currencyName))
-                indexOfCurrency = currencies.indexOf(elem);
-        }
-        Currency currencyOfMaterial = currencies.get(indexOfCurrency);
-
-        double materialPrice = material.getCurrentValue() * currencyOfMaterial.getPurchasePrice();
-
-        double materialAmount = generator.nextDouble()*Math.min(materialsToBuy.get(materialNumber).getAmount(), (int) Math.floor(budget / materialPrice));
-
-        budget -= materialPrice * materialAmount;
-        //increasing budget of IF
-        investmentFunds.get(investmentFundNumber).increaseBudget(materialPrice * materialAmount);
-        //decreasing amount of IF materials
-        materialsToBuy.get(materialNumber).decrementAmount(materialAmount);
-
-        boolean checker = true;
-        for (MaterialInWallet elem : materialsPurchased) {
-            if (material.getName().equals(elem.getName())) {
-                elem.incrementAmount(materialAmount);
-                checker = false;
-            }
-        }
-        if (checker) {
-            MaterialInWallet newMaterial = new MaterialInWallet(materialAmount, material.getName(), materialsToBuy.get(materialNumber).getMarketName());
-            materialsPurchased.add(newMaterial);
         }
 
     }
@@ -204,45 +209,46 @@ public class Investor extends Customer implements DisplayableListItem {
     private void buyCurrenciesWitfIF() {
         Random generator = new Random();
         ObservableList<InvestmentFund> investmentFunds = ApplicationModel.getInstance().getInvestmentFunds();
-        ObservableList<Currency> currencies = ApplicationModel.getInstance().getCurrencies();
-        int investmentFundNumber = generator.nextInt(investmentFunds.size());
-        List<CurrencyInWallet> currenciesToBuy = investmentFunds.get(investmentFundNumber).getCurrenciesPurchased();
-        int currencyNumber = generator.nextInt(currenciesToBuy.size());
-        String currencyName = currenciesToBuy.get(currencyNumber).getName();
+        if(investmentFunds.size() > 0) {
+            ObservableList<Currency> currencies = ApplicationModel.getInstance().getCurrencies();
+            int investmentFundNumber = generator.nextInt(investmentFunds.size());
+            List<CurrencyInWallet> currenciesToBuy = investmentFunds.get(investmentFundNumber).getCurrenciesPurchased();
+            if(currenciesToBuy.size() > 0) {
+                int currencyNumber = generator.nextInt(currenciesToBuy.size());
+                String currencyName = currenciesToBuy.get(currencyNumber).getName();
 
-        int indexOfCurrency= 0;
-        for (Currency elem : currencies) {
-            if (currencyName.equals(elem.getName())) {
-                indexOfCurrency = currencies.indexOf(elem);
+                int indexOfCurrency = 0;
+                for (Currency elem : currencies) {
+                    if (currencyName.equals(elem.getName())) {
+                        indexOfCurrency = currencies.indexOf(elem);
+                    }
+                }
+                Currency currency = currencies.get(indexOfCurrency);
+
+                double currencyPurchasePrice = currency.getPurchasePrice();
+
+                double currencyAmount = generator.nextDouble() * Math.min(currenciesToBuy.get(currencyNumber).getAmount(), (int) Math.floor(budget / currencyPurchasePrice));
+
+                //decreasing investor's budget
+                budget -= currencyPurchasePrice * currencyAmount;
+                //increasing budget of IF
+                investmentFunds.get(investmentFundNumber).increaseBudget(currencyPurchasePrice * currencyAmount);
+                //decreasing amount of IF currencies
+                currenciesToBuy.get(currencyNumber).decrementAmount(currencyAmount);
+
+                boolean checker = true;
+                for (CurrencyInWallet elem : currenciesPurchased) {
+                    if (currency.getName().equals(elem.getName())) {
+                        elem.incrementAmount(currencyAmount);
+                        checker = false;
+                    }
+                }
+                if (checker) {
+                    CurrencyInWallet newCurrency = new CurrencyInWallet(currencyAmount, currencyName);
+                    currenciesPurchased.add(newCurrency);
+                }
             }
         }
-        Currency currency = currencies.get(indexOfCurrency);
-
-        double currencyPurchasePrice = currency.getPurchasePrice();
-
-        double currencyAmount = generator.nextDouble()*Math.min(currenciesToBuy.get(currencyNumber).getAmount(), (int) Math.floor(budget / currencyPurchasePrice));
-
-        //decreasing investor's budget
-        budget -= currencyPurchasePrice * currencyAmount;
-        //increasing budget of IF
-        investmentFunds.get(investmentFundNumber).increaseBudget(currencyPurchasePrice * currencyAmount);
-        //decreasing amount of IF currencies
-        currenciesToBuy.get(currencyNumber).decrementAmount(currencyAmount);
-
-        boolean checker = true;
-        for (CurrencyInWallet elem : currenciesPurchased) {
-            if (currency.getName().equals(elem.getName())) {
-                elem.incrementAmount(currencyAmount);
-                checker = false;
-            }
-        }
-        if (checker) {
-            CurrencyInWallet newCurrency = new CurrencyInWallet(currencyAmount, currencyName);
-            currenciesPurchased.add(newCurrency);
-        }
-
-
-
     }
 
     /**
